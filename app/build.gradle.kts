@@ -31,12 +31,12 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_24
+        targetCompatibility = JavaVersion.VERSION_24
     }
     kotlin {
         compilerOptions {
-            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_24)
         }
     }
     buildFeatures {
@@ -66,4 +66,5 @@ dependencies {
     implementation(libs.androidxMaterial3Library)
     debugImplementation(libs.androidxUiToolingLibrary)
     debugImplementation(libs.androidxUiTestManifestLibrary)
+    implementation(project(":compose-shape-fiiter"))
 }

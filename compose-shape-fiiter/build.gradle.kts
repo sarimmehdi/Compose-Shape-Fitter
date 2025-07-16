@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidLibraryPlugin)
     alias(libs.plugins.kotlinAndroidPlugin)
+    alias(libs.plugins.kotlinComposePlugin)
 }
 
 android {
@@ -32,11 +33,22 @@ android {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_24)
         }
     }
+    buildFeatures {
+        compose = true
+    }
 }
 
 dependencies {
 
     implementation(libs.androidxCoreKtxLibrary)
-    implementation(libs.androidxAppcompatLibrary)
-    implementation(libs.materialLibrary)
+    implementation(libs.androidxLifecycleRuntimeKtxLibrary)
+    implementation(libs.androidxActivityComposeLibrary)
+    implementation(platform(libs.androidxComposeBomLibrary))
+    implementation(libs.androidxUiLibrary)
+    implementation(libs.androidxUiGraphicsLibrary)
+    implementation(libs.androidxUiToolingPreviewLibrary)
+    implementation(libs.androidxMaterial3Library)
+    debugImplementation(libs.androidxUiToolingLibrary)
+    debugImplementation(libs.androidxUiTestManifestLibrary)
+    debugImplementation(libs.androidxUiTestManifestLibrary)
 }
