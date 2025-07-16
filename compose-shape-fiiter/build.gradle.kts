@@ -13,6 +13,19 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        ndk {
+            abiFilters.addAll(listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64"))
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            // Tells Gradle the path to your CMakeLists.txt file.
+            path = file("src/main/cpp/CMakeLists.txt")
+            // Optional: specify a CMake version
+            // version = "3.22.1"
+        }
     }
 
     buildTypes {
@@ -41,14 +54,6 @@ android {
 dependencies {
 
     implementation(libs.androidxCoreKtxLibrary)
-    implementation(libs.androidxLifecycleRuntimeKtxLibrary)
-    implementation(libs.androidxActivityComposeLibrary)
     implementation(platform(libs.androidxComposeBomLibrary))
-    implementation(libs.androidxUiLibrary)
-    implementation(libs.androidxUiGraphicsLibrary)
-    implementation(libs.androidxUiToolingPreviewLibrary)
     implementation(libs.androidxMaterial3Library)
-    debugImplementation(libs.androidxUiToolingLibrary)
-    debugImplementation(libs.androidxUiTestManifestLibrary)
-    debugImplementation(libs.androidxUiTestManifestLibrary)
 }

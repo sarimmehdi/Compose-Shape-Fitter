@@ -15,10 +15,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.input.pointer.pointerInput
+import kotlin.math.PI
 
 sealed interface ShapeType {
-    data class Ellipse(val isCircle: Boolean) : ShapeType
+    data class Ellipse(
+        val type: Type = Type.CIRCLE
+    ) : ShapeType {
+
+        companion object {
+            enum class Type {
+                CIRCLE, AXIS_ALIGNED_ELLIPSE, SKEWED_ELLIPSE
+            }
+        }
+    }
     data class Rectangle(val isSquare: Boolean) : ShapeType
     data object Triangle : ShapeType
     data object Pentagon : ShapeType
@@ -74,29 +85,53 @@ fun DrawingScreen(
             if (points.isNotEmpty()) {
                 when (shapeType) {
                     is ShapeType.Ellipse -> {
-                        if (shapeType.isCircle) {
-                            findSmallestEnclosingCircle(points)?.let { circle ->
-                                drawCircle(
-                                    color = Color.Red,
-                                    radius = circle.radius,
-                                    center = circle.center,
-                                    style = Stroke(width = 5f),
-                                )
+                        when (shapeType.type) {
+                            ShapeType.Ellipse.Companion.Type.CIRCLE -> {
+                                findSmallestEnclosingCircle(points)?.let { circle ->
+                                    drawCircle(
+                                        color = Color.Red,
+                                        radius = circle.radius,
+                                        center = circle.center,
+                                        style = Stroke(width = 5f),
+                                    )
+                                }
                             }
-                        } else {
-                            findSmallestEnclosingEllipse(points)?.let { ellipse ->
-                                drawOval(
-                                    color = Color.Cyan, // Example color for ellipse
-                                    topLeft = Offset(
-                                        ellipse.center.x - ellipse.radiusX,
-                                        ellipse.center.y - ellipse.radiusY
-                                    ),
-                                    size = Size(
-                                        ellipse.radiusX * 2,
-                                        ellipse.radiusY * 2
-                                    ),
-                                    style = Stroke(width = 5f)
-                                )
+                            ShapeType.Ellipse.Companion.Type.AXIS_ALIGNED_ELLIPSE -> {
+                                findSmallestEnclosingEllipse(points)?.let { ellipse ->
+                                    drawOval(
+                                        color = Color.Cyan, // Example color for ellipse
+                                        topLeft = Offset(
+                                            ellipse.center.x - ellipse.radiusX,
+                                            ellipse.center.y - ellipse.radiusY
+                                        ),
+                                        size = Size(
+                                            ellipse.radiusX * 2,
+                                            ellipse.radiusY * 2
+                                        ),
+                                        style = Stroke(width = 5f)
+                                    )
+                                }
+                            }
+                            ShapeType.Ellipse.Companion.Type.SKEWED_ELLIPSE -> {
+                                findSmallestEnclosingSkewedEllipse(points)?.let { rotatedEllipse ->
+                                    rotate(
+                                        degrees = rotatedEllipse.angleRad * (180f / PI.toFloat()), // Convert radians to degrees
+                                        pivot = rotatedEllipse.center
+                                    ) {
+                                        drawOval(
+                                            color = Color.Cyan,
+                                            topLeft = Offset(
+                                                rotatedEllipse.center.x - rotatedEllipse.radiusX,
+                                                rotatedEllipse.center.y - rotatedEllipse.radiusY
+                                            ),
+                                            size = Size(
+                                                rotatedEllipse.radiusX * 2,
+                                                rotatedEllipse.radiusY * 2
+                                            ),
+                                            style = Stroke(width = 5f)
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
