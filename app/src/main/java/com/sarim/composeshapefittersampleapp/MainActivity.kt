@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
             ComposeShapeFitterSampleAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     DrawingScreen(
-                        shapeType = ShapeType.PENTAGON,
+                        shapeType = ShapeType.Rectangle(isSquare = true),
                         modifier = Modifier.padding(innerPadding),
                     )
                 }
