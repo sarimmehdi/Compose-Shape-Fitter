@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.sarim.compose_shape_fiiter.DrawingScreen
-import com.sarim.compose_shape_fiiter.ShapeType
+import com.sarim.compose_shape_fitter.DrawingScreen
+import com.sarim.compose_shape_fitter.ShapeType
 import com.sarim.composeshapefittersampleapp.ui.theme.ComposeShapeFitterSampleAppTheme
 
 class MainActivity : ComponentActivity() {

@@ -66,5 +66,5 @@ dependencies {
     implementation(libs.androidxMaterial3Library)
     debugImplementation(libs.androidxUiToolingLibrary)
     debugImplementation(libs.androidxUiTestManifestLibrary)
-    implementation(project(":compose-shape-fiiter"))
+    implementation(project(":compose-shape-fitter"))
 }

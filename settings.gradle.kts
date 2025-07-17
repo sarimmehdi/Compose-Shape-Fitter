@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Compose Shape Fitter Sample App"
 include(":app")
-include(":compose-shape-fiiter")
+include(":compose-shape-fitter")
