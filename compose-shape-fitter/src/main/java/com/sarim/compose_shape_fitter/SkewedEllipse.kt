@@ -49,8 +49,8 @@ internal fun findSmallestEnclosingSkewedEllipse(points: List<Offset>): RotatedEl
         if (ellipseParamsArray != null && ellipseParamsArray.size == 5) {
             val centerX = ellipseParamsArray[0]
             val centerY = ellipseParamsArray[1]
-            val radiusX = ellipseParamsArray[2]
-            val radiusY = ellipseParamsArray[3]
+            val radiusY = ellipseParamsArray[2]
+            val radiusX = ellipseParamsArray[3]
             val angleRad = ellipseParamsArray[4]
 
             // Basic validation
