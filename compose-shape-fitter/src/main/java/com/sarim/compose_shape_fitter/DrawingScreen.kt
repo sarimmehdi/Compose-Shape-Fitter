@@ -30,7 +30,16 @@ sealed interface ShapeType {
             }
         }
     }
-    data class Rectangle(val isSquare: Boolean) : ShapeType
+    data class Rectangle(
+        val type: Type = Type.RECTANGLE
+    ) : ShapeType {
+
+        companion object {
+            enum class Type {
+                SQUARE, RECTANGLE, OBB
+            }
+        }
+    }
     data object Triangle : ShapeType
     data object Pentagon : ShapeType
     data object Hexagon : ShapeType
@@ -137,23 +146,44 @@ fun DrawingScreen(
                     }
 
                     is ShapeType.Rectangle -> {
-                        if (shapeType.isSquare) {
-                            findSmallestEnclosingSquare(points)?.let { square ->
-                                drawRect(
-                                    color = Color.DarkGray, // Example: different color for square
-                                    topLeft = square.topLeft,
-                                    size = Size(square.width, square.height), // For a square, rect.width and rect.height will be equal
-                                    style = Stroke(width = 5f),
-                                )
+                        when (shapeType.type) {
+                            ShapeType.Rectangle.Companion.Type.SQUARE -> {
+                                findSmallestEnclosingSquare(points)?.let { square ->
+                                    drawRect(
+                                        color = Color.DarkGray, // Example: different color for square
+                                        topLeft = square.topLeft,
+                                        size = Size(square.width, square.height), // For a square, rect.width and rect.height will be equal
+                                        style = Stroke(width = 5f),
+                                    )
+                                }
                             }
-                        } else {
-                            findSmallestEnclosingRectangle(points)?.let { rectangle ->
-                                drawRect(
-                                    color = Color.Blue, // Different color for rectangle
-                                    topLeft = rectangle.topLeft,
-                                    size = Size(rectangle.width, rectangle.height),
-                                    style = Stroke(width = 5f),
-                                )
+                            ShapeType.Rectangle.Companion.Type.RECTANGLE -> {
+                                findSmallestEnclosingRectangle(points)?.let { rectangle ->
+                                    drawRect(
+                                        color = Color.Blue, // Different color for rectangle
+                                        topLeft = rectangle.topLeft,
+                                        size = Size(rectangle.width, rectangle.height),
+                                        style = Stroke(width = 5f),
+                                    )
+                                }
+                            }
+                            ShapeType.Rectangle.Companion.Type.OBB -> {
+                                findSmallestEnclosingObb(points)?.let { obb ->
+                                    rotate(
+                                        degrees = obb.angleRad * (180f / PI.toFloat()), // Convert radians to degrees
+                                        pivot = obb.center
+                                    ) {
+                                        drawRect(
+                                            color = Color.Green,
+                                            topLeft = Offset(
+                                                obb.center.x - obb.width / 2f,
+                                                obb.center.y - obb.height / 2f
+                                            ),
+                                            size = Size(obb.width, obb.height),
+                                            style = Stroke(width = 5f)
+                                        )
+                                    }
+                                }
                             }
                         }
                     }

@@ -310,7 +310,6 @@ Ellipse DirectEllipseFit<T>::calcEllipsePara(
 
     if (best_eigIdx < 0) {
         std::cerr << "DirectEllipseFit::calcEllipsePara: No suitable eigenvector found that robustly satisfies B_norm^2 - 4*A_norm*C_norm < 0." << std::endl;
-        // You could add more diagnostics here, printing all eigenvalues and their B^2-4AC values
         return Ellipse{}; // Return default/invalid ellipse
     }
 
@@ -328,7 +327,6 @@ Ellipse DirectEllipseFit<T>::calcEllipsePara(
     T sy = getScaleValue(m_yData);
 
     // sx and sy should be > 0 due to getScaleValue returning 1.0 for zero range.
-    // However, an explicit check for very small values might still be good practice if critical.
     if (std::abs(sx) < std::numeric_limits<T>::epsilon()) sx = static_cast<T>(1.0);
     if (std::abs(sy) < std::numeric_limits<T>::epsilon()) sy = static_cast<T>(1.0);
 

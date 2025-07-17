@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
             ComposeShapeFitterSampleAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     DrawingScreen(
-                        shapeType = ShapeType.Ellipse(ShapeType.Ellipse.Companion.Type.SKEWED_ELLIPSE),
+                        shapeType = ShapeType.Rectangle(ShapeType.Rectangle.Companion.Type.OBB),
                         modifier = Modifier.padding(innerPadding),
                     )
                 }
