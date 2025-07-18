@@ -30,10 +30,13 @@ fun DrawingScreen(
             .fillMaxSize()
             .pointerInput(Unit) {
                 detectDragGestures(
-                    onDragStart = {
+                    onDragStart = { offset ->
                         isDragging = true
                         lines = emptyList()
-                        points = emptyList()
+                        points = listOf(offset)
+                        if (config.liveUpdateOfPoints) {
+                            onEvent(Event.PointsChangedEvent(points))
+                        }
                     },
                     onDrag = { change, dragAmount ->
                         change.consume()
@@ -47,8 +50,12 @@ fun DrawingScreen(
                     },
                     onDragEnd = {
                         isDragging = false
-                        lines = emptyList()
+
                         onEvent(Event.PointsChangedEvent(points))
+
+                        if (points.isNotEmpty()) {
+                            onEvent(Event.ApproximateShapeChangedEvent(drawableShape.getApproximatedShape(points)))
+                        }
                     }
                 )
             }
@@ -63,19 +70,16 @@ fun DrawingScreen(
                     cap = config.strokeCap
                 )
             }
-        } else {
-            if (points.isNotEmpty()) {
-                if (config.showApproximatedShape) {
-                    drawableShape.draw(
-                        drawScope = this,
-                        points = points
-                    )
-                }
-                onEvent(Event.ApproximateShapeChangedEvent(drawableShape.getApproximatedShape(points)))
-            }
+        }
+        else if (!isDragging && points.isNotEmpty() && config.showApproximatedShape) {
+            drawableShape.draw(
+                drawScope = this,
+                points = points
+            )
         }
     }
 }
+
 
 data class Config(
     val showFingerTracedLines: Boolean = true,

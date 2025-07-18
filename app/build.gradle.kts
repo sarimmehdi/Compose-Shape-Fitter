@@ -9,12 +9,14 @@ plugins {
 
 android {
     namespace = "com.sarim.composeshapefittersampleapp"
-    compileSdk = 36
+    //noinspection GradleDependency
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.sarim.composeshapefittersampleapp"
         minSdk = 24
-        targetSdk = 36
+        //noinspection OldTargetApi
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -31,16 +33,30 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_24
-        targetCompatibility = JavaVersion.VERSION_24
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     kotlin {
         compilerOptions {
-            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_24)
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
         }
     }
     buildFeatures {
         compose = true
+    }
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+            all { test -> // Target all unit tests
+                test.testLogging {
+                    // Show standard out and standard error of the test JVM(s).
+                    showStandardStreams = true
+
+                    events("started", "passed", "skipped", "failed", "standard_out", "standard_error")
+                    exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+                }
+            }
+        }
     }
 }
 
@@ -66,5 +82,11 @@ dependencies {
     implementation(libs.androidxMaterial3Library)
     debugImplementation(libs.androidxUiToolingLibrary)
     debugImplementation(libs.androidxUiTestManifestLibrary)
+    testImplementation(platform(libs.androidxComposeBomLibrary))
+    testImplementation(libs.composeJunit4Library)
+    testImplementation(libs.junitLibrary)
+    testImplementation(libs.truthLibrary)
+    testImplementation(libs.assertJLibrary)
+    testImplementation(libs.roboelectricLibrary)
     implementation(project(":compose-shape-fitter"))
 }

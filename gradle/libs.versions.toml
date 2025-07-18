@@ -6,6 +6,10 @@ lifecycleRuntimeKtxVersion = "2.9.2"
 activityComposeVersion = "1.10.1"
 composeBomVersion = "2025.07.00"
 ktlintVersion = "13.0.0"
+junitVersion = "4.13.2"
+assertJVersion = "3.27.3"
+truthVersion = "1.4.4"
+roboelectricVersion = "4.15.1"
 
 [libraries]
 androidxCoreKtxLibrary = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtxVersion" }
@@ -18,6 +22,11 @@ androidxUiToolingLibrary = { group = "androidx.compose.ui", name = "ui-tooling" 
 androidxUiToolingPreviewLibrary = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidxUiTestManifestLibrary = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidxMaterial3Library = { group = "androidx.compose.material3", name = "material3" }
+composeJunit4Library = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+junitLibrary = { group = "junit", name = "junit", version.ref = "junitVersion" }
+truthLibrary = { group = "com.google.truth", name = "truth", version.ref = "truthVersion" }
+assertJLibrary = { group = "org.assertj", name = "assertj-core", version.ref = "assertJVersion" }
+roboelectricLibrary = { group = "org.robolectric", name = "robolectric", version.ref = "roboelectricVersion" }
 
 [plugins]
 androidApplicationPlugin = { id = "com.android.application", version.ref = "agpVersion" }
