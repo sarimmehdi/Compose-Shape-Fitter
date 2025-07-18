@@ -33,60 +33,61 @@ internal object EllipseFitterJNI {
     external fun fitEllipseNative(pointsX: FloatArray, pointsY: FloatArray): FloatArray?
 }
 
-internal data class RotatedEllipse(
-    val center: Offset,
-    val radiusX: Float, // Semi-major axis (or just one radius if using matrix form)
-    val radiusY: Float, // Semi-minor axis
-    val angleRad: Float // Rotation angle in radians
-)
+class SkewedEllipseShape(val color: Color, val strokeWidth: Float) : DrawableShape {
 
-internal fun findSmallestEnclosingSkewedEllipse(points: List<Offset>): RotatedEllipse? {
-    if (points.isEmpty()) {
-        println("Point list is empty, cannot fit ellipse.")
-        return null
-    }
+    data class RotatedEllipse(
+        val center: Offset,
+        val radiusX: Float, // Semi-major axis (or just one radius if using matrix form)
+        val radiusY: Float, // Semi-minor axis
+        val angleRad: Float // Rotation angle in radians
+    ) : ApproximatedShape
 
-    val pointsX = FloatArray(points.size) { points[it].x }
-    val pointsY = FloatArray(points.size) { points[it].y }
-
-    try {
-        val ellipseParamsArray: FloatArray? = EllipseFitterJNI.fitEllipseNative(pointsX, pointsY)
-
-        if (ellipseParamsArray != null && ellipseParamsArray.size == 5) {
-            val centerX = ellipseParamsArray[0]
-            val centerY = ellipseParamsArray[1]
-            val radiusY = ellipseParamsArray[2]
-            val radiusX = ellipseParamsArray[3]
-            val angleRad = ellipseParamsArray[4]
-
-            // Basic validation
-            if (radiusX <= 0f || radiusY <= 0f) {
-                println("Native method returned invalid ellipse radii: rX=$radiusX, rY=$radiusY")
-                return null
-            }
-
-            return RotatedEllipse(
-                center = Offset(centerX, centerY),
-                radiusX = radiusX,
-                radiusY = radiusY,
-                angleRad = angleRad
-            )
-        } else {
-            println("Native method 'fitEllipseNative' returned null or an array of unexpected size: ${ellipseParamsArray?.size ?: "null"}. Expected 5.")
+    private fun findSmallestEnclosingSkewedEllipse(points: List<Offset>): RotatedEllipse? {
+        if (points.isEmpty()) {
+            println("Point list is empty, cannot fit ellipse.")
             return null
         }
-    } catch (e: UnsatisfiedLinkError) {
-        println("JNI UnsatisfiedLinkError in findEllipseUsingJNI: ${e.message}")
-        e.printStackTrace()
-        return null
-    } catch (e: Exception) {
-        println("Exception during JNI ellipse fitting: ${e.message}")
-        e.printStackTrace()
-        return null
-    }
-}
 
-class SkewedEllipseShape(val color: Color, val strokeWidth: Float) : DrawableShape {
+        val pointsX = FloatArray(points.size) { points[it].x }
+        val pointsY = FloatArray(points.size) { points[it].y }
+
+        try {
+            val ellipseParamsArray: FloatArray? = EllipseFitterJNI.fitEllipseNative(pointsX, pointsY)
+
+            if (ellipseParamsArray != null && ellipseParamsArray.size == 5) {
+                val centerX = ellipseParamsArray[0]
+                val centerY = ellipseParamsArray[1]
+                val radiusY = ellipseParamsArray[2]
+                val radiusX = ellipseParamsArray[3]
+                val angleRad = ellipseParamsArray[4]
+
+                // Basic validation
+                if (radiusX <= 0f || radiusY <= 0f) {
+                    println("Native method returned invalid ellipse radii: rX=$radiusX, rY=$radiusY")
+                    return null
+                }
+
+                return RotatedEllipse(
+                    center = Offset(centerX, centerY),
+                    radiusX = radiusX,
+                    radiusY = radiusY,
+                    angleRad = angleRad
+                )
+            } else {
+                println("Native method 'fitEllipseNative' returned null or an array of unexpected size: ${ellipseParamsArray?.size ?: "null"}. Expected 5.")
+                return null
+            }
+        } catch (e: UnsatisfiedLinkError) {
+            println("JNI UnsatisfiedLinkError in findEllipseUsingJNI: ${e.message}")
+            e.printStackTrace()
+            return null
+        } catch (e: Exception) {
+            println("Exception during JNI ellipse fitting: ${e.message}")
+            e.printStackTrace()
+            return null
+        }
+    }
+
     override fun draw(drawScope: DrawScope, points: List<Offset>) {
         findSmallestEnclosingSkewedEllipse(points)?.let { rotatedEllipse ->
             drawScope.rotate(
@@ -108,4 +109,6 @@ class SkewedEllipseShape(val color: Color, val strokeWidth: Float) : DrawableSha
             }
         }
     }
+
+    override fun getApproximatedShape(points: List<Offset>) = findSmallestEnclosingSkewedEllipse(points)
 }

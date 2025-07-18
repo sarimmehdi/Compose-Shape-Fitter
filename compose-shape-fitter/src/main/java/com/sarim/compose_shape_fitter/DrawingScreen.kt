@@ -11,18 +11,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path // Keep for potential direct path drawing if needed
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawscope.Stroke
-// import androidx.compose.ui.graphics.drawscope.rotate // Keep if some shapes need it directly
 import androidx.compose.ui.input.pointer.pointerInput
-// import kotlin.math.PI // Keep if some shapes need it
 
 @Composable
 fun DrawingScreen(
-    drawableShape: DrawableShape, // Accepts an instance of DrawableShape
+    drawableShape: DrawableShape,
     modifier: Modifier = Modifier,
-    onPointsChange: (List<Offset>) -> Unit = {}, // Callback when points are finalized
+    onPointsChange: (List<Offset>) -> Unit = {},
+    onApproximatedShape: (ApproximatedShape?) -> Unit = {},
     drawingLineColor: Color = Color.Black,
     strokeWidth: Float = 5f,
     strokeCap: StrokeCap = StrokeCap.Round
@@ -78,6 +75,7 @@ fun DrawingScreen(
                     drawScope = this, // 'this' is the DrawScope in the Canvas lambda
                     points = points
                 )
+                onApproximatedShape(drawableShape.getApproximatedShape(points))
             }
         }
     }
