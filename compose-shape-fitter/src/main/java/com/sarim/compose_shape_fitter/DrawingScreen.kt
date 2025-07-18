@@ -36,7 +36,7 @@ sealed interface ShapeType {
 
         companion object {
             enum class Type {
-                SQUARE, RECTANGLE, OBB
+                SQUARE, RECTANGLE, OBB, OBB_SQUARE
             }
         }
     }
@@ -167,8 +167,9 @@ fun DrawingScreen(
                                     )
                                 }
                             }
-                            ShapeType.Rectangle.Companion.Type.OBB -> {
-                                findSmallestEnclosingObb(points)?.let { obb ->
+                            ShapeType.Rectangle.Companion.Type.OBB,
+                            ShapeType.Rectangle.Companion.Type.OBB_SQUARE -> {
+                                findSmallestEnclosingObb(points, shapeType.type == ShapeType.Rectangle.Companion.Type.OBB_SQUARE)?.let { obb ->
                                     rotate(
                                         degrees = obb.angleRad * (180f / PI.toFloat()), // Convert radians to degrees
                                         pivot = obb.center

@@ -1,8 +1,8 @@
 package com.sarim.compose_shape_fitter
 
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import kotlin.math.cos
+import kotlin.math.max
 import kotlin.math.sin
 
 // Assuming you have this from a previous context or define it here
@@ -17,17 +17,32 @@ data class OrientedBoundingBox(
     val corner4: Offset
 )
 
-internal fun createOBBFromEllipse(ellipse: RotatedEllipse): OrientedBoundingBox {
+internal fun createOBBFromEllipse(ellipse: RotatedEllipse, allSidesEqual: Boolean): OrientedBoundingBox {
     val centerX = ellipse.center.x
     val centerY = ellipse.center.y
+    // <<< NO CHANGE UP TO HERE >>>
 
     // If your RotatedEllipse.radiusX is always the semi-axis length whose orientation
     // is given by angleRad, and RotatedEllipse.radiusY is the other semi-axis length.
     // The full width of the OBB will be 2 * radiusX
     // The full height of the OBB will be 2 * radiusY
-    val obbFullWidth = ellipse.radiusX * 2f
-    val obbFullHeight = ellipse.radiusY * 2f
+    val ellipseBasedWidth = ellipse.radiusX * 2f  // <<< CHANGED VARIABLE NAME FOR CLARITY >>>
+    val ellipseBasedHeight = ellipse.radiusY * 2f // <<< CHANGED VARIABLE NAME FOR CLARITY >>>
     val angleRad = ellipse.angleRad
+
+    // +++ START OF INSERTED/MODIFIED BLOCK +++
+    val finalWidth: Float
+    val finalHeight: Float
+
+    if (allSidesEqual) {
+        val sideLength = max(ellipseBasedWidth, ellipseBasedHeight)
+        finalWidth = sideLength
+        finalHeight = sideLength
+    } else {
+        finalWidth = ellipseBasedWidth
+        finalHeight = ellipseBasedHeight
+    }
+    // +++ END OF INSERTED/MODIFIED BLOCK +++
 
     // Calculate the four corner points of this OBB.
     // The OBB is centered at (centerX, centerY).
@@ -38,8 +53,11 @@ internal fun createOBBFromEllipse(ellipse: RotatedEllipse): OrientedBoundingBox 
     val sinA = sin(angleRad)
 
     // Half dimensions
-    val hw = ellipse.radiusX // Same as obbFullWidth / 2f
-    val hh = ellipse.radiusY // Same as obbFullHeight / 2f
+    // <<< MODIFIED BLOCK FOR HALF DIMENSIONS >>>
+    val hw = finalWidth / 2f  // <<< USES finalWidth >>>
+    val hh = finalHeight / 2f // <<< USES finalHeight >>>
+    // <<< END OF MODIFIED BLOCK FOR HALF DIMENSIONS >>>
+
 
     // Corner offsets from the center IN THE ROTATED FRAME
     // (x', y') where x' is along the ellipse.radiusX axis, y' is along ellipse.radiusY axis
@@ -48,32 +66,33 @@ internal fun createOBBFromEllipse(ellipse: RotatedEllipse): OrientedBoundingBox 
         Offset(hw, -hh),  // Local Top-Right
         Offset(hw, hh),   // Local Bottom-Right
         Offset(-hw, hh)   // Local Bottom-Left
-    )
+    ) // <<< NO CHANGE TO THIS localCorners LIST STRUCTURE, BUT USES NEW hw, hh >>>
 
     // Transform local corners to world coordinates
     val worldCorners = localCorners.map { localCorner ->
         val worldX = centerX + localCorner.x * cosA - localCorner.y * sinA
         val worldY = centerY + localCorner.x * sinA + localCorner.y * cosA
         Offset(worldX, worldY)
-    }
+    } // <<< NO CHANGE TO THIS TRANSFORMATION LOGIC >>>
 
     return OrientedBoundingBox(
         center = ellipse.center,
-        width = obbFullWidth,
-        height = obbFullHeight,
+        width = finalWidth,    // <<< USES finalWidth >>>
+        height = finalHeight,  // <<< USES finalHeight >>>
         angleRad = angleRad,
         corner1 = worldCorners[0], // Top-Left-ish after rotation
         corner2 = worldCorners[1], // Top-Right-ish
         corner3 = worldCorners[2], // Bottom-Right-ish
         corner4 = worldCorners[3]  // Bottom-Left-ish
-    )
+    ) // <<< NO OTHER CHANGES TO THE RETURN STATEMENT STRUCTURE >>>
 }
+
 
 /**
  * Function that uses ellipseParamsArray (from JNI) to create an OrientedBoundingBox
  * for the described ellipse.
  */
-internal fun findSmallestEnclosingObb(points: List<Offset>): OrientedBoundingBox? {
+internal fun findSmallestEnclosingObb(points: List<Offset>, allSidesEqual: Boolean): OrientedBoundingBox? {
     if (points.isEmpty()) {
         println("Point list is empty, cannot fit ellipse to derive OBB.")
         return null
@@ -123,7 +142,7 @@ internal fun findSmallestEnclosingObb(points: List<Offset>): OrientedBoundingBox
                 angleRad = ellipseAngleRad
             )
 
-            return createOBBFromEllipse(fittedEllipse)
+            return createOBBFromEllipse(fittedEllipse, allSidesEqual)
 
         } else {
             println("Native method 'fitEllipseNative' returned null or an array of unexpected size for OBB: ${ellipseParamsArray?.size ?: "null"}. Expected 5.")
