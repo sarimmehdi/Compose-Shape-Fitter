@@ -8,28 +8,15 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import kotlin.math.PI
 
-// Object to manage JNI calls
 internal object EllipseFitterJNI {
     init {
-        // Load the native library you will create (e.g., "native-lib")
-        // The name should match what you define in your CMakeLists.txt or ndk-build Android.mk
         try {
-            System.loadLibrary("composeshapefittersampleapp_native") // Common name, adjust if needed
+            System.loadLibrary("composeshapefittersampleapp_native")
         } catch (e: UnsatisfiedLinkError) {
-            // Log this error, critical for debugging JNI
             println("Failed to load native library 'native-lib': ${e.message}")
-            // Consider re-throwing or handling appropriately if the app cannot function without it
         }
     }
 
-    /**
-     * Native method to perform ellipse fitting.
-     *
-     * @param pointsX FloatArray of X coordinates.
-     * @param pointsY FloatArray of Y coordinates.
-     * @return FloatArray containing [centerX, centerY, radiusX, radiusY, angleRad],
-     *         or null/empty array if fitting fails or an error occurs.
-     */
     external fun fitEllipseNative(pointsX: FloatArray, pointsY: FloatArray): FloatArray?
 }
 
@@ -37,9 +24,9 @@ class SkewedEllipseShape(val color: Color, val strokeWidth: Float) : DrawableSha
 
     data class RotatedEllipse(
         val center: Offset,
-        val radiusX: Float, // Semi-major axis (or just one radius if using matrix form)
-        val radiusY: Float, // Semi-minor axis
-        val angleRad: Float // Rotation angle in radians
+        val radiusX: Float,
+        val radiusY: Float,
+        val angleRad: Float
     ) : ApproximatedShape
 
     private fun findSmallestEnclosingSkewedEllipse(points: List<Offset>): RotatedEllipse? {
@@ -61,7 +48,6 @@ class SkewedEllipseShape(val color: Color, val strokeWidth: Float) : DrawableSha
                 val radiusX = ellipseParamsArray[3]
                 val angleRad = ellipseParamsArray[4]
 
-                // Basic validation
                 if (radiusX <= 0f || radiusY <= 0f) {
                     println("Native method returned invalid ellipse radii: rX=$radiusX, rY=$radiusY")
                     return null
@@ -91,7 +77,7 @@ class SkewedEllipseShape(val color: Color, val strokeWidth: Float) : DrawableSha
     override fun draw(drawScope: DrawScope, points: List<Offset>) {
         findSmallestEnclosingSkewedEllipse(points)?.let { rotatedEllipse ->
             drawScope.rotate(
-                degrees = rotatedEllipse.angleRad * (180f / PI.toFloat()), // Convert radians to degrees
+                degrees = rotatedEllipse.angleRad * (180f / PI.toFloat()),
                 pivot = rotatedEllipse.center
             ) {
                 drawOval(

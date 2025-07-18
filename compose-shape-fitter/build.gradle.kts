@@ -21,10 +21,7 @@ android {
 
     externalNativeBuild {
         cmake {
-            // Tells Gradle the path to your CMakeLists.txt file.
             path = file("src/main/cpp/CMakeLists.txt")
-            // Optional: specify a CMake version
-            // version = "3.22.1"
         }
     }
 

@@ -18,11 +18,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 fun DrawingScreen(
     drawableShape: DrawableShape,
     modifier: Modifier = Modifier,
-    onPointsChange: (List<Offset>) -> Unit = {},
-    onApproximatedShape: (ApproximatedShape?) -> Unit = {},
-    drawingLineColor: Color = Color.Black,
-    strokeWidth: Float = 5f,
-    strokeCap: StrokeCap = StrokeCap.Round
+    config: Config = Config(),
+    onEvent: (Event) -> Unit = {},
 ) {
     var lines by remember { mutableStateOf<List<Pair<Offset, Offset>>>(emptyList()) }
     var points by remember { mutableStateOf<List<Offset>>(emptyList()) }
@@ -37,8 +34,6 @@ fun DrawingScreen(
                         isDragging = true
                         lines = emptyList()
                         points = emptyList()
-                        // Optional: If the parent needs to know drawing started with cleared points
-                        // onPointsChange(emptyList())
                     },
                     onDrag = { change, dragAmount ->
                         change.consume()
@@ -46,37 +41,52 @@ fun DrawingScreen(
                         val end = change.position
                         lines = lines + (start to end)
                         points = points + end
-                        // Optional: If the parent needs live updates of points during drag
-                        // onPointsChange(points)
+                        if (config.liveUpdateOfPoints) {
+                            onEvent(Event.PointsChangedEvent(points))
+                        }
                     },
                     onDragEnd = {
                         isDragging = false
-                        lines = emptyList() // Clear temporary drag lines
-                        onPointsChange(points) // Notify parent of the final set of points
+                        lines = emptyList()
+                        onEvent(Event.PointsChangedEvent(points))
                     }
                 )
             }
     ) {
-        if (isDragging) {
+        if (isDragging && config.showFingerTracedLines) {
             lines.forEach { line ->
                 drawLine(
-                    color = drawingLineColor,
+                    color = config.drawingLineColor,
                     start = line.first,
                     end = line.second,
-                    strokeWidth = strokeWidth, // Use parameter
-                    cap = strokeCap        // Use parameter
+                    strokeWidth = config.strokeWidth,
+                    cap = config.strokeCap
                 )
             }
         } else {
-            // When not dragging, if there are points, use the drawableShape to draw
             if (points.isNotEmpty()) {
-                // Delegate drawing to the provided drawableShape instance
-                drawableShape.draw(
-                    drawScope = this, // 'this' is the DrawScope in the Canvas lambda
-                    points = points
-                )
-                onApproximatedShape(drawableShape.getApproximatedShape(points))
+                if (config.showApproximatedShape) {
+                    drawableShape.draw(
+                        drawScope = this,
+                        points = points
+                    )
+                }
+                onEvent(Event.ApproximateShapeChangedEvent(drawableShape.getApproximatedShape(points)))
             }
         }
     }
+}
+
+data class Config(
+    val showFingerTracedLines: Boolean = true,
+    val showApproximatedShape: Boolean = true,
+    val liveUpdateOfPoints: Boolean = false,
+    val drawingLineColor: Color = Color.Black,
+    val strokeWidth: Float = 5f,
+    val strokeCap: StrokeCap = StrokeCap.Round
+)
+
+sealed interface Event {
+    data class PointsChangedEvent(val points: List<Offset>) : Event
+    data class ApproximateShapeChangedEvent(val approximateShape: ApproximatedShape?) : Event
 }

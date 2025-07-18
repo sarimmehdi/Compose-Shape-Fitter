@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import com.sarim.compose_shape_fitter.CircleShape
 import com.sarim.compose_shape_fitter.DrawableShape
 import com.sarim.compose_shape_fitter.DrawingScreen
+import com.sarim.compose_shape_fitter.Event
 import com.sarim.composeshapefittersampleapp.ui.theme.ComposeShapeFitterSampleAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -28,12 +29,16 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding),
-                        onPointsChange = { finalPoints ->
-                            println("Shape drawn with ${finalPoints.size} points.")
+                        onEvent = { event ->
+                            when (event) {
+                                is Event.ApproximateShapeChangedEvent -> {
+                                    println("obtained shape ${event.approximateShape}")
+                                }
+                                is Event.PointsChangedEvent -> {
+                                    println("Shape drawn with ${event.points.size} points.")
+                                }
+                            }
                         },
-                        onApproximatedShape = { approximatedShape ->
-                            println("obtained shape $approximatedShape")
-                        }
                     )
                 }
             }

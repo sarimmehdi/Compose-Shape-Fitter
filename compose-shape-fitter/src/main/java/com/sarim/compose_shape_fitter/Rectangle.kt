@@ -33,9 +33,9 @@ internal fun findSmallestEnclosingRectangle(points: List<Offset>): Rectangle? {
 class RectangleShape(val color: Color, val strokeWidth: Float) : DrawableShape {
     data class Rectangle(val topLeft: Offset, val bottomRight: Offset) : ApproximatedShape {
         val width: Float
-            get() = max(0f, bottomRight.x - topLeft.x) // Ensure width is not negative
+            get() = max(0f, bottomRight.x - topLeft.x)
         val height: Float
-            get() = max(0f, bottomRight.y - topLeft.y) // Ensure height is not negative
+            get() = max(0f, bottomRight.y - topLeft.y)
 
         val center: Offset
             get() = Offset(topLeft.x + width / 2, topLeft.y + height / 2)
@@ -44,7 +44,7 @@ class RectangleShape(val color: Color, val strokeWidth: Float) : DrawableShape {
     override fun draw(drawScope: DrawScope, points: List<Offset>) {
         findSmallestEnclosingRectangle(points)?.let { rectangle ->
             drawScope.drawRect(
-                color = color, // Different color for rectangle
+                color = color,
                 topLeft = rectangle.topLeft,
                 size = Size(rectangle.width, rectangle.height),
                 style = Stroke(width = strokeWidth),
