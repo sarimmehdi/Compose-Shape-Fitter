@@ -1,6 +1,10 @@
 package com.sarim.compose_shape_fitter
 
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
 
 internal data class Pentagon(
     val top: Offset,
@@ -60,4 +64,24 @@ internal fun findSmallestEnclosingPentagon(points: List<Offset>,): Pentagon? {
         bottomLeft = pentagonBottomLeft,
         bottomRight = pentagonBottomRight
     )
+}
+
+class PentagonShape(val color: Color, val strokeWidth: Float) : DrawableShape {
+    override fun draw(drawScope: DrawScope, points: List<Offset>) {
+        findSmallestEnclosingPentagon(points)?.let { pentagon ->
+            val path = Path().apply {
+                moveTo(pentagon.top.x, pentagon.top.y) // Start at the top point
+                lineTo(pentagon.topRight.x, pentagon.topRight.y) // Line to top-right shoulder
+                lineTo(pentagon.bottomRight.x, pentagon.bottomRight.y) // Line to bottom-right corner
+                lineTo(pentagon.bottomLeft.x, pentagon.bottomLeft.y) // Line to bottom-left corner
+                lineTo(pentagon.topLeft.x, pentagon.topLeft.y) // Line to top-left shoulder
+                close() // This will draw a line from pent.topLeft back to pent.top
+            }
+            drawScope.drawPath(
+                path = path,
+                color = color, // Example color for pentagon
+                style = Stroke(width = strokeWidth),
+            )
+        }
+    }
 }

@@ -1,6 +1,9 @@
 package com.sarim.compose_shape_fitter
 
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
 import kotlin.collections.forEach
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -31,4 +34,17 @@ internal fun findSmallestEnclosingCircle(points: List<Offset>): Circle? {
     val radius = sqrt(maxDistanceSq)
 
     return Circle(center, radius)
+}
+
+class CircleShape(val color: Color, val strokeWidth: Float) : DrawableShape {
+    override fun draw(drawScope: DrawScope, points: List<Offset>) {
+        findSmallestEnclosingCircle(points)?.let { circle ->
+            drawScope.drawCircle(
+                color = color,
+                radius = circle.radius,
+                center = circle.center,
+                style = Stroke(width = strokeWidth),
+            )
+        }
+    }
 }

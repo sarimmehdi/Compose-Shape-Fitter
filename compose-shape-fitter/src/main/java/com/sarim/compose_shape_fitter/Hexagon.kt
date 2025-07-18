@@ -1,6 +1,10 @@
 package com.sarim.compose_shape_fitter
 
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.min
 import kotlin.math.min
 import kotlin.math.sqrt
@@ -62,5 +66,31 @@ fun findSmallestEnclosingHexagon(points: List<Offset>): Hexagon? {
     }
 
     return Hexagon(center, vertices)
+}
+
+class HexagonShape(val color: Color, val strokeWidth: Float) : DrawableShape {
+    override fun draw(drawScope: DrawScope, points: List<Offset>) {
+        findSmallestEnclosingHexagon(points)?.let { hexagon ->
+            if (hexagon.vertices.size == 6) {
+                val path = Path().apply {
+                    // Move to the first vertex
+                    moveTo(hexagon.vertices[0].x, hexagon.vertices[0].y)
+                    // Draw lines to the subsequent vertices
+                    lineTo(hexagon.vertices[1].x, hexagon.vertices[1].y)
+                    lineTo(hexagon.vertices[2].x, hexagon.vertices[2].y)
+                    lineTo(hexagon.vertices[3].x, hexagon.vertices[3].y)
+                    lineTo(hexagon.vertices[4].x, hexagon.vertices[4].y)
+                    lineTo(hexagon.vertices[5].x, hexagon.vertices[5].y)
+                    // Close the path to draw the last side (from vertex 5 to vertex 0)
+                    close()
+                }
+                drawScope.drawPath(
+                    path = path,
+                    color = color, // Example color for hexagon
+                    style = Stroke(width = strokeWidth)
+                )
+            }
+        }
+    }
 }
 

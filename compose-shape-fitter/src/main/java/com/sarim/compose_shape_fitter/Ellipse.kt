@@ -1,6 +1,10 @@
 package com.sarim.compose_shape_fitter
 
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
 
 // Data class to represent an ellipse
 data class Ellipse(
@@ -39,4 +43,23 @@ fun findSmallestEnclosingEllipse(points: List<Offset>): Ellipse? {
     }
 
     return Ellipse(center, radiusX, radiusY)
+}
+
+class EllipseShape(val color: Color, val strokeWidth: Float) : DrawableShape {
+    override fun draw(drawScope: DrawScope, points: List<Offset>) {
+        findSmallestEnclosingEllipse(points)?.let { ellipse ->
+            drawScope.drawOval(
+                color = color,
+                topLeft = Offset(
+                    ellipse.center.x - ellipse.radiusX,
+                    ellipse.center.y - ellipse.radiusY
+                ),
+                size = Size(
+                    ellipse.radiusX * 2,
+                    ellipse.radiusY * 2
+                ),
+                style = Stroke(width = strokeWidth)
+            )
+        }
+    }
 }

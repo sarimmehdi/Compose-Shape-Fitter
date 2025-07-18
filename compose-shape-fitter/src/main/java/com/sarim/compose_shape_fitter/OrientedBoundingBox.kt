@@ -1,6 +1,12 @@
 package com.sarim.compose_shape_fitter
 
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.rotate
+import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.sin
@@ -156,5 +162,26 @@ internal fun findSmallestEnclosingObb(points: List<Offset>, allSidesEqual: Boole
         println("Exception during JNI ellipse fitting for OBB: ${e.message}")
         e.printStackTrace()
         return null
+    }
+}
+
+class ObbShape(val color: Color, val strokeWidth: Float, val allSidesEqual: Boolean) : DrawableShape {
+    override fun draw(drawScope: DrawScope, points: List<Offset>) {
+        findSmallestEnclosingObb(points, allSidesEqual)?.let { obb ->
+            drawScope.rotate(
+                degrees = obb.angleRad * (180f / PI.toFloat()), // Convert radians to degrees
+                pivot = obb.center
+            ) {
+                drawRect(
+                    color = color,
+                    topLeft = Offset(
+                        obb.center.x - obb.width / 2f,
+                        obb.center.y - obb.height / 2f
+                    ),
+                    size = Size(obb.width, obb.height),
+                    style = Stroke(width = strokeWidth)
+                )
+            }
+        }
     }
 }

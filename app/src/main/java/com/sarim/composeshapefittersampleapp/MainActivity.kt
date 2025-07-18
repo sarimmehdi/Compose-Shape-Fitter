@@ -7,9 +7,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import com.sarim.compose_shape_fitter.CircleShape
+import com.sarim.compose_shape_fitter.DrawableShape
 import com.sarim.compose_shape_fitter.DrawingScreen
-import com.sarim.compose_shape_fitter.ShapeType
 import com.sarim.composeshapefittersampleapp.ui.theme.ComposeShapeFitterSampleAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,9 +26,18 @@ class MainActivity : ComponentActivity() {
         setContent {
             ComposeShapeFitterSampleAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    var drawnPoints by remember { mutableStateOf<List<Offset>>(emptyList()) }
+                    val currentShapeToDraw: DrawableShape = remember { CircleShape(Color.Blue, 5f) }
                     DrawingScreen(
-                        shapeType = ShapeType.Rectangle(ShapeType.Rectangle.Companion.Type.OBB),
-                        modifier = Modifier.padding(innerPadding),
+                        drawableShape = currentShapeToDraw,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
+                        onPointsChange = { finalPoints ->
+                            drawnPoints = finalPoints
+                            // You can now do something with the finalPoints, like saving or analyzing them
+                            println("Shape drawn with ${drawnPoints.size} points.")
+                        },
                     )
                 }
             }

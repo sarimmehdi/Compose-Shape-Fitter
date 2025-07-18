@@ -1,6 +1,12 @@
 package com.sarim.compose_shape_fitter
 
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.rotate
+import kotlin.math.PI
 import kotlin.math.max
 
 // New function for finding the smallest enclosing square
@@ -37,5 +43,18 @@ internal fun findSmallestEnclosingSquare(points: List<Offset>): Rectangle? {
         topLeft = Offset(squareTopLeftX, squareTopLeftY),
         bottomRight = Offset(squareBottomRightX, squareBottomRightY)
     )
+}
+
+class SquareShape(val color: Color, val strokeWidth: Float) : DrawableShape {
+    override fun draw(drawScope: DrawScope, points: List<Offset>) {
+        findSmallestEnclosingSquare(points)?.let { square ->
+            drawScope.drawRect(
+                color = color, // Example: different color for square
+                topLeft = square.topLeft,
+                size = Size(square.width, square.height), // For a square, rect.width and rect.height will be equal
+                style = Stroke(width = strokeWidth),
+            )
+        }
+    }
 }
 

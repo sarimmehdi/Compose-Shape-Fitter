@@ -1,6 +1,10 @@
 package com.sarim.compose_shape_fitter
 
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
 import kotlin.collections.forEach
 import kotlin.math.max
 import kotlin.math.min
@@ -33,4 +37,17 @@ internal fun findSmallestEnclosingRectangle(points: List<Offset>): Rectangle? {
     }
 
     return Rectangle(topLeft = Offset(minX, minY), bottomRight = Offset(maxX, maxY))
+}
+
+class RectangleShape(val color: Color, val strokeWidth: Float) : DrawableShape {
+    override fun draw(drawScope: DrawScope, points: List<Offset>) {
+        findSmallestEnclosingRectangle(points)?.let { rectangle ->
+            drawScope.drawRect(
+                color = color, // Different color for rectangle
+                topLeft = rectangle.topLeft,
+                size = Size(rectangle.width, rectangle.height),
+                style = Stroke(width = strokeWidth),
+            )
+        }
+    }
 }

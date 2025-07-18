@@ -1,6 +1,12 @@
 package com.sarim.compose_shape_fitter
 
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.rotate
+import kotlin.math.PI
 
 // Object to manage JNI calls
 internal object EllipseFitterJNI {
@@ -77,5 +83,29 @@ internal fun findSmallestEnclosingSkewedEllipse(points: List<Offset>): RotatedEl
         println("Exception during JNI ellipse fitting: ${e.message}")
         e.printStackTrace()
         return null
+    }
+}
+
+class SkewedEllipseShape(val color: Color, val strokeWidth: Float) : DrawableShape {
+    override fun draw(drawScope: DrawScope, points: List<Offset>) {
+        findSmallestEnclosingSkewedEllipse(points)?.let { rotatedEllipse ->
+            drawScope.rotate(
+                degrees = rotatedEllipse.angleRad * (180f / PI.toFloat()), // Convert radians to degrees
+                pivot = rotatedEllipse.center
+            ) {
+                drawOval(
+                    color = color,
+                    topLeft = Offset(
+                        rotatedEllipse.center.x - rotatedEllipse.radiusX,
+                        rotatedEllipse.center.y - rotatedEllipse.radiusY
+                    ),
+                    size = Size(
+                        rotatedEllipse.radiusX * 2,
+                        rotatedEllipse.radiusY * 2
+                    ),
+                    style = Stroke(width = strokeWidth)
+                )
+            }
+        }
     }
 }
