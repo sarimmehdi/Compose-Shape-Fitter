@@ -6,10 +6,12 @@ lifecycleRuntimeKtxVersion = "2.9.2"
 activityComposeVersion = "1.10.1"
 composeBomVersion = "2025.07.00"
 ktlintVersion = "13.0.0"
+detektVersion = "1.23.8"
 junitVersion = "4.13.2"
 assertJVersion = "3.27.3"
 truthVersion = "1.4.4"
 roboelectricVersion = "4.15.1"
+vanniktechVersion = "0.33.0"
 
 [libraries]
 androidxCoreKtxLibrary = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtxVersion" }
@@ -33,5 +35,7 @@ androidApplicationPlugin = { id = "com.android.application", version.ref = "agpV
 kotlinAndroidPlugin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinVersion" }
 kotlinComposePlugin = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinVersion" }
 androidLibraryPlugin = { id = "com.android.library", version.ref = "agpVersion" }
+detektPlugin = { id = "io.gitlab.arturbosch.detekt", version.ref = "detektVersion" }
 ktlintPlugin = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintVersion" }
+vanniktechMavenPublishingPlugin = { id = "com.vanniktech.maven.publish", version.ref = "vanniktechVersion" }
 

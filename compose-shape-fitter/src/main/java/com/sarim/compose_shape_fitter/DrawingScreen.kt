@@ -26,39 +26,40 @@ fun DrawingScreen(
     var isDragging by remember { mutableStateOf(false) }
 
     Canvas(
-        modifier = modifier
-            .fillMaxSize()
-            .pointerInput(Unit) {
-                detectDragGestures(
-                    onDragStart = { offset ->
-                        isDragging = true
-                        lines = emptyList()
-                        points = listOf(offset)
-                        if (config.liveUpdateOfPoints) {
-                            onEvent(Event.PointsChangedEvent(points))
-                        }
-                    },
-                    onDrag = { change, dragAmount ->
-                        change.consume()
-                        val start = change.position - dragAmount
-                        val end = change.position
-                        lines = lines + (start to end)
-                        points = points + end
-                        if (config.liveUpdateOfPoints) {
-                            onEvent(Event.PointsChangedEvent(points))
-                        }
-                    },
-                    onDragEnd = {
-                        isDragging = false
+        modifier =
+            modifier
+                .fillMaxSize()
+                .pointerInput(Unit) {
+                    detectDragGestures(
+                        onDragStart = { offset ->
+                            isDragging = true
+                            lines = emptyList()
+                            points = listOf(offset)
+                            if (config.liveUpdateOfPoints) {
+                                onEvent(Event.PointsChangedEvent(points))
+                            }
+                        },
+                        onDrag = { change, dragAmount ->
+                            change.consume()
+                            val start = change.position - dragAmount
+                            val end = change.position
+                            lines = lines + (start to end)
+                            points = points + end
+                            if (config.liveUpdateOfPoints) {
+                                onEvent(Event.PointsChangedEvent(points))
+                            }
+                        },
+                        onDragEnd = {
+                            isDragging = false
 
-                        onEvent(Event.PointsChangedEvent(points))
+                            onEvent(Event.PointsChangedEvent(points))
 
-                        if (points.isNotEmpty()) {
-                            onEvent(Event.ApproximateShapeChangedEvent(drawableShape.getApproximatedShape(points)))
-                        }
-                    }
-                )
-            }
+                            if (points.isNotEmpty()) {
+                                onEvent(Event.ApproximateShapeChangedEvent(drawableShape.getApproximatedShape(points)))
+                            }
+                        },
+                    )
+                },
     ) {
         if (isDragging && config.showFingerTracedLines) {
             lines.forEach { line ->
@@ -67,19 +68,17 @@ fun DrawingScreen(
                     start = line.first,
                     end = line.second,
                     strokeWidth = config.strokeWidth,
-                    cap = config.strokeCap
+                    cap = config.strokeCap,
                 )
             }
-        }
-        else if (!isDragging && points.isNotEmpty() && config.showApproximatedShape) {
+        } else if (!isDragging && points.isNotEmpty() && config.showApproximatedShape) {
             drawableShape.draw(
                 drawScope = this,
-                points = points
+                points = points,
             )
         }
     }
 }
-
 
 data class Config(
     val showFingerTracedLines: Boolean = true,
@@ -87,10 +86,15 @@ data class Config(
     val liveUpdateOfPoints: Boolean = false,
     val drawingLineColor: Color = Color.Black,
     val strokeWidth: Float = 5f,
-    val strokeCap: StrokeCap = StrokeCap.Round
+    val strokeCap: StrokeCap = StrokeCap.Round,
 )
 
 sealed interface Event {
-    data class PointsChangedEvent(val points: List<Offset>) : Event
-    data class ApproximateShapeChangedEvent(val approximateShape: ApproximatedShape?) : Event
+    data class PointsChangedEvent(
+        val points: List<Offset>,
+    ) : Event
+
+    data class ApproximateShapeChangedEvent(
+        val approximateShape: ApproximatedShape?,
+    ) : Event
 }

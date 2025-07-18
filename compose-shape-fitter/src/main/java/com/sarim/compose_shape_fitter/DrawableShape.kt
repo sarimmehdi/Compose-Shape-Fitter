@@ -6,7 +6,10 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 sealed interface ApproximatedShape
 
 sealed interface DrawableShape {
-    fun draw(drawScope: DrawScope, points: List<Offset>)
+    fun draw(
+        drawScope: DrawScope,
+        points: List<Offset>,
+    )
 
-    fun getApproximatedShape(points: List<Offset>) : ApproximatedShape?
+    fun getApproximatedShape(points: List<Offset>): ApproximatedShape?
 }

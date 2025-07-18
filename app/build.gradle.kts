@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlinAndroidPlugin)
     alias(libs.plugins.kotlinComposePlugin)
     alias(libs.plugins.ktlintPlugin)
+    alias(libs.plugins.detektPlugin)
 }
 
 android {
@@ -47,7 +48,8 @@ android {
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
-            all { test -> // Target all unit tests
+            all { test ->
+                // Target all unit tests
                 test.testLogging {
                     // Show standard out and standard error of the test JVM(s).
                     showStandardStreams = true
