@@ -35,6 +35,7 @@ data class DrawingScreenState(
     val showFingerTracedLines: Boolean = true,
     val showApproximatedShape: Boolean = true,
     val liveUpdateOfPoints: Boolean = true,
+    val showSettingsDropDown: Boolean = false,
 ) : Parcelable {
     
     fun getDrawableShape(color: Color, strokeWidth: Float) = when (selectedShape.shapeType) {

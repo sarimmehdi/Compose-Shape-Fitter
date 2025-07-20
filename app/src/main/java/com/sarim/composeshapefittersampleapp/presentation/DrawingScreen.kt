@@ -10,10 +10,14 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -113,6 +117,78 @@ fun DrawingScreen(
                             Icon(
                                 Icons.Filled.Menu,
                                 contentDescription = UiText.StringResource(R.string.open_drawer).asString()
+                            )
+                        }
+                    },
+                    actions = { // Add the actions parameter here
+                        IconButton(onClick = {
+                            onEvent(DrawingScreenToViewModelEvents.ToggleSettingsDropDown)
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.Settings,
+                                contentDescription = UiText.StringResource(R.string.settings).asString()
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = state.showSettingsDropDown,
+                            onDismissRequest = { onEvent(DrawingScreenToViewModelEvents.ToggleSettingsDropDown) }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text(UiText.StringResource(R.string.finger_traced_lines).asString()) },
+                                onClick = {
+                                    onEvent(
+                                        DrawingScreenToViewModelEvents.ToggleSettings(
+                                            DrawingScreenToViewModelEvents.ToggleSettings.Type.SHOW_FINGER_TRACED_LINES
+                                        )
+                                    )
+                                    onEvent(DrawingScreenToViewModelEvents.ToggleSettingsDropDown)
+                                },
+                                trailingIcon = {
+                                    if (state.showFingerTracedLines) {
+                                        Icon(
+                                            Icons.Filled.Check,
+                                            contentDescription = UiText.StringResource(R.string.settings).asString()
+                                        )
+                                    }
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(UiText.StringResource(R.string.approximated_shape).asString()) },
+                                onClick = {
+                                    onEvent(
+                                        DrawingScreenToViewModelEvents.ToggleSettings(
+                                            DrawingScreenToViewModelEvents.ToggleSettings.Type.SHOW_APPROXIMATED_SHAPE
+                                        )
+                                    )
+                                    onEvent(DrawingScreenToViewModelEvents.ToggleSettingsDropDown)
+                                },
+                                trailingIcon = {
+                                    if (state.showApproximatedShape) {
+                                        Icon(
+                                            Icons.Filled.Check,
+                                            contentDescription = UiText.StringResource(R.string.settings).asString()
+                                        )
+                                    }
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(UiText.StringResource(R.string.points_live_update).asString()) },
+                                onClick = {
+                                    onEvent(
+                                        DrawingScreenToViewModelEvents.ToggleSettings(
+                                            DrawingScreenToViewModelEvents.ToggleSettings.Type.LIVE_UPDATE_OF_POINTS
+                                        )
+                                    )
+                                    onEvent(DrawingScreenToViewModelEvents.ToggleSettingsDropDown)
+                                },
+                                trailingIcon = {
+                                    if (state.liveUpdateOfPoints) {
+                                        Icon(
+                                            Icons.Filled.Check,
+                                            contentDescription = UiText.StringResource(R.string.settings).asString()
+                                        )
+                                    }
+                                }
                             )
                         }
                     },

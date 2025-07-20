@@ -1,4 +1,4 @@
-package com.sarim.composeshapefittersampleapp.data.dto
+package com.sarim.composeshapefittersampleapp.data.dto.settings
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
@@ -7,30 +7,30 @@ import kotlinx.serialization.json.Json
 import java.io.InputStream
 import java.io.OutputStream
 
-object ShapeDtoSerializer : Serializer<ShapeDto> {
+object SettingsDtoSerializer : Serializer<SettingsDto> {
 
-    const val SELECTED_SHAPE_DTO_DATA_STORE_NAME = "ShapeDto.json"
+    const val SETTINGS_DTO_DATA_STORE_NAME = "SettingsDto.json"
 
-    override val defaultValue: ShapeDto
-        get() = ShapeDto()
+    override val defaultValue: SettingsDto
+        get() = SettingsDto()
 
-    override suspend fun readFrom(input: InputStream): ShapeDto {
+    override suspend fun readFrom(input: InputStream): SettingsDto {
         try {
             return Json.decodeFromString(
-                ShapeDto.serializer(),
+                SettingsDto.serializer(),
                 input.readBytes().decodeToString()
             )
         } catch (serialization: SerializationException) {
-            throw CorruptionException("Unable to read ShapeDto", serialization)
+            throw CorruptionException("Unable to read SettingsDto", serialization)
         }
     }
 
     override suspend fun writeTo(
-        t: ShapeDto,
+        t: SettingsDto,
         output: OutputStream
     ) {
         output.write(
-            Json.encodeToString(ShapeDto.serializer(), t)
+            Json.encodeToString(SettingsDto.serializer(), t)
                 .encodeToByteArray()
         )
     }

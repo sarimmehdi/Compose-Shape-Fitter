@@ -2,9 +2,9 @@ package com.sarim.composeshapefittersampleapp.data.repository
 
 import androidx.datastore.core.DataStore
 import com.sarim.composeshapefittersampleapp.R
-import com.sarim.composeshapefittersampleapp.data.dto.ShapeDto
-import com.sarim.composeshapefittersampleapp.data.dto.toSelectedShape
-import com.sarim.composeshapefittersampleapp.data.dto.toShapes
+import com.sarim.composeshapefittersampleapp.data.dto.shape.ShapeDto
+import com.sarim.composeshapefittersampleapp.data.dto.shape.toSelectedShape
+import com.sarim.composeshapefittersampleapp.data.dto.shape.toShapes
 import com.sarim.composeshapefittersampleapp.domain.model.Shape
 import com.sarim.composeshapefittersampleapp.domain.repository.ShapesRepository
 import com.sarim.composeshapefittersampleapp.utils.MessageType

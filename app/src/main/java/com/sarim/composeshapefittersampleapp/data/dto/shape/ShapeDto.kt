@@ -1,4 +1,4 @@
-package com.sarim.composeshapefittersampleapp.data.dto
+package com.sarim.composeshapefittersampleapp.data.dto.shape
 
 import com.sarim.composeshapefittersampleapp.R
 import com.sarim.composeshapefittersampleapp.domain.model.Shape

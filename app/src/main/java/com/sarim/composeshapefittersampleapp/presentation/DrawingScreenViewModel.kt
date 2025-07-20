@@ -23,6 +23,41 @@ class DrawingScreenViewModel(
 
     init {
         viewModelScope.launch {
+            drawingScreenUseCases.getSettingsUseCase().collectLatest {
+                when (it) {
+                    is Resource.Error -> {
+                        val message = it.message
+                        SnackBarController.sendEvent(
+                            event = SnackbarEvent(
+                                message = when (message) {
+                                    is MessageType.IntMessage -> UiText.StringResource(
+                                        message.message,
+                                        message.args
+                                    )
+
+                                    is MessageType.StringMessage -> UiText.StringResource(
+                                        R.string.unable_to_get_settings,
+                                        message.message
+                                    )
+                                },
+                                action = SnackbarAction(
+                                    name = UiText.StringResource(R.string.error)
+                                )
+                            )
+                        )
+                    }
+                    is Resource.Success -> {
+                        savedStateHandle[DRAWING_SCREEN_STATE_KEY] = savedStateHandle
+                            .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
+                                showFingerTracedLines = it.data.showFingerTracedLines,
+                                showApproximatedShape = it.data.showApproximatedShape,
+                                liveUpdateOfPoints = it.data.liveUpdateOfPoints,
+                            )
+                    }
+                }
+            }
+        }
+        viewModelScope.launch {
             drawingScreenUseCases.getAllShapesUseCase().collectLatest {
                 when (it) {
                     is Resource.Error -> {
@@ -36,7 +71,7 @@ class DrawingScreenViewModel(
                                     )
 
                                     is MessageType.StringMessage -> UiText.StringResource(
-                                        R.string.unable_to_get_selected_shape,
+                                        R.string.unable_to_get_all_shapes,
                                         message.message
                                     )
                                 },
@@ -138,6 +173,34 @@ class DrawingScreenViewModel(
                 if (state.value.liveUpdateOfPoints) {
                     println("number of points: ${event.points.size}, values: ${event.points}")
                 }
+            }
+            is DrawingScreenToViewModelEvents.ToggleSettings -> {
+                when (event.type) {
+                    DrawingScreenToViewModelEvents.ToggleSettings.Type.SHOW_FINGER_TRACED_LINES -> {
+                        savedStateHandle[DRAWING_SCREEN_STATE_KEY] = savedStateHandle
+                            .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
+                                showFingerTracedLines = !state.value.showFingerTracedLines
+                            )
+                    }
+                    DrawingScreenToViewModelEvents.ToggleSettings.Type.SHOW_APPROXIMATED_SHAPE -> {
+                        savedStateHandle[DRAWING_SCREEN_STATE_KEY] = savedStateHandle
+                            .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
+                                showApproximatedShape = !state.value.showApproximatedShape
+                            )
+                    }
+                    DrawingScreenToViewModelEvents.ToggleSettings.Type.LIVE_UPDATE_OF_POINTS -> {
+                        savedStateHandle[DRAWING_SCREEN_STATE_KEY] = savedStateHandle
+                            .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
+                                liveUpdateOfPoints = !state.value.liveUpdateOfPoints
+                            )
+                    }
+                }
+            }
+            is DrawingScreenToViewModelEvents.ToggleSettingsDropDown -> {
+                savedStateHandle[DRAWING_SCREEN_STATE_KEY] = savedStateHandle
+                    .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
+                        showSettingsDropDown = !state.value.showSettingsDropDown
+                    )
             }
         }
     }
