@@ -1,16 +1,18 @@
-package com.sarim.compose_shape_fitter
+package com.sarim.compose_shape_fitter.shape
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
-import com.sarim.compose_shape_fitter.RectangleShape.Rectangle
+import com.sarim.compose_shape_fitter.utils.OffsetParceler
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
 import kotlin.collections.forEach
 import kotlin.math.max
 import kotlin.math.min
 
-internal fun findSmallestEnclosingRectangle(points: List<Offset>): Rectangle? {
+internal fun findSmallestEnclosingRectangle(points: List<Offset>): RectangleShape.Rectangle? {
     if (points.isEmpty()) {
         return null
     }
@@ -27,16 +29,17 @@ internal fun findSmallestEnclosingRectangle(points: List<Offset>): Rectangle? {
         maxY = max(maxY, point.y)
     }
 
-    return Rectangle(topLeft = Offset(minX, minY), bottomRight = Offset(maxX, maxY))
+    return RectangleShape.Rectangle(topLeft = Offset(minX, minY), bottomRight = Offset(maxX, maxY))
 }
 
 class RectangleShape(
     val color: Color,
     val strokeWidth: Float,
 ) : DrawableShape {
+    @Parcelize
     data class Rectangle(
-        val topLeft: Offset,
-        val bottomRight: Offset,
+        val topLeft: @WriteWith<OffsetParceler> Offset,
+        val bottomRight: @WriteWith<OffsetParceler> Offset,
     ) : ApproximatedShape {
         val width: Float
             get() = max(0f, bottomRight.x - topLeft.x)

@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.ktlintPlugin)
     alias(libs.plugins.detektPlugin)
     alias(libs.plugins.vanniktechMavenPublishingPlugin)
+    id("kotlin-parcelize")
 }
 
 android {

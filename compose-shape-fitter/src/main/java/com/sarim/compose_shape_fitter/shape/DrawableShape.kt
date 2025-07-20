@@ -1,9 +1,12 @@
-package com.sarim.compose_shape_fitter
+package com.sarim.compose_shape_fitter.shape
 
+import android.os.Parcelable
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import kotlinx.parcelize.Parcelize
 
-sealed interface ApproximatedShape
+@Parcelize
+sealed interface ApproximatedShape : Parcelable
 
 sealed interface DrawableShape {
     fun draw(

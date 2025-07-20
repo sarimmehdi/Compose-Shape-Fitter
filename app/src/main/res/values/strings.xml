@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">Compose Shape Fitter Sample App</string>
+
+    <string name="circle">Circle</string>
+    <string name="ellipse">Ellipse</string>
+    <string name="hexagon">Hexagon</string>
+    <string name="oriented_rectangle">Oriented Rectangle</string>
+    <string name="oriented_square">Oriented Square</string>
+    <string name="pentagon">Pentagon</string>
+    <string name="rectangle">Rectangle</string>
+    <string name="oriented_ellipse">Oriented Ellipse</string>
+    <string name="square">Square</string>
+    <string name="triangle">Triangle</string>
+
+    <string name="unknown_reason_exception">Unknown reason for exception %1$s</string>
+    <string name="unable_to_get_selected_shape">Unable to get selected shape because of %1$s</string>
+    <string name="error">Error</string>
+
+    <string name="open_drawer">Open Drawer</string>
+    <string name="close_nav_menu">Close Drawer</string>
+    <string name="select_shape">Select Shape</string>
 </resources>

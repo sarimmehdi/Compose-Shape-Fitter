@@ -1,4 +1,4 @@
-package com.sarim.compose_shape_fitter
+package com.sarim.compose_shape_fitter.shape
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size

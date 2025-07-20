@@ -1,9 +1,12 @@
-package com.sarim.compose_shape_fitter
+package com.sarim.compose_shape_fitter.shape
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import com.sarim.compose_shape_fitter.utils.OffsetParceler
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
 import kotlin.collections.forEach
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -12,8 +15,10 @@ class CircleShape(
     val color: Color,
     val strokeWidth: Float,
 ) : DrawableShape {
+
+    @Parcelize
     data class Circle(
-        val center: Offset,
+        val center: @WriteWith<OffsetParceler> Offset,
         val radius: Float,
     ) : ApproximatedShape
 

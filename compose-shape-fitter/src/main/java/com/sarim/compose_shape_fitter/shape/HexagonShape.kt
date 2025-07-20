@@ -1,10 +1,13 @@
-package com.sarim.compose_shape_fitter
+package com.sarim.compose_shape_fitter.shape
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import com.sarim.compose_shape_fitter.utils.OffsetParceler
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
@@ -14,9 +17,10 @@ class HexagonShape(
     val color: Color,
     val strokeWidth: Float,
 ) : DrawableShape {
+    @Parcelize
     data class Hexagon(
-        val center: Offset,
-        val vertices: List<Offset>,
+        val center: @WriteWith<OffsetParceler> Offset,
+        val vertices: List<@WriteWith<OffsetParceler> Offset>,
     ) : ApproximatedShape
 
     private fun findSmallestEnclosingHexagon(points: List<Offset>): Hexagon? {

@@ -1,4 +1,4 @@
-package com.sarim.compose_shape_fitter
+package com.sarim.compose_shape_fitter.shape
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -6,6 +6,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
+import com.sarim.compose_shape_fitter.utils.OffsetParceler
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.max
@@ -16,15 +19,16 @@ class ObbShape(
     val strokeWidth: Float,
     val allSidesEqual: Boolean,
 ) : DrawableShape {
+    @Parcelize
     data class OrientedBoundingBox(
-        val center: Offset,
+        val center: @WriteWith<OffsetParceler> Offset,
         val width: Float,
         val height: Float,
         val angleRad: Float,
-        val corner1: Offset,
-        val corner2: Offset,
-        val corner3: Offset,
-        val corner4: Offset,
+        val corner1: @WriteWith<OffsetParceler> Offset,
+        val corner2: @WriteWith<OffsetParceler> Offset,
+        val corner3: @WriteWith<OffsetParceler> Offset,
+        val corner4: @WriteWith<OffsetParceler> Offset,
     ) : ApproximatedShape
 
     private fun createOBBFromEllipse(

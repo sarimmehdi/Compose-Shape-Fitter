@@ -1,19 +1,23 @@
-package com.sarim.compose_shape_fitter
+package com.sarim.compose_shape_fitter.shape
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import com.sarim.compose_shape_fitter.utils.OffsetParceler
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
 
 class TriangleShape(
     val color: Color,
     val strokeWidth: Float,
 ) : DrawableShape {
+    @Parcelize
     data class Triangle(
-        val p1: Offset,
-        val p2: Offset,
-        val p3: Offset,
+        val p1: @WriteWith<OffsetParceler> Offset,
+        val p2: @WriteWith<OffsetParceler> Offset,
+        val p3: @WriteWith<OffsetParceler> Offset,
     ) : ApproximatedShape
 
     private fun findSmallestEnclosingTriangle(points: List<Offset>): Triangle? {

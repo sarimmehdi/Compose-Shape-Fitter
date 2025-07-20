@@ -1,17 +1,21 @@
-package com.sarim.compose_shape_fitter
+package com.sarim.compose_shape_fitter.shape
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import com.sarim.compose_shape_fitter.utils.OffsetParceler
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
 
 class EllipseShape(
     val color: Color,
     val strokeWidth: Float,
 ) : DrawableShape {
+    @Parcelize
     data class Ellipse(
-        val center: Offset,
+        val center: @WriteWith<OffsetParceler> Offset,
         val radiusX: Float,
         val radiusY: Float,
     ) : ApproximatedShape

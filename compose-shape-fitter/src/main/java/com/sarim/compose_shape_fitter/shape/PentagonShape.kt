@@ -1,21 +1,25 @@
-package com.sarim.compose_shape_fitter
+package com.sarim.compose_shape_fitter.shape
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import com.sarim.compose_shape_fitter.utils.OffsetParceler
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
 
 class PentagonShape(
     val color: Color,
     val strokeWidth: Float,
 ) : DrawableShape {
+    @Parcelize
     data class Pentagon(
-        val top: Offset,
-        val topLeft: Offset,
-        val topRight: Offset,
-        val bottomLeft: Offset,
-        val bottomRight: Offset,
+        val top: @WriteWith<OffsetParceler> Offset,
+        val topLeft: @WriteWith<OffsetParceler> Offset,
+        val topRight: @WriteWith<OffsetParceler> Offset,
+        val bottomLeft: @WriteWith<OffsetParceler> Offset,
+        val bottomRight: @WriteWith<OffsetParceler> Offset,
     ) : ApproximatedShape
 
     private fun findSmallestEnclosingPentagon(points: List<Offset>): Pentagon? {

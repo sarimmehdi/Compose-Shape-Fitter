@@ -6,18 +6,18 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performTouchInput
 import com.google.common.truth.Truth.assertThat
-import com.sarim.compose_shape_fitter.CircleShape
-import com.sarim.compose_shape_fitter.DrawableShape
-import com.sarim.compose_shape_fitter.DrawingScreen
-import com.sarim.compose_shape_fitter.EllipseShape
-import com.sarim.compose_shape_fitter.Event
-import com.sarim.compose_shape_fitter.HexagonShape
-import com.sarim.compose_shape_fitter.ObbShape
-import com.sarim.compose_shape_fitter.PentagonShape
-import com.sarim.compose_shape_fitter.RectangleShape
-import com.sarim.compose_shape_fitter.SkewedEllipseShape
-import com.sarim.compose_shape_fitter.SquareShape
-import com.sarim.compose_shape_fitter.TriangleShape
+import com.sarim.compose_shape_fitter.shape.CircleShape
+import com.sarim.compose_shape_fitter.shape.DrawableShape
+import com.sarim.compose_shape_fitter.shape.EllipseShape
+import com.sarim.compose_shape_fitter.shape.HexagonShape
+import com.sarim.compose_shape_fitter.shape.ObbShape
+import com.sarim.compose_shape_fitter.shape.PentagonShape
+import com.sarim.compose_shape_fitter.shape.RectangleShape
+import com.sarim.compose_shape_fitter.shape.SkewedEllipseShape
+import com.sarim.compose_shape_fitter.shape.SquareShape
+import com.sarim.compose_shape_fitter.shape.TriangleShape
+import com.sarim.composeshapefittersampleapp.presentation.DrawingScreen
+import com.sarim.composeshapefittersampleapp.presentation.component.Event
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -94,6 +94,7 @@ internal class DrawingScreenTest(
                         is Event.ApproximateShapeChangedEvent -> {
                             lastApproximateShape = event.approximateShape
                         }
+
                         is Event.PointsChangedEvent -> {
                             lastPoints = event.points
                         }
