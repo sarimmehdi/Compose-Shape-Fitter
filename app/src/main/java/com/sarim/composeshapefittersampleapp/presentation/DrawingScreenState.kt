@@ -13,7 +13,6 @@ import com.sarim.compose_shape_fitter.shape.RectangleShape
 import com.sarim.compose_shape_fitter.shape.SkewedEllipseShape
 import com.sarim.compose_shape_fitter.shape.SquareShape
 import com.sarim.compose_shape_fitter.shape.TriangleShape
-import com.sarim.composeshapefittersampleapp.R
 import com.sarim.composeshapefittersampleapp.domain.model.Shape
 import com.sarim.composeshapefittersampleapp.utils.OffsetParceler
 import kotlinx.collections.immutable.ImmutableList
@@ -23,10 +22,7 @@ import kotlinx.parcelize.WriteWith
 
 @Parcelize
 data class DrawingScreenState(
-    val selectedShape: Shape = Shape(
-        shapeType = Shape.Companion.ShapeType.Circle,
-        shapeStringId = R.string.circle
-    ),
+    val selectedShape: Shape = Shape.Circle,
     val allShapes: ImmutableList<Shape> = persistentListOf(),
     val isDragging: Boolean = false,
     val approximatedShape: ApproximatedShape? = null,
@@ -38,46 +34,46 @@ data class DrawingScreenState(
     val showSettingsDropDown: Boolean = false,
 ) : Parcelable {
     
-    fun getDrawableShape(color: Color, strokeWidth: Float) = when (selectedShape.shapeType) {
-        Shape.Companion.ShapeType.Circle -> CircleShape(
+    fun getDrawableShape(color: Color, strokeWidth: Float) = when (selectedShape) {
+        Shape.Circle -> CircleShape(
             color,
             strokeWidth,
         )
-        Shape.Companion.ShapeType.Ellipse -> EllipseShape(
+        Shape.Ellipse -> EllipseShape(
             color,
             strokeWidth,
         )
-        Shape.Companion.ShapeType.Hexagon -> HexagonShape(
+        Shape.Hexagon -> HexagonShape(
             color,
             strokeWidth,
         )
-        Shape.Companion.ShapeType.OrientedRectangle -> ObbShape(
+        Shape.OrientedRectangle -> ObbShape(
             color,
             strokeWidth,
             false
         )
-        Shape.Companion.ShapeType.OrientedSquare -> ObbShape(
+        Shape.OrientedSquare -> ObbShape(
             color,
             strokeWidth,
             true
         )
-        Shape.Companion.ShapeType.Pentagon -> PentagonShape(
+        Shape.Pentagon -> PentagonShape(
             color,
             strokeWidth,
         )
-        Shape.Companion.ShapeType.Rectangle -> RectangleShape(
+        Shape.Rectangle -> RectangleShape(
             color,
             strokeWidth,
         )
-        Shape.Companion.ShapeType.OrientedEllipse -> SkewedEllipseShape(
+        Shape.OrientedEllipse -> SkewedEllipseShape(
             color,
             strokeWidth,
         )
-        Shape.Companion.ShapeType.Square -> SquareShape(
+        Shape.Square -> SquareShape(
             color,
             strokeWidth,
         )
-        Shape.Companion.ShapeType.Triangle -> TriangleShape(
+        Shape.Triangle -> TriangleShape(
             color,
             strokeWidth,
         )

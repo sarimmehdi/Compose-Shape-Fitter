@@ -50,7 +50,7 @@ fun drawingScreenModule(
                 DrawingScreenUseCases(
                     getSettingsUseCase = GetSettingsUseCase(get()),
                     getSelectedShapeUseCase = GetSelectedShapeUseCase(get()),
-                    getAllShapesUseCase = GetAllShapesUseCase(get()),
+                    getAllShapesUseCase = GetAllShapesUseCase(),
                     updateSelectedShapeUseCase = UpdateSelectedShapeUseCase(get()),
                     updateSettingsUseCase = UpdateSettingsUseCase(get()),
                 ),

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -91,7 +90,7 @@ fun DrawingScreen(
                                 label = {
                                     Text(UiText.StringResource(shape.shapeStringId).asString())
                                 },
-                                selected = shape.shapeType == state.selectedShape.shapeType,
+                                selected = shape == state.selectedShape,
                                 onClick = {
                                     onEvent(
                                         DrawingScreenToViewModelEvents.SetSelectedShape(

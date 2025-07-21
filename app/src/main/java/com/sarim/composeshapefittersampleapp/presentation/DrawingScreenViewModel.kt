@@ -22,6 +22,10 @@ class DrawingScreenViewModel(
     val state = savedStateHandle.getStateFlow(DRAWING_SCREEN_STATE_KEY, DrawingScreenState())
 
     init {
+        savedStateHandle[DRAWING_SCREEN_STATE_KEY] = savedStateHandle
+            .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
+                allShapes = drawingScreenUseCases.getAllShapesUseCase().toImmutableList()
+            )
         viewModelScope.launch {
             drawingScreenUseCases.getSettingsUseCase().collectLatest {
                 when (it) {
@@ -52,39 +56,6 @@ class DrawingScreenViewModel(
                                 showFingerTracedLines = it.data.showFingerTracedLines,
                                 showApproximatedShape = it.data.showApproximatedShape,
                                 liveUpdateOfPoints = it.data.liveUpdateOfPoints,
-                            )
-                    }
-                }
-            }
-        }
-        viewModelScope.launch {
-            drawingScreenUseCases.getAllShapesUseCase().collectLatest {
-                when (it) {
-                    is Resource.Error -> {
-                        val message = it.message
-                        SnackBarController.sendEvent(
-                            event = SnackbarEvent(
-                                message = when (message) {
-                                    is MessageType.IntMessage -> UiText.StringResource(
-                                        message.message,
-                                        message.args
-                                    )
-
-                                    is MessageType.StringMessage -> UiText.StringResource(
-                                        R.string.unable_to_get_all_shapes,
-                                        message.message
-                                    )
-                                },
-                                action = SnackbarAction(
-                                    name = UiText.StringResource(R.string.error)
-                                )
-                            )
-                        )
-                    }
-                    is Resource.Success -> {
-                        savedStateHandle[DRAWING_SCREEN_STATE_KEY] = savedStateHandle
-                            .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
-                                allShapes = it.data.toImmutableList()
                             )
                     }
                 }

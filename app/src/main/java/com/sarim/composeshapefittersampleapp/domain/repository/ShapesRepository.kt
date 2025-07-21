@@ -8,7 +8,5 @@ interface ShapesRepository {
 
     val selectedShape: Flow<Resource<Shape>>
 
-    val allShapes: Flow<Resource<List<Shape>>>
-
     suspend fun updateSelectedShape(selectedShape: Shape): Resource<Boolean>
 }

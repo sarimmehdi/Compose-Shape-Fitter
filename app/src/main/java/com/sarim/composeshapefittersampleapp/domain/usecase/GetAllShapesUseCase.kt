@@ -1,10 +1,8 @@
 package com.sarim.composeshapefittersampleapp.domain.usecase
 
-import com.sarim.composeshapefittersampleapp.domain.repository.ShapesRepository
+import com.sarim.composeshapefittersampleapp.domain.model.Shape
 
-class GetAllShapesUseCase(
-    val repository: ShapesRepository
-) {
+class GetAllShapesUseCase {
 
-    operator fun invoke() = repository.allShapes
+    operator fun invoke() = Shape.entries
 }

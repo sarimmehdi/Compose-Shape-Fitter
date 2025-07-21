@@ -11,12 +11,13 @@ junitVersion = "4.13.2"
 assertJVersion = "3.27.3"
 truthVersion = "1.4.4"
 roboelectricVersion = "4.15.1"
-vanniktechVersion = "0.33.0"
+vanniktechVersion = "0.34.0"
 preferencesDataStoreVersion = "1.1.7"
 kotlinxSerializationVersion = "1.9.0"
 kotlinxImmutableCollectionsVersion = "0.4.0"
 koinBomVersion = "4.1.0"
 navigationVersion = "2.9.2"
+kotestVersion = "6.0.0.M5"
 
 [libraries]
 androidxCoreKtxLibrary = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtxVersion" }
@@ -33,6 +34,7 @@ composeJunit4Library = { group = "androidx.compose.ui", name = "ui-test-junit4" 
 junitLibrary = { group = "junit", name = "junit", version.ref = "junitVersion" }
 truthLibrary = { group = "com.google.truth", name = "truth", version.ref = "truthVersion" }
 assertJLibrary = { group = "org.assertj", name = "assertj-core", version.ref = "assertJVersion" }
+kotestPropertyLibrary = { group = "io.kotest", name = "kotest-property", version.ref = "kotestVersion" }
 roboelectricLibrary = { group = "org.robolectric", name = "robolectric", version.ref = "roboelectricVersion" }
 dataStoreLibrary = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "preferencesDataStoreVersion" }
 kotlinxSerializationLibrary = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationVersion" }
@@ -62,6 +64,7 @@ testBundle = [
     "junitLibrary",
     "truthLibrary",
     "assertJLibrary",
+    "kotestPropertyLibrary",
     "roboelectricLibrary",
 ]
 koinBundle = [

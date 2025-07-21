@@ -1,26 +1,16 @@
 package com.sarim.composeshapefittersampleapp.domain.model
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import com.sarim.composeshapefittersampleapp.R
 
-@Parcelize
-data class Shape(
-    val shapeType: ShapeType,
-    val shapeStringId: Int,
-) : Parcelable {
-
-    companion object {
-        enum class ShapeType {
-            Circle,
-            Ellipse,
-            Hexagon,
-            OrientedRectangle,
-            OrientedSquare,
-            Pentagon,
-            Rectangle,
-            OrientedEllipse,
-            Square,
-            Triangle
-        }
-    }
+enum class Shape(val shapeStringId: Int) {
+    Circle(R.string.circle),
+    Ellipse(R.string.ellipse),
+    Hexagon(R.string.hexagon),
+    OrientedRectangle(R.string.oriented_rectangle),
+    OrientedSquare(R.string.oriented_square),
+    Pentagon(R.string.pentagon),
+    Rectangle(R.string.rectangle),
+    OrientedEllipse(R.string.oriented_ellipse),
+    Square(R.string.square),
+    Triangle(R.string.triangle)
 }
