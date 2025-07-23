@@ -7,11 +7,9 @@ import kotlinx.serialization.Serializable
 data class SettingsDto(
     val showFingerTracedLines: Boolean = true,
     val showApproximatedShape: Boolean = true,
-    val liveUpdateOfPoints: Boolean = true,
 )
 
 fun SettingsDto.toSettings() = Settings(
     showFingerTracedLines = showFingerTracedLines,
     showApproximatedShape = showApproximatedShape,
-    liveUpdateOfPoints = liveUpdateOfPoints,
 )

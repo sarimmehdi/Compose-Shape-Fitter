@@ -30,7 +30,6 @@ data class DrawingScreenState(
     val lines: ImmutableList<Pair<@WriteWith<OffsetParceler> Offset, @WriteWith<OffsetParceler> Offset>> = persistentListOf(),
     val showFingerTracedLines: Boolean = true,
     val showApproximatedShape: Boolean = true,
-    val liveUpdateOfPoints: Boolean = true,
     val showSettingsDropDown: Boolean = false,
 ) : Parcelable {
     

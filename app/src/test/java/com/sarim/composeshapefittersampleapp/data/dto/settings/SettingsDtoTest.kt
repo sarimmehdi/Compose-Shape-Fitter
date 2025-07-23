@@ -40,21 +40,17 @@ class SettingsDtoTest(
 
             val testDataExhaustive: Exhaustive<TestData> =
                 booleanExhaustive.flatMap { showFingerTracedLines ->
-                    booleanExhaustive.flatMap { showApproximatedShape ->
-                        booleanExhaustive.map { liveUpdateOfPoints ->
-                            TestData(
-                                input = SettingsDto(
-                                    showFingerTracedLines = showFingerTracedLines,
-                                    showApproximatedShape = showApproximatedShape,
-                                    liveUpdateOfPoints = liveUpdateOfPoints
-                                ),
-                                expectedOutput = Settings(
-                                    showFingerTracedLines = showFingerTracedLines,
-                                    showApproximatedShape = showApproximatedShape,
-                                    liveUpdateOfPoints = liveUpdateOfPoints
-                                )
+                    booleanExhaustive.map { showApproximatedShape ->
+                        TestData(
+                            input = SettingsDto(
+                                showFingerTracedLines = showFingerTracedLines,
+                                showApproximatedShape = showApproximatedShape,
+                            ),
+                            expectedOutput = Settings(
+                                showFingerTracedLines = showFingerTracedLines,
+                                showApproximatedShape = showApproximatedShape,
                             )
-                        }
+                        )
                     }
                 }
 

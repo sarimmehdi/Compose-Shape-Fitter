@@ -55,7 +55,6 @@ class DrawingScreenViewModel(
                             .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
                                 showFingerTracedLines = it.data.showFingerTracedLines,
                                 showApproximatedShape = it.data.showApproximatedShape,
-                                liveUpdateOfPoints = it.data.liveUpdateOfPoints,
                             )
                     }
                 }
@@ -118,17 +117,14 @@ class DrawingScreenViewModel(
             is DrawingScreenToViewModelEvents.UpdateLines -> {
                 savedStateHandle[DRAWING_SCREEN_STATE_KEY] = savedStateHandle
                     .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
-                        lines = (state.value.lines + event.lines).toImmutableList()
+                        lines = (state.value.lines + event.line).toImmutableList()
                     )
             }
             is DrawingScreenToViewModelEvents.UpdatePoints -> {
                 savedStateHandle[DRAWING_SCREEN_STATE_KEY] = savedStateHandle
                     .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
-                        points = (state.value.points + event.points).toImmutableList()
+                        points = (state.value.points + event.point).toImmutableList()
                     )
-                if (state.value.liveUpdateOfPoints) {
-                    println("number of points: ${event.points.size}, values: ${event.points}")
-                }
             }
             is DrawingScreenToViewModelEvents.SetLines -> {
                 savedStateHandle[DRAWING_SCREEN_STATE_KEY] = savedStateHandle
@@ -141,9 +137,6 @@ class DrawingScreenViewModel(
                     .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
                         points = event.points
                     )
-                if (state.value.liveUpdateOfPoints) {
-                    println("number of points: ${event.points.size}, values: ${event.points}")
-                }
             }
             is DrawingScreenToViewModelEvents.ToggleSettings -> {
                 when (event.type) {
@@ -157,12 +150,6 @@ class DrawingScreenViewModel(
                         savedStateHandle[DRAWING_SCREEN_STATE_KEY] = savedStateHandle
                             .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
                                 showApproximatedShape = !state.value.showApproximatedShape
-                            )
-                    }
-                    DrawingScreenToViewModelEvents.ToggleSettings.Type.LIVE_UPDATE_OF_POINTS -> {
-                        savedStateHandle[DRAWING_SCREEN_STATE_KEY] = savedStateHandle
-                            .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
-                                liveUpdateOfPoints = !state.value.liveUpdateOfPoints
                             )
                     }
                 }

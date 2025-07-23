@@ -36,7 +36,6 @@ class SettingsRepositoryImpl(
             it.copy(
                 showFingerTracedLines = settings.showFingerTracedLines,
                 showApproximatedShape = settings.showApproximatedShape,
-                liveUpdateOfPoints = settings.liveUpdateOfPoints,
             )
         }
         Resource.Success(true)

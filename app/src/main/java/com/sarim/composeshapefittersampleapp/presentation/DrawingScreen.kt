@@ -170,25 +170,6 @@ fun DrawingScreen(
                                     }
                                 }
                             )
-                            DropdownMenuItem(
-                                text = { Text(UiText.StringResource(R.string.points_live_update).asString()) },
-                                onClick = {
-                                    onEvent(
-                                        DrawingScreenToViewModelEvents.ToggleSettings(
-                                            DrawingScreenToViewModelEvents.ToggleSettings.Type.LIVE_UPDATE_OF_POINTS
-                                        )
-                                    )
-                                    onEvent(DrawingScreenToViewModelEvents.ToggleSettingsDropDown)
-                                },
-                                trailingIcon = {
-                                    if (state.liveUpdateOfPoints) {
-                                        Icon(
-                                            Icons.Filled.Check,
-                                            contentDescription = UiText.StringResource(R.string.settings).asString()
-                                        )
-                                    }
-                                }
-                            )
                         }
                     },
                     colors =

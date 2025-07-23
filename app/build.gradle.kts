@@ -51,9 +51,7 @@ android {
         unitTests {
             isIncludeAndroidResources = true
             all { test ->
-                // Target all unit tests
                 test.testLogging {
-                    // Show standard out and standard error of the test JVM(s).
                     showStandardStreams = true
 
                     events("started", "passed", "skipped", "failed", "standard_out", "standard_error")

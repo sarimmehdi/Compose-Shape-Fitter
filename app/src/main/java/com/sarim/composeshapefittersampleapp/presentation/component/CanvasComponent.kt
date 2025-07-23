@@ -13,13 +13,12 @@ import com.sarim.compose_shape_fitter.shape.DrawableShape
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenToViewModelEvents
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun CanvasComponent(
     data: CanvasComponentData,
-    modifier: Modifier = Modifier,
     onEvent: (DrawingScreenToViewModelEvents) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Canvas(
         modifier =
@@ -36,15 +35,12 @@ fun CanvasComponent(
                             change.consume()
                             val start = change.position - dragAmount
                             val end = change.position
-                            onEvent(DrawingScreenToViewModelEvents.UpdateLines(
-                                (data.lines + (start to end)).toPersistentList())
-                            )
-                            onEvent(DrawingScreenToViewModelEvents.UpdatePoints(
-                                (data.points + end).toPersistentList())
-                            )
+                            onEvent(DrawingScreenToViewModelEvents.UpdateLines(start to end))
+                            onEvent(DrawingScreenToViewModelEvents.UpdatePoints(end))
                         },
                         onDragEnd = {
                             onEvent(DrawingScreenToViewModelEvents.SetDragging(false))
+                            println()
                             if (data.points.isNotEmpty()) {
                                 onEvent(
                                     DrawingScreenToViewModelEvents.SetApproximateShape(
