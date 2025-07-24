@@ -19,6 +19,7 @@ koinBomVersion = "4.1.0"
 navigationVersion = "2.9.2"
 kotestVersion = "6.0.0.M5"
 mockkVersion = "1.14.5"
+turbineVersion = "1.2.1"
 
 [libraries]
 androidxCoreKtxLibrary = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtxVersion" }
@@ -38,6 +39,7 @@ assertJLibrary = { group = "org.assertj", name = "assertj-core", version.ref = "
 kotestPropertyLibrary = { group = "io.kotest", name = "kotest-property", version.ref = "kotestVersion" }
 mockkAndroidLibrary = { group = "io.mockk", name = "mockk-android", version.ref = "mockkVersion" }
 mockkAgentLibrary = { group = "io.mockk", name = "mockk-agent", version.ref = "mockkVersion" }
+turbineLibrary = { group = "app.cash.turbine", name = "turbine", version.ref = "turbineVersion" }
 roboelectricLibrary = { group = "org.robolectric", name = "robolectric", version.ref = "roboelectricVersion" }
 dataStoreLibrary = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "preferencesDataStoreVersion" }
 kotlinxSerializationLibrary = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationVersion" }
@@ -70,6 +72,7 @@ testBundle = [
     "kotestPropertyLibrary",
     "mockkAndroidLibrary",
     "mockkAgentLibrary",
+    "turbineLibrary",
     "roboelectricLibrary",
 ]
 koinBundle = [

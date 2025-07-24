@@ -164,6 +164,6 @@ class DrawingScreenViewModel(
     }
 
     companion object {
-        private const val DRAWING_SCREEN_STATE_KEY = "DRAWING_SCREEN_STATE_KEY"
+        const val DRAWING_SCREEN_STATE_KEY = "DRAWING_SCREEN_STATE_KEY"
     }
 }

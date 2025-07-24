@@ -82,6 +82,7 @@ dependencies {
     implementation(platform(libs.androidxComposeBomLibrary))
     implementation(libs.bundles.composeImplementationBundle)
     implementation(libs.bundles.dataStorageBundle)
+    implementation(kotlin("reflect"))
     debugImplementation(libs.bundles.composeDebugImplementationBundle)
     testImplementation(platform(libs.androidxComposeBomLibrary))
     testImplementation(libs.composeJunit4Library)
