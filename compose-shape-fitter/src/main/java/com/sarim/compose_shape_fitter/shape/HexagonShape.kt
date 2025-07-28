@@ -43,7 +43,6 @@ class HexagonShape(
             val radiusBasedOnHeight = if (rectHeight > 0) rectHeight / 2f else 0f
             val radius = min(radiusBasedOnWidth, radiusBasedOnHeight)
 
-
             if (radius <= 0f) {
                 hexagon = Hexagon(center, List(HEXAGON_TOTAL_VERTICES) { center })
             } else {

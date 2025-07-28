@@ -8,7 +8,6 @@ import java.io.InputStream
 import java.io.OutputStream
 
 object SettingsDtoSerializer : Serializer<SettingsDto> {
-
     const val SETTINGS_DTO_DATA_STORE_NAME = "SettingsDto.json"
 
     override val defaultValue: SettingsDto
@@ -18,7 +17,7 @@ object SettingsDtoSerializer : Serializer<SettingsDto> {
         try {
             return Json.decodeFromString(
                 SettingsDto.serializer(),
-                input.readBytes().decodeToString()
+                input.readBytes().decodeToString(),
             )
         } catch (serialization: SerializationException) {
             throw CorruptionException("Unable to read SettingsDto", serialization)
@@ -27,11 +26,12 @@ object SettingsDtoSerializer : Serializer<SettingsDto> {
 
     override suspend fun writeTo(
         t: SettingsDto,
-        output: OutputStream
+        output: OutputStream,
     ) {
         output.write(
-            Json.encodeToString(SettingsDto.serializer(), t)
-                .encodeToByteArray()
+            Json
+                .encodeToString(SettingsDto.serializer(), t)
+                .encodeToByteArray(),
         )
     }
 }

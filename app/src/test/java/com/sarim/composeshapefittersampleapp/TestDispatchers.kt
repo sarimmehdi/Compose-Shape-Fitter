@@ -7,7 +7,7 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher
 
 @ExperimentalCoroutinesApi
-class TestDispatchers: DispatcherProvider {
+class TestDispatchers : DispatcherProvider {
     val testDispatcher: TestDispatcher = StandardTestDispatcher()
     override val main: CoroutineDispatcher
         get() = testDispatcher

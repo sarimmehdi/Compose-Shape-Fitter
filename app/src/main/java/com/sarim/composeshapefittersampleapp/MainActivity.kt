@@ -32,7 +32,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ComposeShapeFitterSampleAppTheme {
-
                 val snackbarHostState =
                     remember {
                         SnackbarHostState()
@@ -70,7 +69,7 @@ class MainActivity : ComponentActivity() {
                             val drawingScreenState by drawingScreenViewModel.state.collectAsStateWithLifecycle()
                             DrawingScreen(
                                 state = drawingScreenState,
-                                onEvent = drawingScreenViewModel::onEvent
+                                onEvent = drawingScreenViewModel::onEvent,
                             )
                         }
                     }

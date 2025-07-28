@@ -21,8 +21,8 @@ class MainApplication :
             androidContext(this@MainApplication)
             lazyModules(
                 drawingScreenActualModule(
-                    named(DrawingFeature::class.java.simpleName)
-                )
+                    named(DrawingFeature::class.java.simpleName),
+                ),
             )
         }
 }

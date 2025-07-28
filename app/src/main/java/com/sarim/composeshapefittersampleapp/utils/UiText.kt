@@ -14,7 +14,6 @@ sealed class UiText {
         @param:StringRes val resId: Int,
         vararg val args: Any,
     ) : UiText() {
-
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (javaClass != other?.javaClass) return false

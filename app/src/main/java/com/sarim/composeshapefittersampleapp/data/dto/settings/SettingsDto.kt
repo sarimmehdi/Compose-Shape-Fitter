@@ -9,7 +9,8 @@ data class SettingsDto(
     val showApproximatedShape: Boolean = true,
 )
 
-fun SettingsDto.toSettings() = Settings(
-    showFingerTracedLines = showFingerTracedLines,
-    showApproximatedShape = showApproximatedShape,
-)
+fun SettingsDto.toSettings() =
+    Settings(
+        showFingerTracedLines = showFingerTracedLines,
+        showApproximatedShape = showApproximatedShape,
+    )

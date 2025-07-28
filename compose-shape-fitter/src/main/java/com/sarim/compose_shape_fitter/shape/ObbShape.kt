@@ -122,18 +122,20 @@ class ObbShape(
                 } else {
                     println(
                         "Native method returned invalid ellipse radii for OBB: " +
-                                "rX=$ellipseRadiusX, rY=$ellipseRadiusY"
+                            "rX=$ellipseRadiusX, rY=$ellipseRadiusY",
                     )
                 }
             } else {
                 println(
                     "Native method 'fitEllipseNative' returned null or an array of unexpected size " +
-                            "for OBB: ${ellipseParamsArray?.size ?: "null"}. Expected $MAX_ELLIPSE_PARAMS."
+                        "for OBB: ${ellipseParamsArray?.size ?: "null"}. Expected $MAX_ELLIPSE_PARAMS.",
                 )
             }
         } catch (e: UnsatisfiedLinkError) {
             println("JNI UnsatisfiedLinkError in findOBBForFittedEllipse: ${e.message}")
-        } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
+        } catch (
+            @Suppress("TooGenericExceptionCaught") e: Exception,
+        ) {
             println("Exception during JNI ellipse fitting for OBB: ${e.message}")
         }
 

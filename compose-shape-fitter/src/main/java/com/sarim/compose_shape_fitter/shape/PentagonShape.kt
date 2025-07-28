@@ -32,18 +32,21 @@ class PentagonShape(
 
         if (boundingRectangle != null) {
             val rectTopLeft = boundingRectangle.topLeft
-            val rectTopRight = Offset(
-                boundingRectangle.topLeft.x + boundingRectangle.width,
-                boundingRectangle.topLeft.y
-            )
-            val rectBottomLeft = Offset(
-                boundingRectangle.topLeft.x,
-                boundingRectangle.topLeft.y + boundingRectangle.height
-            )
-            val rectBottomRight = Offset(
-                boundingRectangle.topLeft.x + boundingRectangle.width,
-                boundingRectangle.topLeft.y + boundingRectangle.height
-            )
+            val rectTopRight =
+                Offset(
+                    boundingRectangle.topLeft.x + boundingRectangle.width,
+                    boundingRectangle.topLeft.y,
+                )
+            val rectBottomLeft =
+                Offset(
+                    boundingRectangle.topLeft.x,
+                    boundingRectangle.topLeft.y + boundingRectangle.height,
+                )
+            val rectBottomRight =
+                Offset(
+                    boundingRectangle.topLeft.x + boundingRectangle.width,
+                    boundingRectangle.topLeft.y + boundingRectangle.height,
+                )
             val rectWidth = boundingRectangle.width
             val rectHeight = boundingRectangle.height
 
@@ -64,13 +67,14 @@ class PentagonShape(
             val pentagonBottomLeft = rectBottomLeft
             val pentagonBottomRight = rectBottomRight
 
-            pentagon = Pentagon(
-                top = pentagonTop,
-                topLeft = pentagonTopLeftShoulder,
-                topRight = pentagonTopRightShoulder,
-                bottomLeft = pentagonBottomLeft,
-                bottomRight = pentagonBottomRight,
-            )
+            pentagon =
+                Pentagon(
+                    top = pentagonTop,
+                    topLeft = pentagonTopLeftShoulder,
+                    topRight = pentagonTopRightShoulder,
+                    bottomLeft = pentagonBottomLeft,
+                    bottomRight = pentagonBottomRight,
+                )
         }
 
         return pentagon

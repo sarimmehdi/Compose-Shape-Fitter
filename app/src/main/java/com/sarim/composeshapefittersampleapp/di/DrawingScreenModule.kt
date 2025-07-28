@@ -24,23 +24,25 @@ import org.koin.dsl.lazyModule
 fun drawingScreenModule(
     shapeDtoDataStoreName: String,
     settingsDtoDataStoreName: String,
-    scope: StringQualifier
+    scope: StringQualifier,
 ) = lazyModule {
     single<ShapesRepository> {
         ShapesRepositoryImpl(
-            dataStore = DataStoreFactory.create(
-                serializer = ShapeDtoSerializer,
-                produceFile = { androidContext().dataStoreFile(shapeDtoDataStoreName) },
-            ),
+            dataStore =
+                DataStoreFactory.create(
+                    serializer = ShapeDtoSerializer,
+                    produceFile = { androidContext().dataStoreFile(shapeDtoDataStoreName) },
+                ),
         )
     }
 
     single<SettingsRepository> {
         SettingsRepositoryImpl(
-            dataStore = DataStoreFactory.create(
-                serializer = SettingsDtoSerializer,
-                produceFile = { androidContext().dataStoreFile(settingsDtoDataStoreName) },
-            ),
+            dataStore =
+                DataStoreFactory.create(
+                    serializer = SettingsDtoSerializer,
+                    produceFile = { androidContext().dataStoreFile(settingsDtoDataStoreName) },
+                ),
         )
     }
 
@@ -60,9 +62,9 @@ fun drawingScreenModule(
     }
 }
 
-fun drawingScreenActualModule(scopeQualifier: StringQualifier) = drawingScreenModule(
-    shapeDtoDataStoreName = ShapeDtoSerializer.SHAPE_DTO_DATA_STORE_NAME,
-    settingsDtoDataStoreName = SettingsDtoSerializer.SETTINGS_DTO_DATA_STORE_NAME,
-    scope = scopeQualifier
-)
-
+fun drawingScreenActualModule(scopeQualifier: StringQualifier) =
+    drawingScreenModule(
+        shapeDtoDataStoreName = ShapeDtoSerializer.SHAPE_DTO_DATA_STORE_NAME,
+        settingsDtoDataStoreName = SettingsDtoSerializer.SETTINGS_DTO_DATA_STORE_NAME,
+        scope = scopeQualifier,
+    )

@@ -15,13 +15,11 @@ class CircleShape(
     val color: Color,
     val strokeWidth: Float,
 ) : DrawableShape {
-
     @Parcelize
     data class Circle(
         val center: @WriteWith<OffsetParceler> Offset,
         val radius: Float,
     ) : ApproximatedShape
-
 
     private fun findSmallestEnclosingCircle(points: List<Offset>): Circle? {
         var circle: Circle?

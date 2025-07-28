@@ -44,8 +44,8 @@ fun CanvasComponent(
                             if (data.points.isNotEmpty()) {
                                 onEvent(
                                     DrawingScreenToViewModelEvents.SetApproximateShape(
-                                        data.drawableShape.getApproximatedShape(data.points)
-                                    )
+                                        data.drawableShape.getApproximatedShape(data.points),
+                                    ),
                                 )
                             }
                         },

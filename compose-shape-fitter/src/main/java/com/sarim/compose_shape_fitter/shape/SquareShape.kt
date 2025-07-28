@@ -23,10 +23,11 @@ class SquareShape(
             val squareSideLength = max(enclosingRectangle.width, enclosingRectangle.height)
 
             if (squareSideLength <= 0f) {
-                square = RectangleShape.Rectangle(
-                    enclosingRectangle.topLeft,
-                    enclosingRectangle.topLeft
-                )
+                square =
+                    RectangleShape.Rectangle(
+                        enclosingRectangle.topLeft,
+                        enclosingRectangle.topLeft,
+                    )
             } else {
                 val rectCenter = enclosingRectangle.center
 
@@ -36,10 +37,11 @@ class SquareShape(
                 val squareBottomRightX = squareTopLeftX + squareSideLength
                 val squareBottomRightY = squareTopLeftY + squareSideLength
 
-                square = RectangleShape.Rectangle(
-                    topLeft = Offset(squareTopLeftX, squareTopLeftY),
-                    bottomRight = Offset(squareBottomRightX, squareBottomRightY),
-                )
+                square =
+                    RectangleShape.Rectangle(
+                        topLeft = Offset(squareTopLeftX, squareTopLeftY),
+                        bottomRight = Offset(squareBottomRightX, squareBottomRightY),
+                    )
             }
         }
         return square

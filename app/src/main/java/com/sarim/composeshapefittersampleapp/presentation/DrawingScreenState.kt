@@ -32,49 +32,61 @@ data class DrawingScreenState(
     val showApproximatedShape: Boolean = true,
     val showSettingsDropDown: Boolean = false,
 ) : Parcelable {
-    
-    fun getDrawableShape(color: Color, strokeWidth: Float) = when (selectedShape) {
-        Shape.Circle -> CircleShape(
-            color,
-            strokeWidth,
-        )
-        Shape.Ellipse -> EllipseShape(
-            color,
-            strokeWidth,
-        )
-        Shape.Hexagon -> HexagonShape(
-            color,
-            strokeWidth,
-        )
-        Shape.OrientedRectangle -> ObbShape(
-            color,
-            strokeWidth,
-            false
-        )
-        Shape.OrientedSquare -> ObbShape(
-            color,
-            strokeWidth,
-            true
-        )
-        Shape.Pentagon -> PentagonShape(
-            color,
-            strokeWidth,
-        )
-        Shape.Rectangle -> RectangleShape(
-            color,
-            strokeWidth,
-        )
-        Shape.OrientedEllipse -> SkewedEllipseShape(
-            color,
-            strokeWidth,
-        )
-        Shape.Square -> SquareShape(
-            color,
-            strokeWidth,
-        )
-        Shape.Triangle -> TriangleShape(
-            color,
-            strokeWidth,
-        )
+    fun getDrawableShape(
+        color: Color,
+        strokeWidth: Float,
+    ) = when (selectedShape) {
+        Shape.Circle ->
+            CircleShape(
+                color,
+                strokeWidth,
+            )
+        Shape.Ellipse ->
+            EllipseShape(
+                color,
+                strokeWidth,
+            )
+        Shape.Hexagon ->
+            HexagonShape(
+                color,
+                strokeWidth,
+            )
+        Shape.OrientedRectangle ->
+            ObbShape(
+                color,
+                strokeWidth,
+                false,
+            )
+        Shape.OrientedSquare ->
+            ObbShape(
+                color,
+                strokeWidth,
+                true,
+            )
+        Shape.Pentagon ->
+            PentagonShape(
+                color,
+                strokeWidth,
+            )
+        Shape.Rectangle ->
+            RectangleShape(
+                color,
+                strokeWidth,
+            )
+        Shape.OrientedEllipse ->
+            SkewedEllipseShape(
+                color,
+                strokeWidth,
+            )
+        Shape.Square ->
+            SquareShape(
+                color,
+                strokeWidth,
+            )
+        Shape.Triangle ->
+            TriangleShape(
+                color,
+                strokeWidth,
+            )
     }
 }

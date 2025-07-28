@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlinSerializationPlugin)
     alias(libs.plugins.ktlintPlugin)
     alias(libs.plugins.detektPlugin)
+    alias(libs.plugins.spotlessPlugin)
     id("kotlin-parcelize")
 }
 
@@ -69,6 +70,15 @@ ktlint {
         reporter(ReporterType.PLAIN)
         reporter(ReporterType.CHECKSTYLE)
         reporter(ReporterType.SARIF)
+    }
+}
+
+spotless {
+    kotlin {
+        target("src/**/*.kt")
+        ktlint().setEditorConfigPath("${project.rootDir}/.editorconfig")
+        trimTrailingWhitespace()
+        endWithNewline()
     }
 }
 

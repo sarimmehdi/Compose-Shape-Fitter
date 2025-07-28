@@ -8,7 +8,6 @@ import java.io.InputStream
 import java.io.OutputStream
 
 object ShapeDtoSerializer : Serializer<ShapeDto> {
-
     const val SHAPE_DTO_DATA_STORE_NAME = "ShapeDto.json"
 
     override val defaultValue: ShapeDto
@@ -18,7 +17,7 @@ object ShapeDtoSerializer : Serializer<ShapeDto> {
         try {
             return Json.decodeFromString(
                 ShapeDto.serializer(),
-                input.readBytes().decodeToString()
+                input.readBytes().decodeToString(),
             )
         } catch (serialization: SerializationException) {
             throw CorruptionException("Unable to read ShapeDto", serialization)
@@ -27,11 +26,12 @@ object ShapeDtoSerializer : Serializer<ShapeDto> {
 
     override suspend fun writeTo(
         t: ShapeDto,
-        output: OutputStream
+        output: OutputStream,
     ) {
         output.write(
-            Json.encodeToString(ShapeDto.serializer(), t)
-                .encodeToByteArray()
+            Json
+                .encodeToString(ShapeDto.serializer(), t)
+                .encodeToByteArray(),
         )
     }
 }

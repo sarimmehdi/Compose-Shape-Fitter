@@ -30,19 +30,20 @@ class TriangleShape(
 
         if (boundingRectangle != null) {
             val rectTopLeft = boundingRectangle.topLeft
-            val rectTopRight = Offset(
-                boundingRectangle.topLeft.x + boundingRectangle.width,
-                boundingRectangle.topLeft.y
-            )
-            val rectBottomLeft = Offset(
-                boundingRectangle.topLeft.x,
-                boundingRectangle.topLeft.y + boundingRectangle.height
-            )
+            val rectTopRight =
+                Offset(
+                    boundingRectangle.topLeft.x + boundingRectangle.width,
+                    boundingRectangle.topLeft.y,
+                )
+            val rectBottomLeft =
+                Offset(
+                    boundingRectangle.topLeft.x,
+                    boundingRectangle.topLeft.y + boundingRectangle.height,
+                )
 
             val topMiddle = Offset((rectTopLeft.x + rectTopRight.x) / 2, rectTopLeft.y)
             val bottomLeft = rectBottomLeft
             val bottomRight = Offset(rectTopRight.x, rectBottomLeft.y)
-
 
             triangle = Triangle(topMiddle, bottomLeft, bottomRight)
         }

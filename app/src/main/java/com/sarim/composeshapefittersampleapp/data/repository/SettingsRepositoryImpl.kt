@@ -13,37 +13,40 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 class SettingsRepositoryImpl(
-    private val dataStore: DataStore<SettingsDto>
+    private val dataStore: DataStore<SettingsDto>,
 ) : SettingsRepository {
-
     override val settings: Flow<Resource<Settings>>
-        get() = try {
-            dataStore.data.map {
-                Resource.Success(it.toSettings())
-            }
-        } catch (e: Exception) {
-            flowOf(
-                Resource.Error(
-                    message = e.localizedMessage?.let {
-                        MessageType.StringMessage(it)
-                    } ?: MessageType.IntMessage(R.string.unknown_reason_exception, e)
+        get() =
+            try {
+                dataStore.data.map {
+                    Resource.Success(it.toSettings())
+                }
+            } catch (e: Exception) {
+                flowOf(
+                    Resource.Error(
+                        message =
+                            e.localizedMessage?.let {
+                                MessageType.StringMessage(it)
+                            } ?: MessageType.IntMessage(R.string.unknown_reason_exception, e),
+                    ),
                 )
-            )
-        }
+            }
 
-    override suspend fun updateSettings(settings: Settings) = try {
-        dataStore.updateData {
-            it.copy(
-                showFingerTracedLines = settings.showFingerTracedLines,
-                showApproximatedShape = settings.showApproximatedShape,
+    override suspend fun updateSettings(settings: Settings) =
+        try {
+            dataStore.updateData {
+                it.copy(
+                    showFingerTracedLines = settings.showFingerTracedLines,
+                    showApproximatedShape = settings.showApproximatedShape,
+                )
+            }
+            Resource.Success(true)
+        } catch (e: Exception) {
+            Resource.Error(
+                message =
+                    e.localizedMessage?.let {
+                        MessageType.StringMessage(it)
+                    } ?: MessageType.IntMessage(R.string.unknown_reason_exception, e),
             )
         }
-        Resource.Success(true)
-    } catch (e: Exception) {
-        Resource.Error(
-            message = e.localizedMessage?.let {
-                MessageType.StringMessage(it)
-            } ?: MessageType.IntMessage(R.string.unknown_reason_exception, e)
-        )
-    }
 }

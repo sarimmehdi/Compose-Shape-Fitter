@@ -54,7 +54,7 @@ const val DEFAULT_STROKE_WIDTH = 5f
 fun DrawingScreen(
     state: DrawingScreenState,
     onEvent: (DrawingScreenToViewModelEvents) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -75,7 +75,7 @@ fun DrawingScreen(
                         Text(
                             UiText.StringResource(R.string.select_shape).asString(),
                             fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                     HorizontalDivider(
@@ -94,8 +94,8 @@ fun DrawingScreen(
                                 onClick = {
                                     onEvent(
                                         DrawingScreenToViewModelEvents.SetSelectedShape(
-                                            selectedShape = shape
-                                        )
+                                            selectedShape = shape,
+                                        ),
                                     )
                                     scope.launch { drawerState.close() }
                                 },
@@ -115,30 +115,31 @@ fun DrawingScreen(
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
                             Icon(
                                 Icons.Filled.Menu,
-                                contentDescription = UiText.StringResource(R.string.open_drawer).asString()
+                                contentDescription = UiText.StringResource(R.string.open_drawer).asString(),
                             )
                         }
                     },
-                    actions = { // Add the actions parameter here
+                    actions = {
+                        // Add the actions parameter here
                         IconButton(onClick = {
                             onEvent(DrawingScreenToViewModelEvents.ToggleSettingsDropDown)
                         }) {
                             Icon(
                                 imageVector = Icons.Filled.Settings,
-                                contentDescription = UiText.StringResource(R.string.settings).asString()
+                                contentDescription = UiText.StringResource(R.string.settings).asString(),
                             )
                         }
                         DropdownMenu(
                             expanded = state.showSettingsDropDown,
-                            onDismissRequest = { onEvent(DrawingScreenToViewModelEvents.ToggleSettingsDropDown) }
+                            onDismissRequest = { onEvent(DrawingScreenToViewModelEvents.ToggleSettingsDropDown) },
                         ) {
                             DropdownMenuItem(
                                 text = { Text(UiText.StringResource(R.string.finger_traced_lines).asString()) },
                                 onClick = {
                                     onEvent(
                                         DrawingScreenToViewModelEvents.ToggleSettings(
-                                            DrawingScreenToViewModelEvents.ToggleSettings.Type.SHOW_FINGER_TRACED_LINES
-                                        )
+                                            DrawingScreenToViewModelEvents.ToggleSettings.Type.SHOW_FINGER_TRACED_LINES,
+                                        ),
                                     )
                                     onEvent(DrawingScreenToViewModelEvents.ToggleSettingsDropDown)
                                 },
@@ -146,18 +147,18 @@ fun DrawingScreen(
                                     if (state.showFingerTracedLines) {
                                         Icon(
                                             Icons.Filled.Check,
-                                            contentDescription = UiText.StringResource(R.string.settings).asString()
+                                            contentDescription = UiText.StringResource(R.string.settings).asString(),
                                         )
                                     }
-                                }
+                                },
                             )
                             DropdownMenuItem(
                                 text = { Text(UiText.StringResource(R.string.approximated_shape).asString()) },
                                 onClick = {
                                     onEvent(
                                         DrawingScreenToViewModelEvents.ToggleSettings(
-                                            DrawingScreenToViewModelEvents.ToggleSettings.Type.SHOW_APPROXIMATED_SHAPE
-                                        )
+                                            DrawingScreenToViewModelEvents.ToggleSettings.Type.SHOW_APPROXIMATED_SHAPE,
+                                        ),
                                     )
                                     onEvent(DrawingScreenToViewModelEvents.ToggleSettingsDropDown)
                                 },
@@ -165,10 +166,10 @@ fun DrawingScreen(
                                     if (state.showApproximatedShape) {
                                         Icon(
                                             Icons.Filled.Check,
-                                            contentDescription = UiText.StringResource(R.string.settings).asString()
+                                            contentDescription = UiText.StringResource(R.string.settings).asString(),
                                         )
                                     }
-                                }
+                                },
                             )
                         }
                     },
@@ -183,14 +184,15 @@ fun DrawingScreen(
             modifier = Modifier.fillMaxSize(),
         ) { innerPadding ->
             CanvasComponent(
-                data = CanvasComponentData(
-                    drawableShape = state.getDrawableShape(Color.Blue, DEFAULT_STROKE_WIDTH),
-                    isDragging = state.isDragging,
-                    points = state.points,
-                    lines = state.lines,
-                    showFingerTracedLines = state.showFingerTracedLines,
-                    showApproximatedShape = state.showApproximatedShape,
-                ),
+                data =
+                    CanvasComponentData(
+                        drawableShape = state.getDrawableShape(Color.Blue, DEFAULT_STROKE_WIDTH),
+                        isDragging = state.isDragging,
+                        points = state.points,
+                        lines = state.lines,
+                        showFingerTracedLines = state.showFingerTracedLines,
+                        showApproximatedShape = state.showApproximatedShape,
+                    ),
                 modifier =
                     Modifier
                         .fillMaxSize()

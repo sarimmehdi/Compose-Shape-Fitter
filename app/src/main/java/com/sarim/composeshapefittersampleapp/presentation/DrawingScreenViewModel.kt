@@ -18,46 +18,54 @@ import kotlinx.coroutines.launch
 class DrawingScreenViewModel(
     private val dispatchers: DispatcherProvider,
     private val savedStateHandle: SavedStateHandle,
-    private val drawingScreenUseCases: DrawingScreenUseCases
+    private val drawingScreenUseCases: DrawingScreenUseCases,
 ) : ViewModel() {
-
     val state = savedStateHandle.getStateFlow(DRAWING_SCREEN_STATE_KEY, DrawingScreenState())
 
     init {
-        savedStateHandle[DRAWING_SCREEN_STATE_KEY] = savedStateHandle
-            .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
-                allShapes = drawingScreenUseCases.getAllShapesUseCase().toImmutableList()
-            )
+        savedStateHandle[DRAWING_SCREEN_STATE_KEY] =
+            savedStateHandle
+                .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)
+                ?.copy(
+                    allShapes = drawingScreenUseCases.getAllShapesUseCase().toImmutableList(),
+                )
         viewModelScope.launch(dispatchers.main) {
             drawingScreenUseCases.getSettingsUseCase().collectLatest {
                 when (it) {
                     is Resource.Error -> {
                         val message = it.message
                         SnackBarController.sendEvent(
-                            event = SnackbarEvent(
-                                message = when (message) {
-                                    is MessageType.IntMessage -> UiText.StringResource(
-                                        message.message,
-                                        *message.args
-                                    )
+                            event =
+                                SnackbarEvent(
+                                    message =
+                                        when (message) {
+                                            is MessageType.IntMessage ->
+                                                UiText.StringResource(
+                                                    message.message,
+                                                    *message.args,
+                                                )
 
-                                    is MessageType.StringMessage -> UiText.StringResource(
-                                        R.string.unable_to_get_settings,
-                                        message.message
-                                    )
-                                },
-                                action = SnackbarAction(
-                                    name = UiText.StringResource(R.string.error)
-                                )
-                            )
+                                            is MessageType.StringMessage ->
+                                                UiText.StringResource(
+                                                    R.string.unable_to_get_settings,
+                                                    message.message,
+                                                )
+                                        },
+                                    action =
+                                        SnackbarAction(
+                                            name = UiText.StringResource(R.string.error),
+                                        ),
+                                ),
                         )
                     }
                     is Resource.Success -> {
-                        savedStateHandle[DRAWING_SCREEN_STATE_KEY] = savedStateHandle
-                            .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
-                                showFingerTracedLines = it.data.showFingerTracedLines,
-                                showApproximatedShape = it.data.showApproximatedShape,
-                            )
+                        savedStateHandle[DRAWING_SCREEN_STATE_KEY] =
+                            savedStateHandle
+                                .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)
+                                ?.copy(
+                                    showFingerTracedLines = it.data.showFingerTracedLines,
+                                    showApproximatedShape = it.data.showApproximatedShape,
+                                )
                     }
                 }
             }
@@ -68,29 +76,36 @@ class DrawingScreenViewModel(
                     is Resource.Error -> {
                         val message = it.message
                         SnackBarController.sendEvent(
-                            event = SnackbarEvent(
-                                message = when (message) {
-                                    is MessageType.IntMessage -> UiText.StringResource(
-                                        message.message,
-                                        message.args
-                                    )
+                            event =
+                                SnackbarEvent(
+                                    message =
+                                        when (message) {
+                                            is MessageType.IntMessage ->
+                                                UiText.StringResource(
+                                                    message.message,
+                                                    message.args,
+                                                )
 
-                                    is MessageType.StringMessage -> UiText.StringResource(
-                                        R.string.unable_to_get_selected_shape,
-                                        message.message
-                                    )
-                                },
-                                action = SnackbarAction(
-                                    name = UiText.StringResource(R.string.error)
-                                )
-                            )
+                                            is MessageType.StringMessage ->
+                                                UiText.StringResource(
+                                                    R.string.unable_to_get_selected_shape,
+                                                    message.message,
+                                                )
+                                        },
+                                    action =
+                                        SnackbarAction(
+                                            name = UiText.StringResource(R.string.error),
+                                        ),
+                                ),
                         )
                     }
                     is Resource.Success -> {
-                        savedStateHandle[DRAWING_SCREEN_STATE_KEY] = savedStateHandle
-                            .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
-                                selectedShape = it.data
-                            )
+                        savedStateHandle[DRAWING_SCREEN_STATE_KEY] =
+                            savedStateHandle
+                                .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)
+                                ?.copy(
+                                    selectedShape = it.data,
+                                )
                     }
                 }
             }
@@ -105,62 +120,80 @@ class DrawingScreenViewModel(
                 }
             }
             is DrawingScreenToViewModelEvents.SetApproximateShape -> {
-                savedStateHandle[DRAWING_SCREEN_STATE_KEY] = savedStateHandle
-                    .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
-                        approximatedShape = event.approximatedShape
-                    )
+                savedStateHandle[DRAWING_SCREEN_STATE_KEY] =
+                    savedStateHandle
+                        .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)
+                        ?.copy(
+                            approximatedShape = event.approximatedShape,
+                        )
             }
             is DrawingScreenToViewModelEvents.SetDragging -> {
-                savedStateHandle[DRAWING_SCREEN_STATE_KEY] = savedStateHandle
-                    .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
-                        isDragging = event.isDragging
-                    )
+                savedStateHandle[DRAWING_SCREEN_STATE_KEY] =
+                    savedStateHandle
+                        .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)
+                        ?.copy(
+                            isDragging = event.isDragging,
+                        )
             }
             is DrawingScreenToViewModelEvents.UpdateLines -> {
-                savedStateHandle[DRAWING_SCREEN_STATE_KEY] = savedStateHandle
-                    .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
-                        lines = (state.value.lines + event.line).toImmutableList()
-                    )
+                savedStateHandle[DRAWING_SCREEN_STATE_KEY] =
+                    savedStateHandle
+                        .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)
+                        ?.copy(
+                            lines = (state.value.lines + event.line).toImmutableList(),
+                        )
             }
             is DrawingScreenToViewModelEvents.UpdatePoints -> {
-                savedStateHandle[DRAWING_SCREEN_STATE_KEY] = savedStateHandle
-                    .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
-                        points = (state.value.points + event.point).toImmutableList()
-                    )
+                savedStateHandle[DRAWING_SCREEN_STATE_KEY] =
+                    savedStateHandle
+                        .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)
+                        ?.copy(
+                            points = (state.value.points + event.point).toImmutableList(),
+                        )
             }
             is DrawingScreenToViewModelEvents.SetLines -> {
-                savedStateHandle[DRAWING_SCREEN_STATE_KEY] = savedStateHandle
-                    .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
-                        lines = event.lines
-                    )
+                savedStateHandle[DRAWING_SCREEN_STATE_KEY] =
+                    savedStateHandle
+                        .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)
+                        ?.copy(
+                            lines = event.lines,
+                        )
             }
             is DrawingScreenToViewModelEvents.SetPoints -> {
-                savedStateHandle[DRAWING_SCREEN_STATE_KEY] = savedStateHandle
-                    .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
-                        points = event.points
-                    )
+                savedStateHandle[DRAWING_SCREEN_STATE_KEY] =
+                    savedStateHandle
+                        .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)
+                        ?.copy(
+                            points = event.points,
+                        )
             }
             is DrawingScreenToViewModelEvents.ToggleSettings -> {
                 when (event.type) {
                     DrawingScreenToViewModelEvents.ToggleSettings.Type.SHOW_FINGER_TRACED_LINES -> {
-                        savedStateHandle[DRAWING_SCREEN_STATE_KEY] = savedStateHandle
-                            .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
-                                showFingerTracedLines = !state.value.showFingerTracedLines
-                            )
+                        savedStateHandle[DRAWING_SCREEN_STATE_KEY] =
+                            savedStateHandle
+                                .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)
+                                ?.copy(
+                                    showFingerTracedLines = !state.value.showFingerTracedLines,
+                                )
                     }
                     DrawingScreenToViewModelEvents.ToggleSettings.Type.SHOW_APPROXIMATED_SHAPE -> {
-                        savedStateHandle[DRAWING_SCREEN_STATE_KEY] = savedStateHandle
-                            .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
-                                showApproximatedShape = !state.value.showApproximatedShape
-                            )
+                        savedStateHandle[DRAWING_SCREEN_STATE_KEY] =
+                            savedStateHandle
+                                .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)
+                                ?.copy(
+                                    showApproximatedShape = !state.value.showApproximatedShape,
+                                )
                     }
                 }
             }
             is DrawingScreenToViewModelEvents.ToggleSettingsDropDown -> {
-                savedStateHandle[DRAWING_SCREEN_STATE_KEY] = savedStateHandle
-                    .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
-                        showSettingsDropDown = !state.value.showSettingsDropDown
-                    )
+                savedStateHandle[DRAWING_SCREEN_STATE_KEY] =
+                    savedStateHandle
+                        .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)
+                        ?.copy(
+                            showSettingsDropDown = !state.value.showSettingsDropDown,
+                        )
             }
         }
     }

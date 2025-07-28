@@ -2,7 +2,9 @@ package com.sarim.composeshapefittersampleapp.domain.model
 
 import com.sarim.composeshapefittersampleapp.R
 
-enum class Shape(val shapeStringId: Int) {
+enum class Shape(
+    val shapeStringId: Int,
+) {
     Circle(R.string.circle),
     Ellipse(R.string.ellipse),
     Hexagon(R.string.hexagon),
@@ -12,5 +14,5 @@ enum class Shape(val shapeStringId: Int) {
     Rectangle(R.string.rectangle),
     OrientedEllipse(R.string.oriented_ellipse),
     Square(R.string.square),
-    Triangle(R.string.triangle)
+    Triangle(R.string.triangle),
 }

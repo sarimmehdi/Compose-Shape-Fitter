@@ -59,24 +59,27 @@ class SkewedEllipseShape(
                 val angleRad = ellipseParamsArray[ANGLE_RAD_IDX]
 
                 if (radiusX > 0f && radiusY > 0f) {
-                    resultEllipse = RotatedEllipse(
-                        center = Offset(centerX, centerY),
-                        radiusX = radiusX,
-                        radiusY = radiusY,
-                        angleRad = angleRad,
-                    )
+                    resultEllipse =
+                        RotatedEllipse(
+                            center = Offset(centerX, centerY),
+                            radiusX = radiusX,
+                            radiusY = radiusY,
+                            angleRad = angleRad,
+                        )
                 } else {
                     println("Native method returned invalid ellipse radii: rX=$radiusX, rY=$radiusY")
                 }
             } else {
                 println(
                     "Native method 'fitEllipseNative' returned null or an array of unexpected size: " +
-                            "${ellipseParamsArray?.size ?: "null"}. Expected $MAX_ELLIPSE_PARAMS."
+                        "${ellipseParamsArray?.size ?: "null"}. Expected $MAX_ELLIPSE_PARAMS.",
                 )
             }
         } catch (e: UnsatisfiedLinkError) {
             println("JNI UnsatisfiedLinkError in findEllipseUsingJNI: ${e.message}")
-        } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
+        } catch (
+            @Suppress("TooGenericExceptionCaught") e: Exception,
+        ) {
             println("Exception during JNI ellipse fitting: ${e.message}")
         }
 

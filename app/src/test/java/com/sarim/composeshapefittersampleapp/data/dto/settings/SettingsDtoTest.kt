@@ -12,9 +12,10 @@ import org.junit.runners.Parameterized
 
 data class TestData(
     val input: SettingsDto,
-    val expectedOutput: Settings
+    val expectedOutput: Settings,
 ) {
-    val testDescription = "when input is $input, " +
+    val testDescription =
+        "when input is $input, " +
             "the expected output should be $expectedOutput"
 }
 
@@ -23,7 +24,6 @@ class SettingsDtoTest(
     @Suppress("UNUSED_PARAMETER") private val testDescription: String,
     private val testData: TestData,
 ) {
-
     @Test
     fun test() {
         assertThat(testData.input.toSettings()).isEqualTo(testData.expectedOutput)
@@ -42,14 +42,16 @@ class SettingsDtoTest(
                 booleanExhaustive.flatMap { showFingerTracedLines ->
                     booleanExhaustive.map { showApproximatedShape ->
                         TestData(
-                            input = SettingsDto(
-                                showFingerTracedLines = showFingerTracedLines,
-                                showApproximatedShape = showApproximatedShape,
-                            ),
-                            expectedOutput = Settings(
-                                showFingerTracedLines = showFingerTracedLines,
-                                showApproximatedShape = showApproximatedShape,
-                            )
+                            input =
+                                SettingsDto(
+                                    showFingerTracedLines = showFingerTracedLines,
+                                    showApproximatedShape = showApproximatedShape,
+                                ),
+                            expectedOutput =
+                                Settings(
+                                    showFingerTracedLines = showFingerTracedLines,
+                                    showApproximatedShape = showApproximatedShape,
+                                ),
                         )
                     }
                 }

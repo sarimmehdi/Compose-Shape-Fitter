@@ -5,4 +5,5 @@ plugins {
     alias(libs.plugins.kotlinComposePlugin) apply false
     alias(libs.plugins.androidLibraryPlugin) apply false
     alias(libs.plugins.detektPlugin) apply false
+    alias(libs.plugins.spotlessPlugin) apply false
 }
