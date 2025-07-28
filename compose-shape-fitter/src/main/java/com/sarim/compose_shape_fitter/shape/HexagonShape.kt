@@ -99,4 +99,26 @@ class HexagonShape(
         private val SQRT_3 = sqrt(3.0f)
         private val MIN_POINTS_FOR_HEXAGON = sqrt(3.0f)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as HexagonShape
+
+        if (color != other.color) return false
+        if (strokeWidth != other.strokeWidth) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = color.hashCode()
+        result = 31 * result + strokeWidth.hashCode()
+        return result
+    }
+
+    override fun toString(): String {
+        return "HexagonShape(color=$color, strokeWidth=$strokeWidth)"
+    }
 }

@@ -10,7 +10,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 
-data class TestData(
+data class TestDataSettingsDtoTest(
     val input: SettingsDto,
     val expectedOutput: Settings,
 ) {
@@ -22,7 +22,7 @@ data class TestData(
 @RunWith(Parameterized::class)
 class SettingsDtoTest(
     @Suppress("UNUSED_PARAMETER") private val testDescription: String,
-    private val testData: TestData,
+    private val testData: TestDataSettingsDtoTest,
 ) {
     @Test
     fun test() {
@@ -38,10 +38,10 @@ class SettingsDtoTest(
         fun getParameters(): Collection<Array<Any>> {
             val booleanExhaustive: Exhaustive<Boolean> = Exhaustive.boolean()
 
-            val testDataExhaustive: Exhaustive<TestData> =
+            val testDataExhaustive =
                 booleanExhaustive.flatMap { showFingerTracedLines ->
                     booleanExhaustive.map { showApproximatedShape ->
-                        TestData(
+                        TestDataSettingsDtoTest(
                             input =
                                 SettingsDto(
                                     showFingerTracedLines = showFingerTracedLines,

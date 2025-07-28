@@ -21,7 +21,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 
-data class TestData(
+data class TestDataDrawingScreenViewModelOnEventTest(
     val inputEvent: DrawingScreenToViewModelEvents,
     val inputState: DrawingScreenState,
     val outputState: DrawingScreenState,
@@ -38,7 +38,7 @@ data class TestData(
 @RunWith(Parameterized::class)
 class DrawingScreenViewModelOnEventTest(
     @Suppress("UNUSED_PARAMETER") private val testDescription: String,
-    private val testData: TestData,
+    private val testData: TestDataDrawingScreenViewModelOnEventTest,
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
     lateinit var testDispatchers: TestDispatchers
@@ -103,7 +103,7 @@ class DrawingScreenViewModelOnEventTest(
                     when (it) {
                         DrawingScreenToViewModelEvents.SetSelectedShape::class -> {
                             Shape.entries.map { shape ->
-                                TestData(
+                                TestDataDrawingScreenViewModelOnEventTest(
                                     inputEvent = DrawingScreenToViewModelEvents.SetSelectedShape(shape),
                                     inputState = DrawingScreenState(),
                                     outputState = DrawingScreenState(),
@@ -113,13 +113,13 @@ class DrawingScreenViewModelOnEventTest(
                         }
                         DrawingScreenToViewModelEvents.SetDragging::class -> {
                             listOf(
-                                TestData(
+                                TestDataDrawingScreenViewModelOnEventTest(
                                     inputEvent = DrawingScreenToViewModelEvents.SetDragging(true),
                                     inputState = DrawingScreenState(),
                                     outputState = DrawingScreenState(isDragging = true),
                                     outputUseCase = null,
                                 ),
-                                TestData(
+                                TestDataDrawingScreenViewModelOnEventTest(
                                     inputEvent = DrawingScreenToViewModelEvents.SetDragging(false),
                                     inputState = DrawingScreenState(),
                                     outputState = DrawingScreenState(isDragging = false),
@@ -129,7 +129,7 @@ class DrawingScreenViewModelOnEventTest(
                         }
                         DrawingScreenToViewModelEvents.SetLines::class -> {
                             listOf(
-                                TestData(
+                                TestDataDrawingScreenViewModelOnEventTest(
                                     inputEvent =
                                         DrawingScreenToViewModelEvents.SetLines(
                                             persistentListOf(
@@ -150,7 +150,7 @@ class DrawingScreenViewModelOnEventTest(
                                         ),
                                     outputUseCase = null,
                                 ),
-                                TestData(
+                                TestDataDrawingScreenViewModelOnEventTest(
                                     inputEvent =
                                         DrawingScreenToViewModelEvents.SetLines(
                                             persistentListOf(
@@ -182,7 +182,7 @@ class DrawingScreenViewModelOnEventTest(
                         }
                         DrawingScreenToViewModelEvents.UpdateLines::class -> {
                             listOf(
-                                TestData(
+                                TestDataDrawingScreenViewModelOnEventTest(
                                     inputEvent =
                                         DrawingScreenToViewModelEvents.UpdateLines(
                                             Pair(Offset.Infinite, Offset.Zero),
@@ -197,7 +197,7 @@ class DrawingScreenViewModelOnEventTest(
                                         ),
                                     outputUseCase = null,
                                 ),
-                                TestData(
+                                TestDataDrawingScreenViewModelOnEventTest(
                                     inputEvent =
                                         DrawingScreenToViewModelEvents.UpdateLines(
                                             Pair(Offset.Infinite, Offset.Zero),
@@ -225,7 +225,7 @@ class DrawingScreenViewModelOnEventTest(
                         }
                         DrawingScreenToViewModelEvents.SetPoints::class -> {
                             listOf(
-                                TestData(
+                                TestDataDrawingScreenViewModelOnEventTest(
                                     inputEvent =
                                         DrawingScreenToViewModelEvents.SetPoints(
                                             persistentListOf(Offset.Infinite, Offset.Zero, Offset.Zero),
@@ -237,7 +237,7 @@ class DrawingScreenViewModelOnEventTest(
                                         ),
                                     outputUseCase = null,
                                 ),
-                                TestData(
+                                TestDataDrawingScreenViewModelOnEventTest(
                                     inputEvent =
                                         DrawingScreenToViewModelEvents.SetPoints(
                                             persistentListOf(Offset.Infinite, Offset.Zero, Offset.Zero),
@@ -259,13 +259,13 @@ class DrawingScreenViewModelOnEventTest(
                                 when (type) {
                                     DrawingScreenToViewModelEvents.ToggleSettings.Type.SHOW_FINGER_TRACED_LINES ->
                                         listOf(
-                                            TestData(
+                                            TestDataDrawingScreenViewModelOnEventTest(
                                                 inputEvent = DrawingScreenToViewModelEvents.ToggleSettings(type),
                                                 inputState = DrawingScreenState(showFingerTracedLines = true),
                                                 outputState = DrawingScreenState(showFingerTracedLines = false),
                                                 outputUseCase = null,
                                             ),
-                                            TestData(
+                                            TestDataDrawingScreenViewModelOnEventTest(
                                                 inputEvent = DrawingScreenToViewModelEvents.ToggleSettings(type),
                                                 inputState = DrawingScreenState(showFingerTracedLines = false),
                                                 outputState = DrawingScreenState(showFingerTracedLines = true),
@@ -274,13 +274,13 @@ class DrawingScreenViewModelOnEventTest(
                                         )
                                     DrawingScreenToViewModelEvents.ToggleSettings.Type.SHOW_APPROXIMATED_SHAPE ->
                                         listOf(
-                                            TestData(
+                                            TestDataDrawingScreenViewModelOnEventTest(
                                                 inputEvent = DrawingScreenToViewModelEvents.ToggleSettings(type),
                                                 inputState = DrawingScreenState(showApproximatedShape = true),
                                                 outputState = DrawingScreenState(showApproximatedShape = false),
                                                 outputUseCase = null,
                                             ),
-                                            TestData(
+                                            TestDataDrawingScreenViewModelOnEventTest(
                                                 inputEvent = DrawingScreenToViewModelEvents.ToggleSettings(type),
                                                 inputState = DrawingScreenState(showApproximatedShape = false),
                                                 outputState = DrawingScreenState(showApproximatedShape = true),
@@ -292,13 +292,13 @@ class DrawingScreenViewModelOnEventTest(
                         }
                         DrawingScreenToViewModelEvents.ToggleSettingsDropDown::class -> {
                             listOf(
-                                TestData(
+                                TestDataDrawingScreenViewModelOnEventTest(
                                     inputEvent = DrawingScreenToViewModelEvents.ToggleSettingsDropDown,
                                     inputState = DrawingScreenState(showSettingsDropDown = true),
                                     outputState = DrawingScreenState(showSettingsDropDown = false),
                                     outputUseCase = null,
                                 ),
-                                TestData(
+                                TestDataDrawingScreenViewModelOnEventTest(
                                     inputEvent = DrawingScreenToViewModelEvents.ToggleSettingsDropDown,
                                     inputState = DrawingScreenState(showSettingsDropDown = false),
                                     outputState = DrawingScreenState(showSettingsDropDown = true),
@@ -308,7 +308,7 @@ class DrawingScreenViewModelOnEventTest(
                         }
                         DrawingScreenToViewModelEvents.UpdatePoints::class -> {
                             listOf(
-                                TestData(
+                                TestDataDrawingScreenViewModelOnEventTest(
                                     inputEvent =
                                         DrawingScreenToViewModelEvents.UpdatePoints(
                                             Offset.Infinite,
@@ -320,7 +320,7 @@ class DrawingScreenViewModelOnEventTest(
                                         ),
                                     outputUseCase = null,
                                 ),
-                                TestData(
+                                TestDataDrawingScreenViewModelOnEventTest(
                                     inputEvent =
                                         DrawingScreenToViewModelEvents.UpdatePoints(
                                             Offset.Infinite,
@@ -346,7 +346,7 @@ class DrawingScreenViewModelOnEventTest(
                         DrawingScreenToViewModelEvents.SetApproximateShape::class -> {
                             val approximatedShape = mockk<ApproximatedShape>(relaxed = true)
                             listOf(
-                                TestData(
+                                TestDataDrawingScreenViewModelOnEventTest(
                                     inputEvent =
                                         DrawingScreenToViewModelEvents.SetApproximateShape(
                                             approximatedShape,

@@ -27,7 +27,7 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-data class TestData(
+data class TestDataDrawingScreenTest(
     val dragStart: Offset,
     val dragPositions: List<Offset>,
     val data: CanvasComponentData,
@@ -43,7 +43,7 @@ data class TestData(
 @RunWith(ParameterizedRobolectricTestRunner::class)
 class DrawingScreenTest(
     @Suppress("UNUSED_PARAMETER") private val testDescription: String,
-    private val testData: TestData,
+    private val testData: TestDataDrawingScreenTest,
 ) {
     @get:Rule
     val composeTestRule = createComposeRule()
@@ -253,7 +253,7 @@ class DrawingScreenTest(
                 allDragPositionsAndResultingDrawableShape
                     .map {
                         listOf(
-                            TestData(
+                            TestDataDrawingScreenTest(
                                 dragStart = it.dragStart,
                                 dragPositions = it.dragPositions,
                                 data =
@@ -281,7 +281,7 @@ class DrawingScreenTest(
                                             DrawingScreenToViewModelEvents.SetDragging(false),
                                         ),
                             ),
-                            TestData(
+                            TestDataDrawingScreenTest(
                                 dragStart = it.dragStart,
                                 dragPositions = it.dragPositions,
                                 data =
