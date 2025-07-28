@@ -20,4 +20,17 @@ data class SnackbarEvent(
 data class SnackbarAction(
     val name: UiText,
     val action: suspend () -> Unit = {},
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as SnackbarAction
+
+        return name == other.name
+    }
+
+    override fun hashCode(): Int {
+        return name.hashCode()
+    }
+}

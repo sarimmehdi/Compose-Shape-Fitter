@@ -15,6 +15,7 @@ import com.sarim.composeshapefittersampleapp.domain.usecase.UpdateSelectedShapeU
 import com.sarim.composeshapefittersampleapp.domain.usecase.UpdateSettingsUseCase
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenUseCases
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenViewModel
+import com.sarim.composeshapefittersampleapp.utils.DefaultDispatchers
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.StringQualifier
@@ -45,6 +46,7 @@ fun drawingScreenModule(
 
     viewModel {
         DrawingScreenViewModel(
+            dispatchers = DefaultDispatchers(),
             savedStateHandle = get(),
             drawingScreenUseCases =
                 DrawingScreenUseCases(

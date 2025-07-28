@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sarim.composeshapefittersampleapp.R
+import com.sarim.composeshapefittersampleapp.utils.DispatcherProvider
 import com.sarim.composeshapefittersampleapp.utils.MessageType
 import com.sarim.composeshapefittersampleapp.utils.Resource
 import com.sarim.composeshapefittersampleapp.utils.SnackBarController
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class DrawingScreenViewModel(
+    private val dispatchers: DispatcherProvider,
     private val savedStateHandle: SavedStateHandle,
     private val drawingScreenUseCases: DrawingScreenUseCases
 ) : ViewModel() {
@@ -26,7 +28,7 @@ class DrawingScreenViewModel(
             .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)?.copy(
                 allShapes = drawingScreenUseCases.getAllShapesUseCase().toImmutableList()
             )
-        viewModelScope.launch {
+        viewModelScope.launch(dispatchers.main) {
             drawingScreenUseCases.getSettingsUseCase().collectLatest {
                 when (it) {
                     is Resource.Error -> {
@@ -36,7 +38,7 @@ class DrawingScreenViewModel(
                                 message = when (message) {
                                     is MessageType.IntMessage -> UiText.StringResource(
                                         message.message,
-                                        message.args
+                                        *message.args
                                     )
 
                                     is MessageType.StringMessage -> UiText.StringResource(
@@ -60,7 +62,7 @@ class DrawingScreenViewModel(
                 }
             }
         }
-        viewModelScope.launch {
+        viewModelScope.launch(dispatchers.main) {
             drawingScreenUseCases.getSelectedShapeUseCase().collectLatest {
                 when (it) {
                     is Resource.Error -> {
@@ -98,7 +100,7 @@ class DrawingScreenViewModel(
     fun onEvent(event: DrawingScreenToViewModelEvents) {
         when (event) {
             is DrawingScreenToViewModelEvents.SetSelectedShape -> {
-                viewModelScope.launch {
+                viewModelScope.launch(dispatchers.main) {
                     drawingScreenUseCases.updateSelectedShapeUseCase(event.selectedShape)
                 }
             }

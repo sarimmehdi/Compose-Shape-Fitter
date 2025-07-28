@@ -4,7 +4,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.lifecycle.SavedStateHandle
 import com.google.common.truth.Truth.assertThat
 import com.sarim.compose_shape_fitter.shape.ApproximatedShape
-import com.sarim.composeshapefittersampleapp.CoroutinesTestRule
+import com.sarim.composeshapefittersampleapp.TestDispatchers
 import com.sarim.composeshapefittersampleapp.domain.model.Shape
 import com.sarim.composeshapefittersampleapp.domain.usecase.UpdateSelectedShapeUseCase
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenViewModel.Companion.DRAWING_SCREEN_STATE_KEY
@@ -17,7 +17,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
@@ -35,22 +34,24 @@ data class TestData(
 }
 
 @RunWith(Parameterized::class)
-class DrawingScreenViewModelTest(
+class DrawingScreenViewModelOnEventTest(
     @Suppress("UNUSED_PARAMETER") private val testDescription: String,
     private val testData: TestData,
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
-    @get:Rule
-    val coroutinesTestRule = CoroutinesTestRule()
+    lateinit var testDispatchers: TestDispatchers
 
     lateinit var savedStateHandle: SavedStateHandle
     lateinit var viewModel: DrawingScreenViewModel
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
+        testDispatchers = TestDispatchers()
         savedStateHandle = SavedStateHandle()
         savedStateHandle[DRAWING_SCREEN_STATE_KEY] = testData.inputState
         viewModel = DrawingScreenViewModel(
+            dispatchers = testDispatchers,
             savedStateHandle = savedStateHandle,
             drawingScreenUseCases = drawingScreenUseCases
         )
@@ -65,7 +66,7 @@ class DrawingScreenViewModelTest(
         testData.outputUseCase?.let {
             if (it is UpdateSelectedShapeUseCase) {
                 assertThat(testData.inputEvent).isInstanceOf(DrawingScreenToViewModelEvents.SetSelectedShape::class.java)
-                coroutinesTestRule.testDispatcher.scheduler.advanceUntilIdle()
+                testDispatchers.testDispatcher.scheduler.advanceUntilIdle()
                 coVerify {
                     it(
                         selectedShape = (testData.inputEvent as DrawingScreenToViewModelEvents.SetSelectedShape).selectedShape
