@@ -34,7 +34,7 @@ class SettingsDtoTest(
         @Parameterized.Parameters(
             name = "{0}",
         )
-        @Suppress("unused", "LongMethod")
+        @Suppress("unused")
         fun getParameters(): Collection<Array<Any>> {
             val booleanExhaustive: Exhaustive<Boolean> = Exhaustive.boolean()
 

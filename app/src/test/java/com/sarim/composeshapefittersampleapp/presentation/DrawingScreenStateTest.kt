@@ -51,7 +51,7 @@ class DrawingScreenStateTest(
         @Parameterized.Parameters(
             name = "{0}",
         )
-        @Suppress("unused", "LongMethod")
+        @Suppress("unused")
         fun getParameters(): Collection<Array<Any>> {
             val color = mockk<Color>(relaxed = true)
             val strokeWidth = mockk<Float>(relaxed = true)

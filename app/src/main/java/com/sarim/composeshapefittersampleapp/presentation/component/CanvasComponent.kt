@@ -9,16 +9,19 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.pointer.pointerInput
+import com.sarim.compose_shape_fitter.shape.CircleShape
 import com.sarim.compose_shape_fitter.shape.DrawableShape
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenToViewModelEvents
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
+const val DEFAULT_STROKE_WIDTH = 5f
+
 @Composable
 fun CanvasComponent(
-    data: CanvasComponentData,
-    onEvent: (DrawingScreenToViewModelEvents) -> Unit,
     modifier: Modifier = Modifier,
+    data: CanvasComponentData = CanvasComponentData(),
+    onEvent: (DrawingScreenToViewModelEvents) -> Unit = {},
 ) {
     Canvas(
         modifier =
@@ -72,10 +75,10 @@ fun CanvasComponent(
 }
 
 data class CanvasComponentData(
-    val drawableShape: DrawableShape,
-    val isDragging: Boolean,
-    val points: ImmutableList<Offset>,
-    val lines: ImmutableList<Pair<Offset, Offset>>,
-    val showFingerTracedLines: Boolean,
-    val showApproximatedShape: Boolean,
+    val drawableShape: DrawableShape = CircleShape(Color.Blue, DEFAULT_STROKE_WIDTH),
+    val isDragging: Boolean = false,
+    val points: ImmutableList<Offset> = persistentListOf(),
+    val lines: ImmutableList<Pair<Offset, Offset>> = persistentListOf(),
+    val showFingerTracedLines: Boolean = true,
+    val showApproximatedShape: Boolean = true,
 )

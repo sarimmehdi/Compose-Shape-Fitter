@@ -8,10 +8,10 @@ import com.sarim.composeshapefittersampleapp.TestDispatchers
 import com.sarim.composeshapefittersampleapp.domain.model.Shape
 import com.sarim.composeshapefittersampleapp.domain.usecase.UpdateSelectedShapeUseCase
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenViewModel.Companion.DRAWING_SCREEN_STATE_KEY
-import io.kotest.assertions.fail
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import junit.framework.TestCase.fail
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.emptyFlow
@@ -96,7 +96,7 @@ class DrawingScreenViewModelOnEventTest(
         @Parameterized.Parameters(
             name = "{0}",
         )
-        @Suppress("unused", "LongMethod")
+        @Suppress("unused")
         fun getParameters(): Collection<Array<Any>> {
             val testDataList =
                 DrawingScreenToViewModelEvents::class.sealedSubclasses.flatMap {

@@ -1,5 +1,5 @@
 [versions]
-agpVersion = "8.11.1"
+agpVersion = "8.12.0"
 kotlinVersion = "2.2.0"
 coreKtxVersion = "1.16.0"
 lifecycleRuntimeKtxVersion = "2.9.2"
@@ -17,8 +17,8 @@ preferencesDataStoreVersion = "1.1.7"
 kotlinxSerializationVersion = "1.9.0"
 kotlinxImmutableCollectionsVersion = "0.4.0"
 koinBomVersion = "4.1.0"
-navigationVersion = "2.9.2"
-kotestVersion = "6.0.0.M5"
+navigationVersion = "2.9.3"
+kotestVersion = "6.0.0.M9"
 mockkVersion = "1.14.5"
 turbineVersion = "1.2.1"
 

@@ -18,6 +18,7 @@ import com.sarim.compose_shape_fitter.shape.TriangleShape
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenToViewModelEvents
 import io.mockk.mockk
 import io.mockk.verifyOrder
+import junit.framework.TestCase.fail
 import kotlinx.collections.immutable.persistentListOf
 import org.junit.Rule
 import org.junit.Test
@@ -52,7 +53,6 @@ class DrawingScreenTest(
 
     @Test
     fun test() {
-        println(testDescription)
         composeTestRule.setContent {
             CanvasComponent(
                 data = testData.data,
@@ -80,16 +80,13 @@ class DrawingScreenTest(
                             onEvent(ofType<DrawingScreenToViewModelEvents.SetLines>())
                         is DrawingScreenToViewModelEvents.SetPoints ->
                             onEvent(ofType<DrawingScreenToViewModelEvents.SetPoints>())
-                        is DrawingScreenToViewModelEvents.SetSelectedShape ->
-                            onEvent(ofType<DrawingScreenToViewModelEvents.SetSelectedShape>())
-                        is DrawingScreenToViewModelEvents.ToggleSettings ->
-                            onEvent(ofType<DrawingScreenToViewModelEvents.ToggleSettings>())
-                        is DrawingScreenToViewModelEvents.ToggleSettingsDropDown ->
-                            onEvent(ofType<DrawingScreenToViewModelEvents.ToggleSettingsDropDown>())
                         is DrawingScreenToViewModelEvents.UpdateLines ->
                             onEvent(ofType<DrawingScreenToViewModelEvents.UpdateLines>())
                         is DrawingScreenToViewModelEvents.UpdatePoints ->
                             onEvent(ofType<DrawingScreenToViewModelEvents.UpdatePoints>())
+                        else -> {
+                            fail("received unexpected event: $it")
+                        }
                     }
                 }
             }
@@ -130,7 +127,7 @@ class DrawingScreenTest(
         @ParameterizedRobolectricTestRunner.Parameters(
             name = "{0}",
         )
-        @Suppress("unused", "LongMethod")
+        @Suppress("unused")
         fun getParameters(): Collection<Array<Any>> {
             val commonStartX = 100f
             val commonStartY = 100f
