@@ -19,6 +19,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,9 +28,13 @@ import com.sarim.composeshapefittersampleapp.R
 import com.sarim.composeshapefittersampleapp.domain.model.Shape
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenEvents
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenToViewModelEvents
-import com.sarim.composeshapefittersampleapp.utils.UiText
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+
+const val DRAWER_COMPONENT_CLOSE_DRAWER_ICON_BUTTON_TEST_TAG = "DRAWER_COMPONENT_CLOSE_DRAWER_ICON_BUTTON_TEST_TAG"
+const val DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG = "DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG"
+const val DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_ = "DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_"
+const val DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_ = "DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_"
 
 @Composable
 fun DrawerComponent(
@@ -45,13 +51,14 @@ fun DrawerComponent(
             IconButton(
                 onClick = {
                     onDrawingScreenEvent(DrawingScreenEvents.CloseDrawer)
-                }
+                },
+                modifier = Modifier.testTag(DRAWER_COMPONENT_CLOSE_DRAWER_ICON_BUTTON_TEST_TAG)
             ) {
-                Icon(Icons.Filled.Close, contentDescription = UiText.StringResource(R.string.close_nav_menu).asString())
+                Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.close_nav_menu))
             }
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                UiText.StringResource(R.string.select_shape).asString(),
+                stringResource(R.string.select_shape),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
             )
@@ -61,12 +68,14 @@ fun DrawerComponent(
             thickness = DividerDefaults.Thickness,
             color = DividerDefaults.color,
         )
-        LazyColumn {
+        LazyColumn(
+            modifier = Modifier.testTag(DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG)
+        ) {
             items(data.allShapes.size) { i ->
                 val shape = data.allShapes[i]
                 NavigationDrawerItem(
                     label = {
-                        Text(UiText.StringResource(shape.shapeStringId).asString())
+                        Text(stringResource(shape.shapeStringId))
                     },
                     selected = shape == data.selectedShape,
                     onClick = {
@@ -77,7 +86,15 @@ fun DrawerComponent(
                         )
                         onDrawingScreenEvent(DrawingScreenEvents.CloseDrawer)
                     },
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+                    modifier = Modifier
+                        .padding(NavigationDrawerItemDefaults.ItemPadding)
+                        .testTag(
+                            if (shape == data.selectedShape) {
+                                DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_ + stringResource(shape.shapeStringId)
+                            } else {
+                                DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_ + stringResource(shape.shapeStringId)
+                            }
+                        ),
                 )
             }
         }
