@@ -10,7 +10,10 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -62,6 +65,9 @@ class MainActivity : ComponentActivity() {
                 NavHost(
                     navController = navController,
                     startDestination = DrawingFeature,
+                    modifier = Modifier.semantics {
+                        testTagsAsResourceId = true
+                    },
                 ) {
                     navigation<DrawingFeature>(startDestination = DrawingScreenNavigationDestination) {
                         composable<DrawingScreenNavigationDestination> {

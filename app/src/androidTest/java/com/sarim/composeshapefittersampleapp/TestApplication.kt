@@ -13,18 +13,22 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.koinConfiguration
 
 @OptIn(KoinExperimentalAPI::class)
-class MainApplication :
+class TestApplication :
     Application(),
     KoinStartup {
     override fun onKoinStartup() =
         koinConfiguration {
             androidLogger(Level.DEBUG)
-            androidContext(this@MainApplication)
+            androidContext(this@TestApplication)
             lazyModules(
                 drawingScreenModule(
                     scopeQualifier = named(DrawingFeature::class.java.simpleName),
-                    moduleType = ModuleType.ACTUAL
+                    moduleType = ModuleType.TEST
                 ),
             )
         }
+
+    override fun onCreate() {
+        super.onCreate()
+    }
 }

@@ -21,6 +21,9 @@ navigationVersion = "2.9.3"
 kotestVersion = "6.0.0.M9"
 mockkVersion = "1.14.5"
 turbineVersion = "1.2.1"
+androidXTestRunnerVersion = "1.7.0"
+androidXTestJUnitVersion = "1.3.0"
+uiAutomatorVersion = "2.3.0"
 
 [libraries]
 androidxCoreKtxLibrary = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtxVersion" }
@@ -41,6 +44,9 @@ kotestPropertyLibrary = { group = "io.kotest", name = "kotest-property", version
 mockkAndroidLibrary = { group = "io.mockk", name = "mockk-android", version.ref = "mockkVersion" }
 mockkAgentLibrary = { group = "io.mockk", name = "mockk-agent", version.ref = "mockkVersion" }
 turbineLibrary = { group = "app.cash.turbine", name = "turbine", version.ref = "turbineVersion" }
+androidXTestRunnerLibrary = { group = "androidx.test", name = "runner", version.ref = "androidXTestRunnerVersion" }
+androidXTestJUnitLibrary = { group = "androidx.test.ext", name = "junit", version.ref = "androidXTestJUnitVersion" }
+uiAutomatorLibrary = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiAutomatorVersion" }
 roboelectricLibrary = { group = "org.robolectric", name = "robolectric", version.ref = "roboelectricVersion" }
 dataStoreLibrary = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "preferencesDataStoreVersion" }
 kotlinxSerializationLibrary = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationVersion" }
@@ -75,6 +81,12 @@ testBundle = [
     "mockkAgentLibrary",
     "turbineLibrary",
     "roboelectricLibrary",
+]
+androidTestBundle = [
+    "truthLibrary",
+    "androidXTestRunnerLibrary",
+    "androidXTestJUnitLibrary",
+    "uiAutomatorLibrary",
 ]
 koinBundle = [
     "koinCoreLibrary",

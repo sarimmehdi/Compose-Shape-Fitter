@@ -26,9 +26,9 @@ const val DEFAULT_STROKE_WIDTH = 5f
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DrawingScreen(
-    state: DrawingScreenState,
-    onEvent: (DrawingScreenToViewModelEvents) -> Unit,
     modifier: Modifier = Modifier,
+    state: DrawingScreenState = DrawingScreenState(),
+    onEvent: (DrawingScreenToViewModelEvents) -> Unit = {},
 ) {
     val scope = rememberCoroutineScope()
 

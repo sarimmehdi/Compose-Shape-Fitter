@@ -24,7 +24,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.sarim.composeshapefittersampleapp.InstrumentationTestRunner"
     }
 
     buildTypes {
@@ -96,6 +96,9 @@ dependencies {
     debugImplementation(libs.bundles.composeDebugImplementationBundle)
     testImplementation(platform(libs.androidxComposeBomLibrary))
     testImplementation(libs.composeJunit4Library)
+    androidTestImplementation(platform(libs.androidxComposeBomLibrary))
+    androidTestImplementation(libs.composeJunit4Library)
     testImplementation(libs.bundles.testBundle)
+    androidTestImplementation(libs.bundles.androidTestBundle)
     implementation(project(":compose-shape-fitter"))
 }
