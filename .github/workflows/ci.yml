@@ -107,6 +107,31 @@ jobs:
           name: unit-test-results
           path: app/build/reports/tests/testDebugUnitTest/
 
+  integration_test:
+    name: Run Integration Tests
+    runs-on: macos-latest
+    needs: test
+
+    steps:
+      - name: Setup Common Environment
+        uses: ./.github/actions/setup-environment
+
+      - name: Run Integration Tests
+        uses: reactivecircus/android-emulator-runner@v2.34.0
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: Nexus 6
+          script: ./gradlew connectedCheck
+
+      - name: Upload Integration Test Results
+        if: always()
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: integration-test-results
+          path: app/build/reports/androidTests/connected/
+
   publish:
     name: Release build and publish
     runs-on: macOS-latest
