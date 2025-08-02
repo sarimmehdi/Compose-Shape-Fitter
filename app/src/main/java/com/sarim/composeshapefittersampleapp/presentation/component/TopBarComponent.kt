@@ -17,6 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import com.sarim.composeshapefittersampleapp.R
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenEvents
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenToViewModelEvents
@@ -44,7 +46,9 @@ fun TopBarComponent(
                 onClick = {
                     onDrawingScreenEvent(DrawingScreenEvents.OpenDrawer)
                 },
-                modifier = Modifier.testTag(TOP_BAR_COMPONENT_OPEN_DRAWER_ICON_BUTTON_TEST_TAG)
+                modifier = Modifier
+                    .semantics { testTagsAsResourceId = true }
+                    .testTag(TOP_BAR_COMPONENT_OPEN_DRAWER_ICON_BUTTON_TEST_TAG)
             ) {
                 Icon(
                     Icons.Filled.Menu,
@@ -57,7 +61,9 @@ fun TopBarComponent(
                 onClick = {
                     onEvent(DrawingScreenToViewModelEvents.ToggleSettingsDropDown)
                 },
-                modifier = Modifier.testTag(TOP_BAR_COMPONENT_SETTINGS_ICON_BUTTON_TEST_TAG)
+                modifier = Modifier
+                    .semantics { testTagsAsResourceId = true }
+                    .testTag(TOP_BAR_COMPONENT_SETTINGS_ICON_BUTTON_TEST_TAG)
             ) {
                 Icon(
                     imageVector = Icons.Filled.Settings,
@@ -67,7 +73,9 @@ fun TopBarComponent(
             DropdownMenu(
                 expanded = data.showSettingsDropDown,
                 onDismissRequest = { onEvent(DrawingScreenToViewModelEvents.ToggleSettingsDropDown) },
-                modifier = Modifier.testTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_TEST_TAG)
+                modifier = Modifier
+                    .semantics { testTagsAsResourceId = true }
+                    .testTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_TEST_TAG)
             ) {
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.finger_traced_lines)) },
@@ -83,11 +91,15 @@ fun TopBarComponent(
                             Icon(
                                 imageVector = Icons.Filled.Check,
                                 contentDescription = stringResource(R.string.settings),
-                                modifier = Modifier.testTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TRAILING_ICON_TEST_TAG)
+                                modifier = Modifier
+                                    .semantics { testTagsAsResourceId = true }
+                                    .testTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TRAILING_ICON_TEST_TAG)
                             )
                         }
                     },
-                    modifier = Modifier.testTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TEST_TAG)
+                    modifier = Modifier
+                        .semantics { testTagsAsResourceId = true }
+                        .testTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TEST_TAG)
                 )
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.approximated_shape)) },
@@ -103,11 +115,15 @@ fun TopBarComponent(
                             Icon(
                                 imageVector = Icons.Filled.Check,
                                 contentDescription = stringResource(R.string.settings),
-                                modifier = Modifier.testTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TRAILING_ICON_TEST_TAG)
+                                modifier = Modifier
+                                    .semantics { testTagsAsResourceId = true }
+                                    .testTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TRAILING_ICON_TEST_TAG)
                             )
                         }
                     },
-                    modifier = Modifier.testTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TEST_TAG)
+                    modifier = Modifier
+                        .semantics { testTagsAsResourceId = true }
+                        .testTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TEST_TAG)
                 )
             }
         },

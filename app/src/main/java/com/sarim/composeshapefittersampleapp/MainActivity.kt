@@ -65,9 +65,6 @@ class MainActivity : ComponentActivity() {
                 NavHost(
                     navController = navController,
                     startDestination = DrawingFeature,
-                    modifier = Modifier.semantics {
-                        testTagsAsResourceId = true
-                    },
                 ) {
                     navigation<DrawingFeature>(startDestination = DrawingScreenNavigationDestination) {
                         composable<DrawingScreenNavigationDestination> {

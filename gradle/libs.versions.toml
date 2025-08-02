@@ -84,6 +84,7 @@ testBundle = [
 ]
 androidTestBundle = [
     "truthLibrary",
+    "kotestPropertyLibrary",
     "androidXTestRunnerLibrary",
     "androidXTestJUnitLibrary",
     "uiAutomatorLibrary",

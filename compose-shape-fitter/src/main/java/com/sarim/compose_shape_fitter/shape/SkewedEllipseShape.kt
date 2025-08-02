@@ -1,5 +1,6 @@
 package com.sarim.compose_shape_fitter.shape
 
+import android.util.Log
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -16,7 +17,7 @@ internal object EllipseFitterJNI {
         try {
             System.loadLibrary("composeshapefittersampleapp_native")
         } catch (e: UnsatisfiedLinkError) {
-            println("Failed to load native library 'native-lib': ${e.message}")
+            Log.e(EllipseFitterJNI::class.java.simpleName, "Failed to load native library 'native-lib': ${e.message}")
         }
     }
 
@@ -40,7 +41,7 @@ class SkewedEllipseShape(
 
     private fun findSmallestEnclosingSkewedEllipse(points: List<Offset>): RotatedEllipse? {
         if (points.isEmpty()) {
-            println("Point list is empty, cannot fit ellipse.")
+            Log.w(SkewedEllipseShape::class.java.simpleName, "Point list is empty, cannot fit ellipse.")
             return null
         }
 
@@ -67,20 +68,20 @@ class SkewedEllipseShape(
                             angleRad = angleRad,
                         )
                 } else {
-                    println("Native method returned invalid ellipse radii: rX=$radiusX, rY=$radiusY")
+                    Log.w(SkewedEllipseShape::class.java.simpleName, "Native method returned invalid ellipse radii: rX=$radiusX, rY=$radiusY")
                 }
             } else {
-                println(
-                    "Native method 'fitEllipseNative' returned null or an array of unexpected size: " +
+                Log.w(
+                    SkewedEllipseShape::class.java.simpleName, "Native method 'fitEllipseNative' returned null or an array of unexpected size: " +
                         "${ellipseParamsArray?.size ?: "null"}. Expected $MAX_ELLIPSE_PARAMS.",
                 )
             }
         } catch (e: UnsatisfiedLinkError) {
-            println("JNI UnsatisfiedLinkError in findEllipseUsingJNI: ${e.message}")
+            Log.e(SkewedEllipseShape::class.java.simpleName,"JNI UnsatisfiedLinkError in findEllipseUsingJNI: ${e.message}")
         } catch (
             @Suppress("TooGenericExceptionCaught") e: Exception,
         ) {
-            println("Exception during JNI ellipse fitting: ${e.message}")
+            Log.e(SkewedEllipseShape::class.java.simpleName,"Exception during JNI ellipse fitting: ${e.message}")
         }
 
         return resultEllipse

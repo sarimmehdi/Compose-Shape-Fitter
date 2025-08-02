@@ -1,5 +1,6 @@
 package com.sarim.compose_shape_fitter.shape
 
+import android.util.Log
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -91,7 +92,7 @@ class ObbShape(
         allSidesEqual: Boolean,
     ): OrientedBoundingBox? {
         if (points.isEmpty()) {
-            println("Point list is empty, cannot fit ellipse to derive OBB.")
+            Log.w(ObbShape::class.java.simpleName,"Point list is empty, cannot fit ellipse to derive OBB.")
             return null
         }
 
@@ -120,23 +121,23 @@ class ObbShape(
                         )
                     obb = createOBBFromEllipse(fittedEllipse, allSidesEqual) // Assign to obb
                 } else {
-                    println(
-                        "Native method returned invalid ellipse radii for OBB: " +
+                    Log.w(
+                        ObbShape::class.java.simpleName,"Native method returned invalid ellipse radii for OBB: " +
                             "rX=$ellipseRadiusX, rY=$ellipseRadiusY",
                     )
                 }
             } else {
-                println(
-                    "Native method 'fitEllipseNative' returned null or an array of unexpected size " +
+                Log.w(
+                    ObbShape::class.java.simpleName,"Native method 'fitEllipseNative' returned null or an array of unexpected size " +
                         "for OBB: ${ellipseParamsArray?.size ?: "null"}. Expected $MAX_ELLIPSE_PARAMS.",
                 )
             }
         } catch (e: UnsatisfiedLinkError) {
-            println("JNI UnsatisfiedLinkError in findOBBForFittedEllipse: ${e.message}")
+            Log.e(ObbShape::class.java.simpleName,"JNI UnsatisfiedLinkError in findOBBForFittedEllipse: ${e.message}")
         } catch (
             @Suppress("TooGenericExceptionCaught") e: Exception,
         ) {
-            println("Exception during JNI ellipse fitting for OBB: ${e.message}")
+            Log.e(ObbShape::class.java.simpleName,"Exception during JNI ellipse fitting for OBB: ${e.message}")
         }
 
         return obb

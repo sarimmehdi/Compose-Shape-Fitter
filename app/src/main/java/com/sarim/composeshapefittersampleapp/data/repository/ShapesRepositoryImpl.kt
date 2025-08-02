@@ -1,5 +1,6 @@
 package com.sarim.composeshapefittersampleapp.data.repository
 
+import android.util.Log
 import androidx.datastore.core.DataStore
 import com.sarim.composeshapefittersampleapp.R
 import com.sarim.composeshapefittersampleapp.data.dto.shape.ShapeDto
@@ -18,6 +19,10 @@ class ShapesRepositoryImpl(
         get() =
             try {
                 dataStore.data.map {
+                    Log.i(
+                        ShapesRepositoryImpl::class.java.simpleName,
+                        "shapeDto = $it, selectedShapeType = ${it.selectedShapeType}"
+                    )
                     Resource.Success(it.selectedShapeType)
                 }
             } catch (e: Exception) {
@@ -33,6 +38,10 @@ class ShapesRepositoryImpl(
 
     override suspend fun updateSelectedShape(selectedShape: Shape) =
         try {
+            Log.i(
+                ShapesRepositoryImpl::class.java.simpleName,
+                "called updateSelectedShape with $selectedShape"
+            )
             dataStore.updateData {
                 it.copy(
                     selectedShapeType = selectedShape,

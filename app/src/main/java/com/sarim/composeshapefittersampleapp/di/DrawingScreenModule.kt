@@ -1,13 +1,12 @@
 package com.sarim.composeshapefittersampleapp.di
 
+import android.util.Log
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import com.sarim.composeshapefittersampleapp.data.dto.settings.SettingsDtoSerializer
 import com.sarim.composeshapefittersampleapp.data.dto.shape.ShapeDtoSerializer
 import com.sarim.composeshapefittersampleapp.data.repository.SettingsRepositoryImpl
-import com.sarim.composeshapefittersampleapp.data.repository.SettingsRepositoryTestImpl
 import com.sarim.composeshapefittersampleapp.data.repository.ShapesRepositoryImpl
-import com.sarim.composeshapefittersampleapp.data.repository.ShapesRepositoryTestImpl
 import com.sarim.composeshapefittersampleapp.domain.repository.SettingsRepository
 import com.sarim.composeshapefittersampleapp.domain.repository.ShapesRepository
 import com.sarim.composeshapefittersampleapp.domain.usecase.GetAllShapesUseCase
@@ -31,32 +30,32 @@ fun drawingScreenModule(
     shapeDtoDataStoreName: String,
     settingsDtoDataStoreName: String,
     scope: StringQualifier,
-    moduleType: ModuleType
 ) = lazyModule {
+    Log.d(
+        "DrawingScreenModule",
+        "called drawingScreenModule " +
+                "with shapeDtoDataStoreName = $shapeDtoDataStoreName, " +
+                "settingsDtoDataStoreName = $settingsDtoDataStoreName, " +
+                "and scope = $scope"
+    )
     single<ShapesRepository> {
-        when (moduleType) {
-            ModuleType.ACTUAL -> ShapesRepositoryImpl(
-                dataStore =
-                    DataStoreFactory.create(
-                        serializer = ShapeDtoSerializer,
-                        produceFile = { androidContext().dataStoreFile(shapeDtoDataStoreName) },
-                    ),
-            )
-            ModuleType.TEST -> ShapesRepositoryTestImpl()
-        }
+        ShapesRepositoryImpl(
+            dataStore =
+                DataStoreFactory.create(
+                    serializer = ShapeDtoSerializer,
+                    produceFile = { androidContext().dataStoreFile(shapeDtoDataStoreName) },
+                ),
+        )
     }
 
     single<SettingsRepository> {
-        when (moduleType) {
-            ModuleType.ACTUAL -> SettingsRepositoryImpl(
-                dataStore =
-                    DataStoreFactory.create(
-                        serializer = SettingsDtoSerializer,
-                        produceFile = { androidContext().dataStoreFile(settingsDtoDataStoreName) },
-                    ),
-            )
-            ModuleType.TEST -> SettingsRepositoryTestImpl()
-        }
+        SettingsRepositoryImpl(
+            dataStore =
+                DataStoreFactory.create(
+                    serializer = SettingsDtoSerializer,
+                    produceFile = { androidContext().dataStoreFile(settingsDtoDataStoreName) },
+                ),
+        )
     }
 
     viewModel {
@@ -77,8 +76,13 @@ fun drawingScreenModule(
 
 fun drawingScreenModule(scopeQualifier: StringQualifier, moduleType: ModuleType) =
     drawingScreenModule(
-        shapeDtoDataStoreName = ShapeDtoSerializer.SHAPE_DTO_DATA_STORE_NAME,
-        settingsDtoDataStoreName = SettingsDtoSerializer.SETTINGS_DTO_DATA_STORE_NAME,
+        shapeDtoDataStoreName = when (moduleType) {
+            ModuleType.ACTUAL -> ShapeDtoSerializer.SHAPE_DTO_DATA_STORE_NAME
+            ModuleType.TEST -> ShapeDtoSerializer.SHAPE_DTO_TEST_DATA_STORE_NAME
+        },
+        settingsDtoDataStoreName = when (moduleType) {
+            ModuleType.ACTUAL -> SettingsDtoSerializer.SETTINGS_DTO_DATA_STORE_NAME
+            ModuleType.TEST -> SettingsDtoSerializer.SETTINGS_DTO_TEST_DATA_STORE_NAME
+        },
         scope = scopeQualifier,
-        moduleType = moduleType
     )

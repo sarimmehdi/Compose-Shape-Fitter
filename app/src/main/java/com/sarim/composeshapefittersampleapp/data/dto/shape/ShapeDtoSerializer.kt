@@ -9,6 +9,7 @@ import java.io.OutputStream
 
 object ShapeDtoSerializer : Serializer<ShapeDto> {
     const val SHAPE_DTO_DATA_STORE_NAME = "ShapeDto.json"
+    const val SHAPE_DTO_TEST_DATA_STORE_NAME = "ShapeDtoTest.json"
 
     override val defaultValue: ShapeDto
         get() = ShapeDto()

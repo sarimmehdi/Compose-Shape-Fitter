@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sarim.composeshapefittersampleapp.R
+import com.sarim.composeshapefittersampleapp.domain.model.Settings
 import com.sarim.composeshapefittersampleapp.utils.DispatcherProvider
 import com.sarim.composeshapefittersampleapp.utils.MessageType
 import com.sarim.composeshapefittersampleapp.utils.Resource
@@ -168,22 +169,24 @@ class DrawingScreenViewModel(
                         )
             }
             is DrawingScreenToViewModelEvents.ToggleSettings -> {
-                when (event.type) {
-                    DrawingScreenToViewModelEvents.ToggleSettings.Type.SHOW_FINGER_TRACED_LINES -> {
-                        savedStateHandle[DRAWING_SCREEN_STATE_KEY] =
-                            savedStateHandle
-                                .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)
-                                ?.copy(
+                viewModelScope.launch {
+                    when (event.type) {
+                        DrawingScreenToViewModelEvents.ToggleSettings.Type.SHOW_FINGER_TRACED_LINES -> {
+                            drawingScreenUseCases.updateSettingsUseCase(
+                                Settings(
                                     showFingerTracedLines = !state.value.showFingerTracedLines,
+                                    showApproximatedShape = state.value.showApproximatedShape
                                 )
-                    }
-                    DrawingScreenToViewModelEvents.ToggleSettings.Type.SHOW_APPROXIMATED_SHAPE -> {
-                        savedStateHandle[DRAWING_SCREEN_STATE_KEY] =
-                            savedStateHandle
-                                .get<DrawingScreenState>(DRAWING_SCREEN_STATE_KEY)
-                                ?.copy(
-                                    showApproximatedShape = !state.value.showApproximatedShape,
+                            )
+                        }
+                        DrawingScreenToViewModelEvents.ToggleSettings.Type.SHOW_APPROXIMATED_SHAPE -> {
+                            drawingScreenUseCases.updateSettingsUseCase(
+                                Settings(
+                                    showFingerTracedLines = state.value.showFingerTracedLines,
+                                    showApproximatedShape = !state.value.showApproximatedShape
                                 )
+                            )
+                        }
                     }
                 }
             }

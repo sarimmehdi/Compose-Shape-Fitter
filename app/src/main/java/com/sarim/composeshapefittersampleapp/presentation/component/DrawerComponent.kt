@@ -21,6 +21,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,7 +54,9 @@ fun DrawerComponent(
                 onClick = {
                     onDrawingScreenEvent(DrawingScreenEvents.CloseDrawer)
                 },
-                modifier = Modifier.testTag(DRAWER_COMPONENT_CLOSE_DRAWER_ICON_BUTTON_TEST_TAG)
+                modifier = Modifier
+                    .semantics { testTagsAsResourceId = true }
+                    .testTag(DRAWER_COMPONENT_CLOSE_DRAWER_ICON_BUTTON_TEST_TAG)
             ) {
                 Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.close_nav_menu))
             }
@@ -69,7 +73,9 @@ fun DrawerComponent(
             color = DividerDefaults.color,
         )
         LazyColumn(
-            modifier = Modifier.testTag(DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG)
+            modifier = Modifier
+                .semantics { testTagsAsResourceId = true }
+                .testTag(DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG)
         ) {
             items(data.allShapes.size) { i ->
                 val shape = data.allShapes[i]
@@ -88,6 +94,7 @@ fun DrawerComponent(
                     },
                     modifier = Modifier
                         .padding(NavigationDrawerItemDefaults.ItemPadding)
+                        .semantics { testTagsAsResourceId = true }
                         .testTag(
                             if (shape == data.selectedShape) {
                                 DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_ + stringResource(shape.shapeStringId)

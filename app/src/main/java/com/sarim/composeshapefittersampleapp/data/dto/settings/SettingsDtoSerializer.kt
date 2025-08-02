@@ -9,6 +9,7 @@ import java.io.OutputStream
 
 object SettingsDtoSerializer : Serializer<SettingsDto> {
     const val SETTINGS_DTO_DATA_STORE_NAME = "SettingsDto.json"
+    const val SETTINGS_DTO_TEST_DATA_STORE_NAME = "SettingsDtoTest.json"
 
     override val defaultValue: SettingsDto
         get() = SettingsDto()

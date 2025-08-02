@@ -18,7 +18,7 @@ android {
 
     defaultConfig {
         applicationId = "com.sarim.composeshapefittersampleapp"
-        minSdk = 24
+        minSdk = 26
         //noinspection OldTargetApi
         targetSdk = 35
         versionCode = 1
@@ -59,6 +59,12 @@ android {
                     exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
                 }
             }
+        }
+    }
+    packaging {
+        resources {
+            pickFirsts.add("META-INF/AL2.0")
+            pickFirsts.add("META-INF/LGPL2.1")
         }
     }
 }

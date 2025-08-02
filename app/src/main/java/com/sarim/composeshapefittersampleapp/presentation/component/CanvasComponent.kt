@@ -43,7 +43,6 @@ fun CanvasComponent(
                         },
                         onDragEnd = {
                             onEvent(DrawingScreenToViewModelEvents.SetDragging(false))
-                            println()
                             if (data.points.isNotEmpty()) {
                                 onEvent(
                                     DrawingScreenToViewModelEvents.SetApproximateShape(

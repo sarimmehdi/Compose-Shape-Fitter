@@ -1,5 +1,6 @@
 package com.sarim.composeshapefittersampleapp.data.repository
 
+import android.util.Log
 import androidx.datastore.core.DataStore
 import com.sarim.composeshapefittersampleapp.R
 import com.sarim.composeshapefittersampleapp.data.dto.settings.SettingsDto
@@ -19,6 +20,10 @@ class SettingsRepositoryImpl(
         get() =
             try {
                 dataStore.data.map {
+                    Log.i(
+                        SettingsRepositoryImpl::class.java.simpleName,
+                        "settingsDto = $it, settings = ${it.toSettings()}"
+                    )
                     Resource.Success(it.toSettings())
                 }
             } catch (e: Exception) {
@@ -34,6 +39,10 @@ class SettingsRepositoryImpl(
 
     override suspend fun updateSettings(settings: Settings) =
         try {
+            Log.i(
+                SettingsRepositoryImpl::class.java.simpleName,
+                "called updateSettings with $settings"
+            )
             dataStore.updateData {
                 it.copy(
                     showFingerTracedLines = settings.showFingerTracedLines,
