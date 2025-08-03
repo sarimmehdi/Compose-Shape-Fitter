@@ -24,6 +24,7 @@ turbineVersion = "1.2.1"
 androidXTestRunnerVersion = "1.7.0"
 androidXTestJUnitVersion = "1.3.0"
 uiAutomatorVersion = "2.3.0"
+archUnitJUnit4Version = "1.4.1"
 
 [libraries]
 androidxCoreKtxLibrary = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtxVersion" }
@@ -38,6 +39,7 @@ androidxUiTestManifestLibrary = { group = "androidx.compose.ui", name = "ui-test
 androidxMaterial3Library = { group = "androidx.compose.material3", name = "material3" }
 composeJunit4Library = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 junitLibrary = { group = "junit", name = "junit", version.ref = "junitVersion" }
+archUnitJUnit4Library = { group = "com.tngtech.archunit", name = "archunit-junit4", version.ref = "archUnitJUnit4Version" }
 truthLibrary = { group = "com.google.truth", name = "truth", version.ref = "truthVersion" }
 assertJLibrary = { group = "org.assertj", name = "assertj-core", version.ref = "assertJVersion" }
 kotestPropertyLibrary = { group = "io.kotest", name = "kotest-property", version.ref = "kotestVersion" }
@@ -74,6 +76,7 @@ composeDebugImplementationBundle = [
 ]
 testBundle = [
     "junitLibrary",
+    "archUnitJUnit4Library",
     "truthLibrary",
     "assertJLibrary",
     "kotestPropertyLibrary",
