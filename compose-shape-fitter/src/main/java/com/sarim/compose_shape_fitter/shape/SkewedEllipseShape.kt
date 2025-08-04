@@ -1,13 +1,16 @@
 package com.sarim.compose_shape_fitter.shape
 
-import android.util.Log
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
+import com.sarim.compose_shape_fitter.BuildConfig
+import com.sarim.compose_shape_fitter.shape.DrawableShape.Companion.DEFAULT_LOG_REGARDLESS
+import com.sarim.compose_shape_fitter.utils.LogType
 import com.sarim.compose_shape_fitter.utils.OffsetParceler
+import com.sarim.compose_shape_fitter.utils.log
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.WriteWith
 import kotlin.math.PI
@@ -17,19 +20,21 @@ internal object EllipseFitterJNI {
         try {
             System.loadLibrary("composeshapefittersampleapp_native")
         } catch (e: UnsatisfiedLinkError) {
-            Log.e(EllipseFitterJNI::class.java.simpleName, "Failed to load native library 'native-lib': ${e.message}")
+            throw IllegalStateException("Failed to initialize EllipseFitterJNI due to missing native library", e)
         }
     }
 
     external fun fitEllipseNative(
         pointsX: FloatArray,
         pointsY: FloatArray,
+        shouldLog: Boolean
     ): FloatArray?
 }
 
 class SkewedEllipseShape(
     val color: Color,
     val strokeWidth: Float,
+    override var logRegardless: Boolean = DEFAULT_LOG_REGARDLESS
 ) : DrawableShape {
     @Parcelize
     data class RotatedEllipse(
@@ -41,7 +46,14 @@ class SkewedEllipseShape(
 
     private fun findSmallestEnclosingSkewedEllipse(points: List<Offset>): RotatedEllipse? {
         if (points.isEmpty()) {
-            Log.w(SkewedEllipseShape::class.java.simpleName, "Point list is empty, cannot fit ellipse.")
+            log(
+                tag = SkewedEllipseShape::class.java.simpleName,
+                messageBuilder = {
+                    "Point list is empty, cannot fit ellipse."
+                },
+                logType = LogType.WARN,
+                logRegardless = logRegardless
+            )
             return null
         }
 
@@ -50,7 +62,9 @@ class SkewedEllipseShape(
         val pointsY = FloatArray(points.size) { points[it].y }
 
         try {
-            val ellipseParamsArray: FloatArray? = EllipseFitterJNI.fitEllipseNative(pointsX, pointsY)
+            val ellipseParamsArray: FloatArray? = EllipseFitterJNI.fitEllipseNative(
+                pointsX, pointsY, BuildConfig.DEBUG || logRegardless
+            )
 
             if (ellipseParamsArray != null && ellipseParamsArray.size == MAX_ELLIPSE_PARAMS) {
                 val centerX = ellipseParamsArray[CENTER_X_IDX]
@@ -68,20 +82,46 @@ class SkewedEllipseShape(
                             angleRad = angleRad,
                         )
                 } else {
-                    Log.w(SkewedEllipseShape::class.java.simpleName, "Native method returned invalid ellipse radii: rX=$radiusX, rY=$radiusY")
+                    log(
+                        tag = SkewedEllipseShape::class.java.simpleName,
+                        messageBuilder = {
+                            "Native method returned invalid ellipse radii: rX=$radiusX, rY=$radiusY"
+                        },
+                        logType = LogType.WARN,
+                        logRegardless = logRegardless
+                    )
                 }
             } else {
-                Log.w(
-                    SkewedEllipseShape::class.java.simpleName, "Native method 'fitEllipseNative' returned null or an array of unexpected size: " +
-                        "${ellipseParamsArray?.size ?: "null"}. Expected $MAX_ELLIPSE_PARAMS.",
+                log(
+                    tag = SkewedEllipseShape::class.java.simpleName,
+                    messageBuilder = {
+                        "Native method 'fitEllipseNative' returned null or an array of unexpected size: " +
+                                "${ellipseParamsArray?.size ?: "null"}. Expected $MAX_ELLIPSE_PARAMS."
+                    },
+                    logType = LogType.WARN,
+                    logRegardless = logRegardless
                 )
             }
         } catch (e: UnsatisfiedLinkError) {
-            Log.e(SkewedEllipseShape::class.java.simpleName,"JNI UnsatisfiedLinkError in findEllipseUsingJNI: ${e.message}")
+            log(
+                tag = SkewedEllipseShape::class.java.simpleName,
+                messageBuilder = {
+                    "JNI UnsatisfiedLinkError in findEllipseUsingJNI: ${e.message}"
+                },
+                logType = LogType.ERROR,
+                logRegardless = logRegardless
+            )
         } catch (
             @Suppress("TooGenericExceptionCaught") e: Exception,
         ) {
-            Log.e(SkewedEllipseShape::class.java.simpleName,"Exception during JNI ellipse fitting: ${e.message}")
+            log(
+                tag = SkewedEllipseShape::class.java.simpleName,
+                messageBuilder = {
+                    "Exception during JNI ellipse fitting: ${e.message}"
+                },
+                logType = LogType.ERROR,
+                logRegardless = logRegardless
+            )
         }
 
         return resultEllipse

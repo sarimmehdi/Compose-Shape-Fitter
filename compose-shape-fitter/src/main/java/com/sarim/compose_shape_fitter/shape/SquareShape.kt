@@ -5,11 +5,13 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import com.sarim.compose_shape_fitter.shape.DrawableShape.Companion.DEFAULT_LOG_REGARDLESS
 import kotlin.math.max
 
 class SquareShape(
     val color: Color,
     val strokeWidth: Float,
+    override var logRegardless: Boolean = DEFAULT_LOG_REGARDLESS
 ) : DrawableShape {
     private fun findSmallestEnclosingSquare(points: List<Offset>): RectangleShape.Rectangle? {
         if (points.isEmpty()) {

@@ -9,10 +9,16 @@ import kotlinx.parcelize.Parcelize
 sealed interface ApproximatedShape : Parcelable
 
 sealed interface DrawableShape {
+    var logRegardless: Boolean
+
     fun draw(
         drawScope: DrawScope,
         points: List<Offset>,
     )
 
     fun getApproximatedShape(points: List<Offset>): ApproximatedShape?
+
+    companion object {
+        const val DEFAULT_LOG_REGARDLESS = false
+    }
 }

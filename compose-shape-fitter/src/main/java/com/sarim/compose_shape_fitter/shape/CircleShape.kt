@@ -4,6 +4,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import com.sarim.compose_shape_fitter.shape.DrawableShape.Companion.DEFAULT_LOG_REGARDLESS
 import com.sarim.compose_shape_fitter.utils.OffsetParceler
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.WriteWith
@@ -14,6 +15,7 @@ import kotlin.math.sqrt
 class CircleShape(
     val color: Color,
     val strokeWidth: Float,
+    override var logRegardless: Boolean = DEFAULT_LOG_REGARDLESS
 ) : DrawableShape {
     @Parcelize
     data class Circle(

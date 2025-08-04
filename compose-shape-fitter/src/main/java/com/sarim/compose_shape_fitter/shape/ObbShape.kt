@@ -1,13 +1,15 @@
 package com.sarim.compose_shape_fitter.shape
 
-import android.util.Log
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
+import com.sarim.compose_shape_fitter.shape.DrawableShape.Companion.DEFAULT_LOG_REGARDLESS
+import com.sarim.compose_shape_fitter.utils.LogType
 import com.sarim.compose_shape_fitter.utils.OffsetParceler
+import com.sarim.compose_shape_fitter.utils.log
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.WriteWith
 import kotlin.math.PI
@@ -19,6 +21,7 @@ class ObbShape(
     val color: Color,
     val strokeWidth: Float,
     val allSidesEqual: Boolean,
+    override var logRegardless: Boolean = DEFAULT_LOG_REGARDLESS
 ) : DrawableShape {
     @Parcelize
     data class OrientedBoundingBox(
@@ -92,7 +95,14 @@ class ObbShape(
         allSidesEqual: Boolean,
     ): OrientedBoundingBox? {
         if (points.isEmpty()) {
-            Log.w(ObbShape::class.java.simpleName,"Point list is empty, cannot fit ellipse to derive OBB.")
+            log(
+                tag = ObbShape::class.java.simpleName,
+                messageBuilder = {
+                    "Point list is empty, cannot fit ellipse to derive OBB."
+                },
+                logType = LogType.WARN,
+                logRegardless = logRegardless
+            )
             return null
         }
 
@@ -101,7 +111,7 @@ class ObbShape(
         val pointsY = FloatArray(points.size) { points[it].y }
 
         try {
-            val ellipseParamsArray: FloatArray? = EllipseFitterJNI.fitEllipseNative(pointsX, pointsY)
+            val ellipseParamsArray: FloatArray? = EllipseFitterJNI.fitEllipseNative(pointsX, pointsY, logRegardless)
 
             if (ellipseParamsArray != null && ellipseParamsArray.size == MAX_ELLIPSE_PARAMS) {
                 val centerX = ellipseParamsArray[CENTER_X_IDX]
@@ -121,23 +131,47 @@ class ObbShape(
                         )
                     obb = createOBBFromEllipse(fittedEllipse, allSidesEqual) // Assign to obb
                 } else {
-                    Log.w(
-                        ObbShape::class.java.simpleName,"Native method returned invalid ellipse radii for OBB: " +
-                            "rX=$ellipseRadiusX, rY=$ellipseRadiusY",
+                    log(
+                        tag = ObbShape::class.java.simpleName,
+                        messageBuilder = {
+                            "Native method returned invalid ellipse radii for OBB: " +
+                                    "rX=$ellipseRadiusX, rY=$ellipseRadiusY"
+                        },
+                        logType = LogType.WARN,
+                        logRegardless = logRegardless
                     )
                 }
             } else {
-                Log.w(
-                    ObbShape::class.java.simpleName,"Native method 'fitEllipseNative' returned null or an array of unexpected size " +
-                        "for OBB: ${ellipseParamsArray?.size ?: "null"}. Expected $MAX_ELLIPSE_PARAMS.",
+                log(
+                    tag = ObbShape::class.java.simpleName,
+                    messageBuilder = {
+                        "Native method 'fitEllipseNative' returned null or an array of unexpected size " +
+                                "for OBB: ${ellipseParamsArray?.size ?: "null"}. Expected $MAX_ELLIPSE_PARAMS."
+                    },
+                    logType = LogType.WARN,
+                    logRegardless = logRegardless
                 )
             }
         } catch (e: UnsatisfiedLinkError) {
-            Log.e(ObbShape::class.java.simpleName,"JNI UnsatisfiedLinkError in findOBBForFittedEllipse: ${e.message}")
+            log(
+                tag = ObbShape::class.java.simpleName,
+                messageBuilder = {
+                    "JNI UnsatisfiedLinkError in findOBBForFittedEllipse: ${e.message}"
+                },
+                logType = LogType.ERROR,
+                logRegardless = logRegardless
+            )
         } catch (
             @Suppress("TooGenericExceptionCaught") e: Exception,
         ) {
-            Log.e(ObbShape::class.java.simpleName,"Exception during JNI ellipse fitting for OBB: ${e.message}")
+            log(
+                tag = ObbShape::class.java.simpleName,
+                messageBuilder = {
+                    "Exception during JNI ellipse fitting for OBB: ${e.message}"
+                },
+                logType = LogType.ERROR,
+                logRegardless = logRegardless
+            )
         }
 
         return obb
