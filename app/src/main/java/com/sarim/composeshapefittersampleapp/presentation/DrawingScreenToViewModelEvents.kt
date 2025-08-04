@@ -27,13 +27,9 @@ sealed interface DrawingScreenToViewModelEvents {
     ) : DrawingScreenToViewModelEvents
 
     data class ToggleSettings(
-        val type: Type,
-    ) : DrawingScreenToViewModelEvents {
-        enum class Type {
-            SHOW_FINGER_TRACED_LINES,
-            SHOW_APPROXIMATED_SHAPE,
-        }
-    }
+        val showFingerTracedLines: Boolean,
+        val showApproximatedShape: Boolean,
+    ) : DrawingScreenToViewModelEvents
 
     data object ToggleSettingsDropDown : DrawingScreenToViewModelEvents
 

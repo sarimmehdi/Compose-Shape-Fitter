@@ -9,11 +9,16 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import com.sarim.compose_shape_fitter.shape.CircleShape
 import com.sarim.compose_shape_fitter.shape.DrawableShape
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenToViewModelEvents
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+
+const val CANVAS_COMPONENT_TEST_TAG = "CANVAS_COMPONENT_TEST_TAG"
 
 const val DEFAULT_STROKE_WIDTH = 5f
 
@@ -52,7 +57,14 @@ fun CanvasComponent(
                             }
                         },
                     )
-                },
+                }
+                .semantics { testTagsAsResourceId = true }
+                .testTag(
+                    CANVAS_COMPONENT_TEST_TAG +
+                            "_isDragging=${data.isDragging}" +
+                            "_showFingerTracedLines=${data.showFingerTracedLines}" +
+                            "_showApproximatedShape=${data.showApproximatedShape}"
+                ),
     ) {
         if (data.isDragging && data.showFingerTracedLines) {
             data.lines.forEach { line ->

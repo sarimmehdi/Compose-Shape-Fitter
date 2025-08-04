@@ -169,25 +169,13 @@ class DrawingScreenViewModel(
                         )
             }
             is DrawingScreenToViewModelEvents.ToggleSettings -> {
-                viewModelScope.launch {
-                    when (event.type) {
-                        DrawingScreenToViewModelEvents.ToggleSettings.Type.SHOW_FINGER_TRACED_LINES -> {
-                            drawingScreenUseCases.updateSettingsUseCase(
-                                Settings(
-                                    showFingerTracedLines = !state.value.showFingerTracedLines,
-                                    showApproximatedShape = state.value.showApproximatedShape
-                                )
-                            )
-                        }
-                        DrawingScreenToViewModelEvents.ToggleSettings.Type.SHOW_APPROXIMATED_SHAPE -> {
-                            drawingScreenUseCases.updateSettingsUseCase(
-                                Settings(
-                                    showFingerTracedLines = state.value.showFingerTracedLines,
-                                    showApproximatedShape = !state.value.showApproximatedShape
-                                )
-                            )
-                        }
-                    }
+                viewModelScope.launch(dispatchers.main) {
+                    drawingScreenUseCases.updateSettingsUseCase(
+                        Settings(
+                            showFingerTracedLines = event.showFingerTracedLines,
+                            showApproximatedShape = event.showApproximatedShape
+                        )
+                    )
                 }
             }
             is DrawingScreenToViewModelEvents.ToggleSettingsDropDown -> {

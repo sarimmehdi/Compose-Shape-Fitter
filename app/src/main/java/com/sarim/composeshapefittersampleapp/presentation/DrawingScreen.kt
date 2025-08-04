@@ -9,7 +9,6 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.sarim.composeshapefittersampleapp.presentation.component.CanvasComponent
@@ -18,7 +17,6 @@ import com.sarim.composeshapefittersampleapp.presentation.component.DrawerCompon
 import com.sarim.composeshapefittersampleapp.presentation.component.DrawerComponentData
 import com.sarim.composeshapefittersampleapp.presentation.component.TopBarComponent
 import com.sarim.composeshapefittersampleapp.presentation.component.TopBarComponentData
-import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
 const val DEFAULT_STROKE_WIDTH = 5f
@@ -30,19 +28,7 @@ fun DrawingScreen(
     state: DrawingScreenState = DrawingScreenState(),
     onEvent: (DrawingScreenToViewModelEvents) -> Unit = {},
 ) {
-    val scope = rememberCoroutineScope()
-
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val onDrawingScreenEvent: (DrawingScreenEvents) -> Unit = {
-        when (it) {
-            DrawingScreenEvents.CloseDrawer -> scope.launch {
-                drawerState.close()
-            }
-            DrawingScreenEvents.OpenDrawer -> scope.launch {
-                drawerState.open()
-            }
-        }
-    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -51,10 +37,10 @@ fun DrawingScreen(
                 DrawerComponent(
                     data = DrawerComponentData(
                         allShapes = state.allShapes,
-                        selectedShape = state.selectedShape
+                        selectedShape = state.selectedShape,
+                        currentDrawerState = drawerState,
                     ),
                     onEvent = onEvent,
-                    onDrawingScreenEvent = onDrawingScreenEvent
                 )
             }
         },
@@ -65,10 +51,10 @@ fun DrawingScreen(
                     data = TopBarComponentData(
                         showSettingsDropDown = state.showSettingsDropDown,
                         showFingerTracedLines = state.showFingerTracedLines,
-                        showApproximatedShape = state.showApproximatedShape
+                        showApproximatedShape = state.showApproximatedShape,
+                        currentDrawerState = drawerState,
                     ),
                     onEvent = onEvent,
-                    onDrawingScreenEvent = onDrawingScreenEvent
                 )
             },
             modifier = Modifier.fillMaxSize(),
@@ -91,11 +77,6 @@ fun DrawingScreen(
             )
         }
     }
-}
-
-sealed interface DrawingScreenEvents {
-    data object CloseDrawer : DrawingScreenEvents
-    data object OpenDrawer : DrawingScreenEvents
 }
 
 @Serializable

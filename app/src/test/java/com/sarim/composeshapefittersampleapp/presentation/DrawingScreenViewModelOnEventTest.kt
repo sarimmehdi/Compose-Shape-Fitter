@@ -5,9 +5,16 @@ import androidx.lifecycle.SavedStateHandle
 import com.google.common.truth.Truth.assertThat
 import com.sarim.compose_shape_fitter.shape.ApproximatedShape
 import com.sarim.composeshapefittersampleapp.TestDispatchers
+import com.sarim.composeshapefittersampleapp.domain.model.Settings
 import com.sarim.composeshapefittersampleapp.domain.model.Shape
 import com.sarim.composeshapefittersampleapp.domain.usecase.UpdateSelectedShapeUseCase
+import com.sarim.composeshapefittersampleapp.domain.usecase.UpdateSettingsUseCase
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenViewModel.Companion.DRAWING_SCREEN_STATE_KEY
+import io.kotest.property.Exhaustive
+import io.kotest.property.exhaustive.boolean
+import io.kotest.property.exhaustive.flatMap
+import io.kotest.property.exhaustive.map
+import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
@@ -26,12 +33,14 @@ data class TestDataDrawingScreenViewModelOnEventTest(
     val inputState: DrawingScreenState,
     val outputState: DrawingScreenState,
     val outputUseCase: Any?,
+    val outputEvent: (suspend () -> Unit)?,
 ) {
     val testDescription = (
         "when the input event is $inputEvent " +
             "and the input state is $inputState " +
             "the output state is $outputState " +
-            outputUseCase?.let { "and the usecase that will be called is $outputUseCase" }
+            outputUseCase?.let { "and the usecase that will be called is $outputUseCase" } +
+            outputEvent?.let { "and the event that will occur is $outputEvent" }
     )
 }
 
@@ -68,20 +77,37 @@ class DrawingScreenViewModelOnEventTest(
             viewModel.onEvent(testData.inputEvent)
             assertThat(viewModel.state.value).isEqualTo(testData.outputState)
             testData.outputUseCase?.let {
-                if (it is UpdateSelectedShapeUseCase) {
-                    assertThat(testData.inputEvent).isInstanceOf(DrawingScreenToViewModelEvents.SetSelectedShape::class.java)
-                    testDispatchers.testDispatcher.scheduler.advanceUntilIdle()
-                    coVerify {
-                        it(
-                            selectedShape = (testData.inputEvent as DrawingScreenToViewModelEvents.SetSelectedShape).selectedShape,
+                when (it) {
+                    is UpdateSelectedShapeUseCase -> {
+                        assertThat(testData.inputEvent).isInstanceOf(DrawingScreenToViewModelEvents.SetSelectedShape::class.java)
+                        testDispatchers.testDispatcher.scheduler.advanceUntilIdle()
+                        coVerify {
+                            it(
+                                selectedShape = (testData.inputEvent as DrawingScreenToViewModelEvents.SetSelectedShape).selectedShape,
+                            )
+                        }
+                    }
+                    is UpdateSettingsUseCase -> {
+                        assertThat(testData.inputEvent).isInstanceOf(DrawingScreenToViewModelEvents.ToggleSettings::class.java)
+                        testDispatchers.testDispatcher.scheduler.advanceUntilIdle()
+                        coVerify {
+                            it(
+                                settings = Settings(
+                                    showFingerTracedLines = (testData.inputEvent as DrawingScreenToViewModelEvents.ToggleSettings).showFingerTracedLines,
+                                    showApproximatedShape = testData.inputEvent.showApproximatedShape
+                                )
+                            )
+                        }
+                    }
+                    else -> {
+                        fail(
+                            "unexpected usecase: $it",
                         )
                     }
-                } else {
-                    fail(
-                        "$it is a usecase that is not one of these: " +
-                            "[UpdateSelectedShapeUseCase]",
-                    )
                 }
+            }
+            testData.outputEvent?.let {
+                coEvery { it() }
             }
         }
 
@@ -108,6 +134,7 @@ class DrawingScreenViewModelOnEventTest(
                                     inputState = DrawingScreenState(),
                                     outputState = DrawingScreenState(),
                                     outputUseCase = drawingScreenUseCases.updateSelectedShapeUseCase,
+                                    outputEvent = null,
                                 )
                             }
                         }
@@ -118,12 +145,14 @@ class DrawingScreenViewModelOnEventTest(
                                     inputState = DrawingScreenState(),
                                     outputState = DrawingScreenState(isDragging = true),
                                     outputUseCase = null,
+                                    outputEvent = null,
                                 ),
                                 TestDataDrawingScreenViewModelOnEventTest(
                                     inputEvent = DrawingScreenToViewModelEvents.SetDragging(false),
                                     inputState = DrawingScreenState(),
                                     outputState = DrawingScreenState(isDragging = false),
                                     outputUseCase = null,
+                                    outputEvent = null,
                                 ),
                             )
                         }
@@ -149,6 +178,7 @@ class DrawingScreenViewModelOnEventTest(
                                                 ),
                                         ),
                                     outputUseCase = null,
+                                    outputEvent = null,
                                 ),
                                 TestDataDrawingScreenViewModelOnEventTest(
                                     inputEvent =
@@ -177,6 +207,7 @@ class DrawingScreenViewModelOnEventTest(
                                                 ),
                                         ),
                                     outputUseCase = null,
+                                    outputEvent = null,
                                 ),
                             )
                         }
@@ -196,6 +227,7 @@ class DrawingScreenViewModelOnEventTest(
                                                 ),
                                         ),
                                     outputUseCase = null,
+                                    outputEvent = null,
                                 ),
                                 TestDataDrawingScreenViewModelOnEventTest(
                                     inputEvent =
@@ -220,6 +252,7 @@ class DrawingScreenViewModelOnEventTest(
                                                 ),
                                         ),
                                     outputUseCase = null,
+                                    outputEvent = null,
                                 ),
                             )
                         }
@@ -236,6 +269,7 @@ class DrawingScreenViewModelOnEventTest(
                                             points = persistentListOf(Offset.Infinite, Offset.Zero, Offset.Zero),
                                         ),
                                     outputUseCase = null,
+                                    outputEvent = null,
                                 ),
                                 TestDataDrawingScreenViewModelOnEventTest(
                                     inputEvent =
@@ -251,44 +285,25 @@ class DrawingScreenViewModelOnEventTest(
                                             points = persistentListOf(Offset.Infinite, Offset.Zero, Offset.Zero),
                                         ),
                                     outputUseCase = null,
+                                    outputEvent = null,
                                 ),
                             )
                         }
                         DrawingScreenToViewModelEvents.ToggleSettings::class -> {
-                            DrawingScreenToViewModelEvents.ToggleSettings.Type.entries.flatMap { type ->
-                                when (type) {
-                                    DrawingScreenToViewModelEvents.ToggleSettings.Type.SHOW_FINGER_TRACED_LINES ->
-                                        listOf(
-                                            TestDataDrawingScreenViewModelOnEventTest(
-                                                inputEvent = DrawingScreenToViewModelEvents.ToggleSettings(type),
-                                                inputState = DrawingScreenState(showFingerTracedLines = true),
-                                                outputState = DrawingScreenState(showFingerTracedLines = false),
-                                                outputUseCase = null,
-                                            ),
-                                            TestDataDrawingScreenViewModelOnEventTest(
-                                                inputEvent = DrawingScreenToViewModelEvents.ToggleSettings(type),
-                                                inputState = DrawingScreenState(showFingerTracedLines = false),
-                                                outputState = DrawingScreenState(showFingerTracedLines = true),
-                                                outputUseCase = null,
-                                            ),
-                                        )
-                                    DrawingScreenToViewModelEvents.ToggleSettings.Type.SHOW_APPROXIMATED_SHAPE ->
-                                        listOf(
-                                            TestDataDrawingScreenViewModelOnEventTest(
-                                                inputEvent = DrawingScreenToViewModelEvents.ToggleSettings(type),
-                                                inputState = DrawingScreenState(showApproximatedShape = true),
-                                                outputState = DrawingScreenState(showApproximatedShape = false),
-                                                outputUseCase = null,
-                                            ),
-                                            TestDataDrawingScreenViewModelOnEventTest(
-                                                inputEvent = DrawingScreenToViewModelEvents.ToggleSettings(type),
-                                                inputState = DrawingScreenState(showApproximatedShape = false),
-                                                outputState = DrawingScreenState(showApproximatedShape = true),
-                                                outputUseCase = null,
-                                            ),
-                                        )
+                            Exhaustive.boolean().flatMap { showFingerTracedLines ->
+                                Exhaustive.boolean().map { showApproximatedShape ->
+                                    TestDataDrawingScreenViewModelOnEventTest(
+                                        inputEvent = DrawingScreenToViewModelEvents.ToggleSettings(
+                                            showFingerTracedLines = showFingerTracedLines,
+                                            showApproximatedShape = showApproximatedShape,
+                                        ),
+                                        inputState = DrawingScreenState(),
+                                        outputState = DrawingScreenState(),
+                                        outputUseCase = drawingScreenUseCases.updateSettingsUseCase,
+                                        outputEvent = null,
+                                    )
                                 }
-                            }
+                            }.values
                         }
                         DrawingScreenToViewModelEvents.ToggleSettingsDropDown::class -> {
                             listOf(
@@ -297,12 +312,14 @@ class DrawingScreenViewModelOnEventTest(
                                     inputState = DrawingScreenState(showSettingsDropDown = true),
                                     outputState = DrawingScreenState(showSettingsDropDown = false),
                                     outputUseCase = null,
+                                    outputEvent = null,
                                 ),
                                 TestDataDrawingScreenViewModelOnEventTest(
                                     inputEvent = DrawingScreenToViewModelEvents.ToggleSettingsDropDown,
                                     inputState = DrawingScreenState(showSettingsDropDown = false),
                                     outputState = DrawingScreenState(showSettingsDropDown = true),
                                     outputUseCase = null,
+                                    outputEvent = null,
                                 ),
                             )
                         }
@@ -319,6 +336,7 @@ class DrawingScreenViewModelOnEventTest(
                                             points = persistentListOf(Offset.Infinite),
                                         ),
                                     outputUseCase = null,
+                                    outputEvent = null,
                                 ),
                                 TestDataDrawingScreenViewModelOnEventTest(
                                     inputEvent =
@@ -340,6 +358,7 @@ class DrawingScreenViewModelOnEventTest(
                                                 ),
                                         ),
                                     outputUseCase = null,
+                                    outputEvent = null,
                                 ),
                             )
                         }
@@ -357,12 +376,12 @@ class DrawingScreenViewModelOnEventTest(
                                             approximatedShape = approximatedShape,
                                         ),
                                     outputUseCase = null,
+                                    outputEvent = null,
                                 ),
                             )
                         }
                         else -> {
-                            println("Warning: Unhandled sealed subclass ${it.simpleName}")
-                            emptyList()
+                            throw IllegalStateException("Warning: Unhandled sealed subclass ${it.simpleName}. Please handle this new event type.")
                         }
                     }
                 }

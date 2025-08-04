@@ -10,6 +10,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.DividerDefaults
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -17,6 +19,7 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -28,11 +31,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sarim.composeshapefittersampleapp.R
 import com.sarim.composeshapefittersampleapp.domain.model.Shape
-import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenEvents
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenToViewModelEvents
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.launch
 
+const val DRAWER_COMPONENT_TEST_TAG = "DRAWER_COMPONENT_TEST_TAG"
 const val DRAWER_COMPONENT_CLOSE_DRAWER_ICON_BUTTON_TEST_TAG = "DRAWER_COMPONENT_CLOSE_DRAWER_ICON_BUTTON_TEST_TAG"
 const val DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG = "DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG"
 const val DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_ = "DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_"
@@ -43,16 +47,24 @@ fun DrawerComponent(
     modifier: Modifier = Modifier,
     data: DrawerComponentData = DrawerComponentData(),
     onEvent: (DrawingScreenToViewModelEvents) -> Unit = {},
-    onDrawingScreenEvent: (DrawingScreenEvents) -> Unit = {},
 ) {
-    Column(modifier = modifier.padding(16.dp)) {
+    val scope = rememberCoroutineScope()
+
+    Column(
+        modifier = modifier
+            .padding(16.dp)
+            .semantics { testTagsAsResourceId = true }
+            .testTag(DRAWER_COMPONENT_TEST_TAG)
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth(),
         ) {
             IconButton(
                 onClick = {
-                    onDrawingScreenEvent(DrawingScreenEvents.CloseDrawer)
+                    scope.launch {
+                        data.currentDrawerState.close()
+                    }
                 },
                 modifier = Modifier
                     .semantics { testTagsAsResourceId = true }
@@ -90,7 +102,9 @@ fun DrawerComponent(
                                 selectedShape = shape,
                             ),
                         )
-                        onDrawingScreenEvent(DrawingScreenEvents.CloseDrawer)
+                        scope.launch {
+                            data.currentDrawerState.close()
+                        }
                     },
                     modifier = Modifier
                         .padding(NavigationDrawerItemDefaults.ItemPadding)
@@ -111,4 +125,5 @@ fun DrawerComponent(
 data class DrawerComponentData(
     val allShapes: ImmutableList<Shape> = persistentListOf(),
     val selectedShape: Shape = Shape.Circle,
+    val currentDrawerState: DrawerState = DrawerState(DrawerValue.Closed),
 )

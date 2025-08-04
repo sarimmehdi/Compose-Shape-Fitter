@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.18.1)
 
-project("composeshapefittersampleapp_native_project")
+project("composeshapefitters_native_project")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -8,13 +8,13 @@ set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,max-page-size
 
 file(GLOB ELLIPSOID_FIT_SOURCES "ellipse-fit/*.cpp")
 add_library(
-        composeshapefittersampleapp_native
+        composeshapefitters_native
         SHARED
         native-lib.cpp
         ${ELLIPSOID_FIT_SOURCES}
 )
 
-target_include_directories(composeshapefittersampleapp_native
+target_include_directories(composeshapefitters_native
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
 )
@@ -26,7 +26,7 @@ find_library(
 
 if(log-lib)
     target_link_libraries(
-            composeshapefittersampleapp_native
+            composeshapefitters_native
             PRIVATE
             ${log-lib}
     )

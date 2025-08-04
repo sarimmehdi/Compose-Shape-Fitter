@@ -8,10 +8,8 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.performScrollToNode
 import com.sarim.composeshapefittersampleapp.domain.model.Shape
-import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenEvents
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenToViewModelEvents
 import io.mockk.mockk
-import io.mockk.verify
 import io.mockk.verifyOrder
 import junit.framework.TestCase.fail
 import kotlinx.collections.immutable.toImmutableList
@@ -19,40 +17,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
-import org.robolectric.RobolectricTestRunner
-
-@RunWith(RobolectricTestRunner::class)
-class DrawerComponentTest {
-
-    @get:Rule
-    val composeTestRule = createComposeRule()
-
-    val onEvent: (DrawingScreenToViewModelEvents) -> Unit = mockk(relaxed = true)
-    val onDrawingScreenEvent: (DrawingScreenEvents) -> Unit = mockk(relaxed = true)
-
-    @Test
-    fun `click on drawer icon to close drawer`() {
-        composeTestRule.setContent {
-            DrawerComponent(
-                onEvent = onEvent,
-                onDrawingScreenEvent = onDrawingScreenEvent
-            )
-        }
-
-        composeTestRule.onNodeWithTag(DRAWER_COMPONENT_CLOSE_DRAWER_ICON_BUTTON_TEST_TAG).performClick()
-
-        composeTestRule.runOnIdle {
-            verify {
-                onDrawingScreenEvent(ofType<DrawingScreenEvents.CloseDrawer>())
-            }
-        }
-    }
-
-    @Test
-    fun `click on every shape in drawer to close it`() {
-
-    }
-}
 
 data class TestDataDrawerComponentTestSelectShape(
     val selectedShape: Shape,
@@ -71,7 +35,6 @@ class DrawerComponentTestSelectShape(
     val composeTestRule = createComposeRule()
 
     val onEvent: (DrawingScreenToViewModelEvents) -> Unit = mockk(relaxed = true)
-    val onDrawingScreenEvent: (DrawingScreenEvents) -> Unit = mockk(relaxed = true)
     val allShapes = Shape.entries.toTypedArray().toImmutableList()
 
     lateinit var selectedShapeString: String
@@ -90,7 +53,6 @@ class DrawerComponentTestSelectShape(
                     selectedShape = testData.selectedShape
                 ),
                 onEvent = onEvent,
-                onDrawingScreenEvent = onDrawingScreenEvent
             )
         }
 
@@ -158,7 +120,6 @@ class DrawerComponentTestSelectShape(
                             )
                         )
                     )
-                    onDrawingScreenEvent(ofType<DrawingScreenEvents.CloseDrawer>())
                 }
             }
         } else {

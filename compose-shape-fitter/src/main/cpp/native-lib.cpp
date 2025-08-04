@@ -15,7 +15,7 @@
 extern "C" JNIEXPORT jfloatArray JNICALL
 Java_com_sarim_compose_1shape_1fitter_shape_EllipseFitterJNI_fitEllipseNative(
         JNIEnv *env,
-        jobject /* this */,
+        jobject,
         jfloatArray pointsX_jni,
         jfloatArray pointsY_jni,
         jboolean shouldLog_jni

@@ -66,6 +66,8 @@ android {
         resources {
             pickFirsts.add("META-INF/AL2.0")
             pickFirsts.add("META-INF/LGPL2.1")
+            pickFirsts.add("META-INF/LICENSE.md")
+            pickFirsts.add("META-INF/LICENSE-notice.md")
         }
     }
 }

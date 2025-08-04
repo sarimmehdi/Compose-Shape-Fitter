@@ -18,7 +18,7 @@ import kotlin.math.PI
 internal object EllipseFitterJNI {
     init {
         try {
-            System.loadLibrary("composeshapefittersampleapp_native")
+            System.loadLibrary("composeshapefitters_native")
         } catch (e: UnsatisfiedLinkError) {
             throw IllegalStateException("Failed to initialize EllipseFitterJNI due to missing native library", e)
         }

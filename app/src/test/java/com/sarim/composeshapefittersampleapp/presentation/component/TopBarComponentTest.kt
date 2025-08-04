@@ -3,7 +3,6 @@ package com.sarim.composeshapefittersampleapp.presentation.component
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
-import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenEvents
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenToViewModelEvents
 import io.kotest.property.Exhaustive
 import io.kotest.property.exhaustive.boolean
@@ -25,32 +24,12 @@ class TopBarComponentTest {
     val composeTestRule = createComposeRule()
 
     val onEvent: (DrawingScreenToViewModelEvents) -> Unit = mockk(relaxed = true)
-    val onDrawingScreenEvent: (DrawingScreenEvents) -> Unit = mockk(relaxed = true)
-
-    @Test
-    fun `click on drawer icon to open drawer`() {
-        composeTestRule.setContent {
-            TopBarComponent(
-                onEvent = onEvent,
-                onDrawingScreenEvent = onDrawingScreenEvent
-            )
-        }
-
-        composeTestRule.onNodeWithTag(TOP_BAR_COMPONENT_OPEN_DRAWER_ICON_BUTTON_TEST_TAG).performClick()
-
-        composeTestRule.runOnIdle {
-            verify {
-                onDrawingScreenEvent(ofType<DrawingScreenEvents.OpenDrawer>())
-            }
-        }
-    }
 
     @Test
     fun `click on settings icon`() {
         composeTestRule.setContent {
             TopBarComponent(
                 onEvent = onEvent,
-                onDrawingScreenEvent = onDrawingScreenEvent
             )
         }
 
@@ -71,7 +50,6 @@ class TopBarComponentTest {
                     showSettingsDropDown = true
                 ),
                 onEvent = onEvent,
-                onDrawingScreenEvent = onDrawingScreenEvent
             )
         }
 
@@ -83,14 +61,16 @@ class TopBarComponentTest {
                 onEvent(
                     eq(
                         DrawingScreenToViewModelEvents.ToggleSettings(
-                            DrawingScreenToViewModelEvents.ToggleSettings.Type.SHOW_FINGER_TRACED_LINES,
+                            showFingerTracedLines = false,
+                            showApproximatedShape = true,
                         )
                     )
                 )
                 onEvent(
                     eq(
                         DrawingScreenToViewModelEvents.ToggleSettings(
-                            DrawingScreenToViewModelEvents.ToggleSettings.Type.SHOW_APPROXIMATED_SHAPE,
+                            showFingerTracedLines = true,
+                            showApproximatedShape = false,
                         )
                     )
                 )
