@@ -15,7 +15,7 @@ data class TestDataSettingsDtoTest(
     val expectedOutput: Settings,
 ) {
     val testDescription =
-        "when input is $input, " +
+        "when input is $input, \n" +
             "the expected output should be $expectedOutput"
 }
 

@@ -24,6 +24,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import com.sarim.composeshapefittersampleapp.R
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenToViewModelEvents
+import com.sarim.composeshapefittersampleapp.utils.LogType
+import com.sarim.composeshapefittersampleapp.utils.log
 import kotlinx.coroutines.launch
 
 const val TOP_BAR_COMPONENT_OPEN_DRAWER_ICON_BUTTON_TEST_TAG = "TOP_BAR_COMPONENT_OPEN_DRAWER_ICON_BUTTON_TEST_TAG"
@@ -41,6 +43,14 @@ fun TopBarComponent(
     data: TopBarComponentData = TopBarComponentData(),
     onEvent: (DrawingScreenToViewModelEvents) -> Unit = {},
 ) {
+    log(
+        tag = "TopBarComponent",
+        messageBuilder = {
+            "data = $data"
+        },
+        logType = LogType.DEBUG
+    )
+
     val scope = rememberCoroutineScope()
 
     TopAppBar(
@@ -150,4 +160,14 @@ data class TopBarComponentData(
     val showFingerTracedLines: Boolean = true,
     val showApproximatedShape: Boolean = true,
     val currentDrawerState: DrawerState = DrawerState(DrawerValue.Closed),
-)
+) {
+    override fun toString(): String {
+        val indent = "  "
+        return """TopBarComponentData(
+${indent}showSettingsDropDown: $showSettingsDropDown,
+${indent}showFingerTracedLines: $showFingerTracedLines,
+${indent}showApproximatedShape: $showApproximatedShape,
+${indent}currentDrawerState: $currentDrawerState
+)""".trimIndent()
+    }
+}

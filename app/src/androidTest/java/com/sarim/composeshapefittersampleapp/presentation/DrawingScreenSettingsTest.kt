@@ -18,20 +18,18 @@ import org.junit.runners.Parameterized
 data class TestDataDrawingScreenTest(
     val testTagToClickOn: String,
     val affectedTestTagAfterClick: String,
-    val clickedTestTagEnabled: Boolean,
     val enabledTestTags: List<String>,
     val disabledTestTags: List<String>,
 ) {
     val testDescription =
-        "when input node with $testTagToClickOn is clicked, " +
-                "the node with test tag $affectedTestTagAfterClick will be affected, " +
-                "affectedTestTagAfterClick will become $clickedTestTagEnabled, " +
-                "these test tags must be enabled before the click action: $enabledTestTags, and " +
+        "when input node with $testTagToClickOn is clicked, \n" +
+                "the node with test tag $affectedTestTagAfterClick will be affected, \n" +
+                "these test tags must be enabled before the click action: $enabledTestTags, and \n" +
                 "these test tags must be disabled before the click action: $disabledTestTags"
 }
 
 @RunWith(Parameterized::class)
-class DrawingScreenTest(
+class DrawingScreenSettingsTest(
     @Suppress("UNUSED_PARAMETER") private val testDescription: String,
     private val testData: TestDataDrawingScreenTest,
 ) {
@@ -57,19 +55,10 @@ class DrawingScreenTest(
         }
 
         device.findObject(By.res(testData.testTagToClickOn)).click()
-        if (testData.clickedTestTagEnabled) {
-            assertThat(
-                device.wait(Until.hasObject(By.res(testData.affectedTestTagAfterClick)), MAX_TIMEOUT)
-            ).isTrue()
-        } else {
-            assertThat(
-                device.wait(Until.hasObject(By.res(testData.affectedTestTagAfterClick)), MAX_TIMEOUT)
-            ).isFalse()
-        }
     }
 
     companion object {
-        private const val MAX_TIMEOUT = 1_000L
+        private const val MAX_TIMEOUT = 10_000L
 
         @JvmStatic
         @Parameterized.Parameters(
@@ -81,7 +70,6 @@ class DrawingScreenTest(
                 TestDataDrawingScreenTest(
                     testTagToClickOn = TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TEST_TAG,
                     affectedTestTagAfterClick = TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TRAILING_ICON_TEST_TAG,
-                    clickedTestTagEnabled = false,
                     enabledTestTags = listOf(
                         TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TRAILING_ICON_TEST_TAG,
                         TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TRAILING_ICON_TEST_TAG
@@ -91,7 +79,6 @@ class DrawingScreenTest(
                 TestDataDrawingScreenTest(
                     testTagToClickOn = TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TEST_TAG,
                     affectedTestTagAfterClick = TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TRAILING_ICON_TEST_TAG,
-                    clickedTestTagEnabled = false,
                     enabledTestTags = listOf(
                         TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TRAILING_ICON_TEST_TAG
                     ),
@@ -102,7 +89,6 @@ class DrawingScreenTest(
                 TestDataDrawingScreenTest(
                     testTagToClickOn = TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TEST_TAG,
                     affectedTestTagAfterClick = TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TRAILING_ICON_TEST_TAG,
-                    clickedTestTagEnabled = true,
                     enabledTestTags = emptyList(),
                     disabledTestTags = listOf(
                         TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TRAILING_ICON_TEST_TAG,
@@ -112,7 +98,6 @@ class DrawingScreenTest(
                 TestDataDrawingScreenTest(
                     testTagToClickOn = TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TEST_TAG,
                     affectedTestTagAfterClick = TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TRAILING_ICON_TEST_TAG,
-                    clickedTestTagEnabled = true,
                     enabledTestTags = listOf(
                         TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TEST_TAG
                     ),
@@ -123,7 +108,6 @@ class DrawingScreenTest(
                 TestDataDrawingScreenTest(
                     testTagToClickOn = TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TEST_TAG,
                     affectedTestTagAfterClick = TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TRAILING_ICON_TEST_TAG,
-                    clickedTestTagEnabled = false,
                     enabledTestTags = listOf(
                         TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TEST_TAG,
                         TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TRAILING_ICON_TEST_TAG

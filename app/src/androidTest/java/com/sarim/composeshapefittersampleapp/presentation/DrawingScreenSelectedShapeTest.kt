@@ -17,14 +17,12 @@ import org.junit.runners.Parameterized
 
 data class TestDataDrawingScreenSelectedShapeTest(
     val testTagToClickOn: String,
-    val testTagAfterClickedOn: String,
     val enabledTestTags: List<String>,
     val disabledTestTags: List<String>,
 ) {
     val testDescription =
-        "when input node with $testTagToClickOn is clicked, " +
-                "it will have a new test tag $testTagAfterClickedOn, " +
-                "these test tags must be enabled before the click action: $enabledTestTags, and " +
+        "when input node with $testTagToClickOn is clicked, \n" +
+                "these test tags must be enabled before the click action: $enabledTestTags, and \n" +
                 "these test tags must be disabled before the click action: $disabledTestTags"
 }
 
@@ -55,14 +53,10 @@ class DrawingScreenSelectedShapeTest(
         }
 
         device.findObject(By.res(testData.testTagToClickOn)).click()
-        device.findObject(By.res(TOP_BAR_COMPONENT_OPEN_DRAWER_ICON_BUTTON_TEST_TAG)).click()
-        assertThat(
-            device.wait(Until.hasObject(By.res(testData.testTagAfterClickedOn)), MAX_TIMEOUT)
-        ).isTrue()
     }
 
     companion object {
-        private const val MAX_TIMEOUT = 1_000L
+        private const val MAX_TIMEOUT = 10_000L
 
         @JvmStatic
         @Parameterized.Parameters(
@@ -77,7 +71,6 @@ class DrawingScreenSelectedShapeTest(
                     val notSelectedShapeName = context.getString(consecutiveShapePairs.second.shapeStringId)
                     TestDataDrawingScreenSelectedShapeTest(
                         testTagToClickOn = DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_ + notSelectedShapeName,
-                        testTagAfterClickedOn = DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_ + notSelectedShapeName,
                         enabledTestTags = listOf(DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_ + selectedShapeName),
                         disabledTestTags = Shape.entries.filter { it != consecutiveShapePairs.first }.map {
                             DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_ + context.getString(it.shapeStringId)

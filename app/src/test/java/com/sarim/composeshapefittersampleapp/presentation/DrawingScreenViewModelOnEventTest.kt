@@ -36,10 +36,10 @@ data class TestDataDrawingScreenViewModelOnEventTest(
     val outputEvent: (suspend () -> Unit)?,
 ) {
     val testDescription = (
-        "when the input event is $inputEvent " +
-            "and the input state is $inputState " +
-            "the output state is $outputState " +
-            outputUseCase?.let { "and the usecase that will be called is $outputUseCase" } +
+        "when the input event is $inputEvent \n" +
+            "and the input state is $inputState \n" +
+            "the output state is $outputState \n" +
+            outputUseCase?.let { "and the usecase that will be called is $outputUseCase \n" } +
             outputEvent?.let { "and the event that will occur is $outputEvent" }
     )
 }

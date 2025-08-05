@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.detektPlugin)
     alias(libs.plugins.spotlessPlugin)
     id("kotlin-parcelize")
+    id("jacoco")
 }
 
 android {
@@ -28,6 +29,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            enableUnitTestCoverage = true
+            enableAndroidTestCoverage = true
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -52,6 +57,7 @@ android {
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
+            isReturnDefaultValues = true
             all { test ->
                 test.testLogging {
                     showStandardStreams = true
@@ -70,6 +76,80 @@ android {
             pickFirsts.add("META-INF/LICENSE-notice.md")
         }
     }
+}
+
+jacoco {
+    toolVersion = libs.versions.jacocoVersion.get()
+}
+
+tasks.register<JacocoReport>("jacocoTestReport") {
+    dependsOn("testDebugUnitTest", "createDebugCoverageReport")
+
+    reports {
+        html.required.set(true)
+        xml.required.set(false)
+        csv.required.set(false)
+    }
+
+    val mainSrc = "${project.projectDir}/src/main/java"
+    val kotlinSrc = "${project.projectDir}/src/main/kotlin"
+    sourceDirectories.setFrom(files(mainSrc, kotlinSrc).filter { it.exists() })
+    val fileFilter = listOf(
+        "**/R.class",
+        "**/R$*.class",
+        "**/Manifest*.*",
+        "**/BuildConfig.class",
+        "**/*Test.class",
+        "**/*Test$*.class",
+        "**/*Tests.class",
+        "**/*Tests$*.class",
+        "**/*UnitTest.class",
+        "**/*UnitTest$*.class",
+        "**/*InstrumentedTest.class",
+        "**/*InstrumentedTest$*.class",
+        "**/*Spec.class",
+        "**/*Spec$*.class",
+
+        "android/**/*.*",
+        "androidx/**/*.*",
+        "com/android/**/*.*",
+        "com/google/android/material/**/*.*",
+        "kotlinx/**/*.*",
+        "kotlin/coroutines/**/*.*",
+        "java/**/*.*",
+        "javax/**/*.*",
+        "org/intellij/lang/annotations/**/*.*",
+        "org/jetbrains/annotations/**/*.*",
+
+        "**/*ComposableSingletons*.*",
+        "**/*Kt$ années*.*",
+        "**/*Kt$*.class",
+        "**/databinding/*Binding.class",
+        "androidx/databinding/**/*.*",
+        "**/*\$ViewInjector*.*",
+        "**/*\$ViewBinder*.*",
+        "**/*Module.class",
+        "**/*Module$*.class",
+        "**/$*$.class",
+        "timber/**/*.*",
+        "com/jakewharton/timber/**/*.*",
+        "org/mockito/**/*.*",
+        "io/mockk/**/*.*",
+        "**/*\$MockitoMock*$.class",
+        "**/*\$MockK*.class"
+    )
+
+    val kotlinClassesDirProvider = layout.buildDirectory.dir("tmp/kotlin-classes/debug")
+    classDirectories.from(kotlinClassesDirProvider.map { dir ->
+        project.fileTree(dir) {
+            exclude(fileFilter)
+        }
+    })
+    executionData.setFrom(
+        fileTree(layout.buildDirectory.dir("outputs/unit_test_code_coverage/debugUnitTest")) {
+            include("*.exec")
+        }
+    )
 }
 
 ktlint {

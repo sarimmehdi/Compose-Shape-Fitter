@@ -35,9 +35,9 @@ data class TestDataDrawingScreenTest(
     val expectedEvents: List<DrawingScreenToViewModelEvents>,
 ) {
     val testDescription =
-        "when you start dragging from $dragStart, " +
-                "and go through points: $dragPositions " +
-                "with data $data" +
+        "when you start dragging from $dragStart, \n" +
+                "and go through points: $dragPositions \n" +
+                "with data $data \n" +
                 "the expected sequence of events should be $expectedEvents"
 }
 

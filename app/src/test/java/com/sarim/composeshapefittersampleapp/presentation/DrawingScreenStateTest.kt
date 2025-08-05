@@ -25,9 +25,9 @@ data class TestDataDrawingScreenStateTest(
     val expectedOutput: DrawableShape,
 ) {
     val testDescription =
-        "when input shape is $inputShape, " +
-                "input color is $inputColor, " +
-                "and input stroke width is $inputStrokeWidth" +
+        "when input shape is $inputShape, \n" +
+                "input color is $inputColor, \n" +
+                "and input stroke width is $inputStrokeWidth \n" +
                 "the expected output should be $expectedOutput"
 }
 

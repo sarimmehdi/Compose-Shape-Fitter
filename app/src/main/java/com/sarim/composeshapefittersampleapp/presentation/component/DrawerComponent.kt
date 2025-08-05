@@ -32,6 +32,8 @@ import androidx.compose.ui.unit.sp
 import com.sarim.composeshapefittersampleapp.R
 import com.sarim.composeshapefittersampleapp.domain.model.Shape
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenToViewModelEvents
+import com.sarim.composeshapefittersampleapp.utils.LogType
+import com.sarim.composeshapefittersampleapp.utils.log
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
@@ -48,6 +50,14 @@ fun DrawerComponent(
     data: DrawerComponentData = DrawerComponentData(),
     onEvent: (DrawingScreenToViewModelEvents) -> Unit = {},
 ) {
+    log(
+        tag = "DrawerComponent",
+        messageBuilder = {
+            "data = $data"
+        },
+        logType = LogType.DEBUG
+    )
+
     val scope = rememberCoroutineScope()
 
     Column(
@@ -126,4 +136,22 @@ data class DrawerComponentData(
     val allShapes: ImmutableList<Shape> = persistentListOf(),
     val selectedShape: Shape = Shape.Circle,
     val currentDrawerState: DrawerState = DrawerState(DrawerValue.Closed),
-)
+) {
+    override fun toString(): String {
+        val indent = "  "
+
+        val allShapesString = if (allShapes.isEmpty()) {
+            "allShapes: []"
+        } else {
+            "allShapes: [\n" + allShapes.joinToString(separator = ",\n") { shape ->
+                "${indent}${indent}${shape}"
+            } + "\n${indent}]"
+        }
+
+        return """DrawerComponentData(
+${indent}$allShapesString,
+${indent}selectedShape: $selectedShape,
+${indent}currentDrawerState: $currentDrawerState
+)""".trimIndent()
+    }
+}

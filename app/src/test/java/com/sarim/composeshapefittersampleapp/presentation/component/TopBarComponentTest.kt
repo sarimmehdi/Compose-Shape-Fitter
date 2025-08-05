@@ -85,8 +85,8 @@ data class TestDataTopBarComponentSettingsMenu(
     val disabledTestTags: List<String>,
 ) {
     val testDescription =
-        "when input data is $data, " +
-                "components with these test tags are enabled: $enabledTestTags" +
+        "when input data is $data, \n" +
+                "components with these test tags are enabled: $enabledTestTags \n" +
                 "components with these test tags are disabled: $disabledTestTags"
 }
 

@@ -15,6 +15,8 @@ import androidx.compose.ui.semantics.testTagsAsResourceId
 import com.sarim.compose_shape_fitter.shape.CircleShape
 import com.sarim.compose_shape_fitter.shape.DrawableShape
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenToViewModelEvents
+import com.sarim.composeshapefittersampleapp.utils.LogType
+import com.sarim.composeshapefittersampleapp.utils.log
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -28,6 +30,13 @@ fun CanvasComponent(
     data: CanvasComponentData = CanvasComponentData(),
     onEvent: (DrawingScreenToViewModelEvents) -> Unit = {},
 ) {
+    log(
+        tag = "CanvasComponent",
+        messageBuilder = {
+            "data = $data"
+        },
+        logType = LogType.DEBUG
+    )
     Canvas(
         modifier =
             modifier
@@ -92,4 +101,32 @@ data class CanvasComponentData(
     val lines: ImmutableList<Pair<Offset, Offset>> = persistentListOf(),
     val showFingerTracedLines: Boolean = true,
     val showApproximatedShape: Boolean = true,
-)
+) {
+    override fun toString(): String {
+        val indent = "  "
+        val pointsString = if (points.isEmpty()) {
+            "points: []"
+        } else {
+            "points: [\n" + points.joinToString(separator = ",\n") { point ->
+                "${indent}${indent}Offset(x=${point.x}, y=${point.y})"
+            } + "\n${indent}]"
+        }
+
+        val linesString = if (lines.isEmpty()) {
+            "lines: []"
+        } else {
+            "lines: [\n" + lines.joinToString(separator = ",\n") { line ->
+                "${indent}${indent}Pair(start=Offset(x=${line.first.x}, y=${line.first.y}), end=Offset(x=${line.second.x}, y=${line.second.y}))"
+            } + "\n${indent}]"
+        }
+
+        return """CanvasComponentData(
+${indent}drawableShape: $drawableShape,
+${indent}isDragging: $isDragging,
+${indent}$pointsString,
+${indent}$linesString,
+${indent}showFingerTracedLines: $showFingerTracedLines,
+${indent}showApproximatedShape: $showApproximatedShape
+)""".trimIndent()
+    }
+}
