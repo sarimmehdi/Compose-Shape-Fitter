@@ -60,9 +60,6 @@ class DrawerComponentTestSelectShape(
 
             composeTestRule.onNodeWithTag(DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG)
                 .performScrollToNode(hasTestTag(DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_ + selectedShapeString))
-            composeTestRule.onNodeWithTag(
-                DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_ + selectedShapeString
-            ).assertExists()
             composeTestRule.onNodeWithTag(DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG)
                 .performScrollToIndex(0)
 
@@ -80,9 +77,6 @@ class DrawerComponentTestSelectShape(
 
                 composeTestRule.onNodeWithTag(DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG)
                     .performScrollToNode(hasTestTag(DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_ + it))
-                composeTestRule.onNodeWithTag(
-                    DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_ + it
-                ).assertExists()
                 composeTestRule.onNodeWithTag(DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG)
                     .performScrollToIndex(0)
 

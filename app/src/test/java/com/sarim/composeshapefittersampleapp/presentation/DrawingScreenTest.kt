@@ -6,17 +6,24 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTouchInput
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.test.platform.app.InstrumentationRegistry
 import com.sarim.composeshapefittersampleapp.TestDispatchers
+import com.sarim.composeshapefittersampleapp.domain.model.Shape
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenViewModel.Companion.DRAWING_SCREEN_STATE_KEY
 import com.sarim.composeshapefittersampleapp.presentation.component.CANVAS_COMPONENT_TEST_TAG
 import com.sarim.composeshapefittersampleapp.presentation.component.DRAWER_COMPONENT_CLOSE_DRAWER_ICON_BUTTON_TEST_TAG
+import com.sarim.composeshapefittersampleapp.presentation.component.DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG
+import com.sarim.composeshapefittersampleapp.presentation.component.DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_
+import com.sarim.composeshapefittersampleapp.presentation.component.DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_
 import com.sarim.composeshapefittersampleapp.presentation.component.DRAWER_COMPONENT_TEST_TAG
 import com.sarim.composeshapefittersampleapp.presentation.component.TOP_BAR_COMPONENT_OPEN_DRAWER_ICON_BUTTON_TEST_TAG
 import com.sarim.composeshapefittersampleapp.presentation.component.TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TEST_TAG
@@ -36,6 +43,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import kotlin.collections.zipWithNext
 
 @RunWith(RobolectricTestRunner::class)
 class DrawingScreenTest {
@@ -46,6 +54,7 @@ class DrawingScreenTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     val testDispatchers = TestDispatchers()
 
+    lateinit var drawingScreenUseCases: DrawingScreenUseCases
     lateinit var savedStateHandle: SavedStateHandle
     lateinit var viewModel: DrawingScreenViewModel
 
@@ -55,12 +64,15 @@ class DrawingScreenTest {
         mockkObject(SnackBarController)
         savedStateHandle = SavedStateHandle()
         savedStateHandle[DRAWING_SCREEN_STATE_KEY] = DrawingScreenState()
+        drawingScreenUseCases = mockk(relaxed = true) {
+            every { getAllShapesUseCase() } returns Shape.entries
+        }
         viewModel =
             spyk(
                 DrawingScreenViewModel(
                     dispatchers = testDispatchers,
                     savedStateHandle = savedStateHandle,
-                    drawingScreenUseCases = mockk(relaxed = true),
+                    drawingScreenUseCases = drawingScreenUseCases,
                 )
             )
         every { viewModel.onEvent(match { event -> event is DrawingScreenToViewModelEvents.ToggleSettings }) } answers {
@@ -68,6 +80,12 @@ class DrawingScreenTest {
                 (savedStateHandle[DRAWING_SCREEN_STATE_KEY] as DrawingScreenState?)?.copy(
                     showFingerTracedLines = firstArg<DrawingScreenToViewModelEvents.ToggleSettings>().showFingerTracedLines,
                     showApproximatedShape = firstArg<DrawingScreenToViewModelEvents.ToggleSettings>().showApproximatedShape
+                )
+        }
+        every { viewModel.onEvent(match { event -> event is DrawingScreenToViewModelEvents.SetSelectedShape }) } answers {
+            savedStateHandle[DRAWING_SCREEN_STATE_KEY] =
+                (savedStateHandle[DRAWING_SCREEN_STATE_KEY] as DrawingScreenState?)?.copy(
+                    selectedShape = firstArg<DrawingScreenToViewModelEvents.SetSelectedShape>().selectedShape,
                 )
         }
     }
@@ -291,6 +309,108 @@ class DrawingScreenTest {
     // TODO: only test interaction between the two separate components and then add jacoco!
     @Test
     fun `test clicking on all shapes in drawer`() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
 
+        composeTestRule.setContent {
+            val drawingScreenState by viewModel.state.collectAsStateWithLifecycle()
+            val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+            DrawingScreen(
+                data = DrawingScreenData(
+                    state = drawingScreenState,
+                    drawerState = drawerState
+                ),
+                onEvent = viewModel::onEvent,
+            )
+        }
+
+        composeTestRule.onNodeWithTag(TOP_BAR_COMPONENT_OPEN_DRAWER_ICON_BUTTON_TEST_TAG).performClick()
+
+        Shape.entries.zipWithNext().map { consecutiveShapePairs ->
+                val selectedShape = consecutiveShapePairs.first
+                val shapeNotSelectedButWillBeSelectedNext = consecutiveShapePairs.second
+
+                composeTestRule.runOnIdle {
+                    composeTestRule.onNodeWithTag(
+                        DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG,
+                        useUnmergedTree = true
+                    )
+                        .performScrollToNode(
+                            hasTestTag(
+                                DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_ + context.getString(selectedShape.shapeStringId)
+                            )
+                        )
+                    Shape.entries.filter { it != selectedShape }.forEach { notSelectedShape ->
+                        composeTestRule.onNodeWithTag(
+                            DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG,
+                            useUnmergedTree = true
+                        )
+                            .performScrollToNode(
+                                hasTestTag(
+                                    DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_ + context.getString(notSelectedShape.shapeStringId)
+                                )
+                            )
+                    }
+                    composeTestRule.onNodeWithTag(
+                        DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG,
+                        useUnmergedTree = true
+                    )
+                        .performScrollToNode(
+                            hasTestTag(
+                                DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_ + context.getString(selectedShape.shapeStringId)
+                            )
+                        )
+                    composeTestRule.onNodeWithTag(
+                        DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_ + context.getString(selectedShape.shapeStringId),
+                        useUnmergedTree = true
+                    ).performClick()
+                }
+
+                composeTestRule.runOnIdle {
+                    composeTestRule.onNodeWithTag(TOP_BAR_COMPONENT_OPEN_DRAWER_ICON_BUTTON_TEST_TAG).performClick()
+                }
+
+                composeTestRule.runOnIdle {
+                    composeTestRule.onNodeWithTag(
+                        DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG,
+                        useUnmergedTree = true
+                    )
+                        .performScrollToNode(
+                            hasTestTag(
+                                DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_ + context.getString(selectedShape.shapeStringId)
+                            )
+                        )
+                    Shape.entries.filter { it != selectedShape }.forEach { notSelectedShape ->
+                        composeTestRule.onNodeWithTag(
+                            DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG,
+                            useUnmergedTree = true
+                        )
+                            .performScrollToNode(
+                                hasTestTag(
+                                    DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_ + context.getString(notSelectedShape.shapeStringId)
+                                )
+                            )
+                    }
+                    composeTestRule.onNodeWithTag(
+                        DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG,
+                        useUnmergedTree = true
+                    )
+                        .performScrollToNode(
+                            hasTestTag(
+                                DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_ + context.getString(shapeNotSelectedButWillBeSelectedNext.shapeStringId)
+                            )
+                        )
+                    composeTestRule.onNodeWithTag(
+                        DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_ + context.getString(shapeNotSelectedButWillBeSelectedNext.shapeStringId),
+                        useUnmergedTree = true
+                    ).performClick()
+                }
+
+                composeTestRule.runOnIdle {
+                    composeTestRule.onNodeWithTag(
+                        TOP_BAR_COMPONENT_OPEN_DRAWER_ICON_BUTTON_TEST_TAG,
+                        useUnmergedTree = true
+                    ).performClick()
+                }
+            }
     }
 }
