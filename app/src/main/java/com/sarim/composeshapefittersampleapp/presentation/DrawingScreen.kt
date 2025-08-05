@@ -2,12 +2,12 @@ package com.sarim.composeshapefittersampleapp.presentation
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,20 +25,18 @@ const val DEFAULT_STROKE_WIDTH = 5f
 @Composable
 fun DrawingScreen(
     modifier: Modifier = Modifier,
-    state: DrawingScreenState = DrawingScreenState(),
+    data: DrawingScreenData = DrawingScreenData(),
     onEvent: (DrawingScreenToViewModelEvents) -> Unit = {},
 ) {
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-
     ModalNavigationDrawer(
-        drawerState = drawerState,
+        drawerState = data.drawerState,
         drawerContent = {
             ModalDrawerSheet(modifier = modifier) {
                 DrawerComponent(
                     data = DrawerComponentData(
-                        allShapes = state.allShapes,
-                        selectedShape = state.selectedShape,
-                        currentDrawerState = drawerState,
+                        allShapes = data.state.allShapes,
+                        selectedShape = data.state.selectedShape,
+                        currentDrawerState = data.drawerState,
                     ),
                     onEvent = onEvent,
                 )
@@ -49,10 +47,10 @@ fun DrawingScreen(
             topBar = {
                 TopBarComponent(
                     data = TopBarComponentData(
-                        showSettingsDropDown = state.showSettingsDropDown,
-                        showFingerTracedLines = state.showFingerTracedLines,
-                        showApproximatedShape = state.showApproximatedShape,
-                        currentDrawerState = drawerState,
+                        showSettingsDropDown = data.state.showSettingsDropDown,
+                        showFingerTracedLines = data.state.showFingerTracedLines,
+                        showApproximatedShape = data.state.showApproximatedShape,
+                        currentDrawerState = data.drawerState,
                     ),
                     onEvent = onEvent,
                 )
@@ -62,12 +60,12 @@ fun DrawingScreen(
             CanvasComponent(
                 data =
                     CanvasComponentData(
-                        drawableShape = state.getDrawableShape(Color.Blue, DEFAULT_STROKE_WIDTH),
-                        isDragging = state.isDragging,
-                        points = state.points,
-                        lines = state.lines,
-                        showFingerTracedLines = state.showFingerTracedLines,
-                        showApproximatedShape = state.showApproximatedShape,
+                        drawableShape = data.state.getDrawableShape(Color.Blue, DEFAULT_STROKE_WIDTH),
+                        isDragging = data.state.isDragging,
+                        points = data.state.points,
+                        lines = data.state.lines,
+                        showFingerTracedLines = data.state.showFingerTracedLines,
+                        showApproximatedShape = data.state.showApproximatedShape,
                     ),
                 modifier =
                     Modifier
@@ -78,6 +76,11 @@ fun DrawingScreen(
         }
     }
 }
+
+data class DrawingScreenData(
+    val state: DrawingScreenState = DrawingScreenState(),
+    val drawerState: DrawerState = DrawerState(DrawerValue.Closed)
+)
 
 @Serializable
 object DrawingScreenNavigationDestination

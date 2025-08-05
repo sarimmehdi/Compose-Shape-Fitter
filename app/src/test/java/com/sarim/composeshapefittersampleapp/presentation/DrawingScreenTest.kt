@@ -1,5 +1,7 @@
 package com.sarim.composeshapefittersampleapp.presentation
 
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.test.assertIsDisplayed
@@ -23,9 +25,7 @@ import com.sarim.composeshapefittersampleapp.presentation.component.TOP_BAR_COMP
 import com.sarim.composeshapefittersampleapp.presentation.component.TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TRAILING_ICON_TEST_TAG
 import com.sarim.composeshapefittersampleapp.presentation.component.TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_TEST_TAG
 import com.sarim.composeshapefittersampleapp.presentation.component.TOP_BAR_COMPONENT_SETTINGS_ICON_BUTTON_TEST_TAG
-import com.sarim.composeshapefittersampleapp.utils.Resource
 import com.sarim.composeshapefittersampleapp.utils.SnackBarController
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
@@ -76,9 +76,13 @@ class DrawingScreenTest {
     fun `test open and closing behavior of drawer`() {
         composeTestRule.setContent {
             val drawingScreenState by viewModel.state.collectAsStateWithLifecycle()
+            val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
             DrawingScreen(
-                state = drawingScreenState,
-                onEvent = viewModel::onEvent
+                data = DrawingScreenData(
+                    state = drawingScreenState,
+                    drawerState = drawerState
+                ),
+                onEvent = viewModel::onEvent,
             )
         }
 
@@ -113,9 +117,13 @@ class DrawingScreenTest {
     fun `test open and closing behavior of settings menu`() {
         composeTestRule.setContent {
             val drawingScreenState by viewModel.state.collectAsStateWithLifecycle()
+            val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
             DrawingScreen(
-                state = drawingScreenState,
-                onEvent = viewModel::onEvent
+                data = DrawingScreenData(
+                    state = drawingScreenState,
+                    drawerState = drawerState
+                ),
+                onEvent = viewModel::onEvent,
             )
         }
 
@@ -142,9 +150,13 @@ class DrawingScreenTest {
     fun `test all settings in settings menu by clicking on them`() {
         composeTestRule.setContent {
             val drawingScreenState by viewModel.state.collectAsStateWithLifecycle()
+            val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
             DrawingScreen(
-                state = drawingScreenState,
-                onEvent = viewModel::onEvent
+                data = DrawingScreenData(
+                    state = drawingScreenState,
+                    drawerState = drawerState
+                ),
+                onEvent = viewModel::onEvent,
             )
         }
 

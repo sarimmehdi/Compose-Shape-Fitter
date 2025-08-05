@@ -4,9 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -17,6 +19,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreen
+import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenData
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenNavigationDestination
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenViewModel
 import com.sarim.composeshapefittersampleapp.ui.theme.ComposeShapeFitterSampleAppTheme
@@ -67,8 +70,12 @@ class MainActivity : ComponentActivity() {
                         composable<DrawingScreenNavigationDestination> {
                             val drawingScreenViewModel = koinViewModel<DrawingScreenViewModel>()
                             val drawingScreenState by drawingScreenViewModel.state.collectAsStateWithLifecycle()
+                            val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
                             DrawingScreen(
-                                state = drawingScreenState,
+                                data = DrawingScreenData(
+                                    state = drawingScreenState,
+                                    drawerState = drawerState
+                                ),
                                 onEvent = drawingScreenViewModel::onEvent,
                             )
                         }
