@@ -72,10 +72,11 @@ class MainActivity : ComponentActivity() {
                             val drawingScreenState by drawingScreenViewModel.state.collectAsStateWithLifecycle()
                             val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
                             DrawingScreen(
-                                data = DrawingScreenData(
-                                    state = drawingScreenState,
-                                    drawerState = drawerState
-                                ),
+                                data =
+                                    DrawingScreenData(
+                                        state = drawingScreenState,
+                                        drawerState = drawerState,
+                                    ),
                                 onEvent = drawingScreenViewModel::onEvent,
                             )
                         }

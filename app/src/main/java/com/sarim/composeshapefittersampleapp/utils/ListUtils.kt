@@ -1,6 +1,9 @@
 package com.sarim.composeshapefittersampleapp.utils
 
-fun <T> shuffleListExceptOne(list: MutableList<T>, fixedElementIndex: Int): List<T> {
+fun <T> shuffleListExceptOne(
+    list: MutableList<T>,
+    fixedElementIndex: Int,
+): List<T> {
     if (fixedElementIndex < 0 || fixedElementIndex >= list.size) {
         throw IndexOutOfBoundsException("Invalid index for fixed element")
     }

@@ -1,6 +1,5 @@
 package com.sarim.composeshapefittersampleapp.presentation
 
-import com.sarim.composeshapefittersampleapp.domain.usecase.GetAllShapesUseCase
 import com.sarim.composeshapefittersampleapp.domain.usecase.GetSelectedShapeUseCase
 import com.sarim.composeshapefittersampleapp.domain.usecase.GetSettingsUseCase
 import com.sarim.composeshapefittersampleapp.domain.usecase.UpdateSelectedShapeUseCase
@@ -9,7 +8,6 @@ import com.sarim.composeshapefittersampleapp.domain.usecase.UpdateSettingsUseCas
 data class DrawingScreenUseCases(
     val getSettingsUseCase: GetSettingsUseCase,
     val getSelectedShapeUseCase: GetSelectedShapeUseCase,
-    val getAllShapesUseCase: GetAllShapesUseCase,
     val updateSelectedShapeUseCase: UpdateSelectedShapeUseCase,
     val updateSettingsUseCase: UpdateSettingsUseCase,
 )

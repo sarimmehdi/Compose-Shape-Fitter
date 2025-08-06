@@ -15,12 +15,11 @@ import androidx.compose.ui.semantics.testTagsAsResourceId
 import com.sarim.compose_shape_fitter.shape.CircleShape
 import com.sarim.compose_shape_fitter.shape.DrawableShape
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenToViewModelEvents
+import com.sarim.composeshapefittersampleapp.presentation.component.CanvasComponentTestTags.CANVAS_COMPONENT
 import com.sarim.composeshapefittersampleapp.utils.LogType
 import com.sarim.composeshapefittersampleapp.utils.log
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-
-const val CANVAS_COMPONENT_TEST_TAG = "CANVAS_COMPONENT_TEST_TAG"
 
 const val DEFAULT_STROKE_WIDTH = 5f
 
@@ -35,7 +34,7 @@ fun CanvasComponent(
         messageBuilder = {
             "data = $data"
         },
-        logType = LogType.DEBUG
+        logType = LogType.DEBUG,
     )
     Canvas(
         modifier =
@@ -66,13 +65,12 @@ fun CanvasComponent(
                             }
                         },
                     )
-                }
-                .semantics { testTagsAsResourceId = true }
+                }.semantics { testTagsAsResourceId = true }
                 .testTag(
-                    CANVAS_COMPONENT_TEST_TAG +
-                            "_isDragging=${data.isDragging}" +
-                            "_showFingerTracedLines=${data.showFingerTracedLines}" +
-                            "_showApproximatedShape=${data.showApproximatedShape}"
+                    CANVAS_COMPONENT +
+                        "_isDragging=${data.isDragging}" +
+                        "_showFingerTracedLines=${data.showFingerTracedLines}" +
+                        "_showApproximatedShape=${data.showApproximatedShape}",
                 ),
     ) {
         if (data.isDragging && data.showFingerTracedLines) {
@@ -104,29 +102,43 @@ data class CanvasComponentData(
 ) {
     override fun toString(): String {
         val indent = "  "
-        val pointsString = if (points.isEmpty()) {
-            "points: []"
-        } else {
-            "points: [\n" + points.joinToString(separator = ",\n") { point ->
-                "${indent}${indent}Offset(x=${point.x}, y=${point.y})"
-            } + "\n${indent}]"
-        }
+        val pointsString =
+            if (points.isEmpty()) {
+                "points: []"
+            } else {
+                "points: [\n" +
+                    points.joinToString(separator = ",\n") { point ->
+                        "${indent}${indent}Offset(x=${point.x}, y=${point.y})"
+                    } + "\n$indent]"
+            }
 
-        val linesString = if (lines.isEmpty()) {
-            "lines: []"
-        } else {
-            "lines: [\n" + lines.joinToString(separator = ",\n") { line ->
-                "${indent}${indent}Pair(start=Offset(x=${line.first.x}, y=${line.first.y}), end=Offset(x=${line.second.x}, y=${line.second.y}))"
-            } + "\n${indent}]"
-        }
+        val linesString =
+            if (lines.isEmpty()) {
+                "lines: []"
+            } else {
+                "lines: [\n" +
+                    lines.joinToString(separator = ",\n") { line ->
+                        "${indent}${indent}Pair(start=Offset(x=${line.first.x}, y=${line.first.y}), " +
+                            "end=Offset(x=${line.second.x}, y=${line.second.y}))"
+                    } + "\n$indent]"
+            }
 
-        return """CanvasComponentData(
+        return """
+            CanvasComponentData(
 ${indent}drawableShape: $drawableShape,
 ${indent}isDragging: $isDragging,
 ${indent}$pointsString,
 ${indent}$linesString,
 ${indent}showFingerTracedLines: $showFingerTracedLines,
 ${indent}showApproximatedShape: $showApproximatedShape
-)""".trimIndent()
+)
+            """.trimIndent()
     }
+}
+
+object CanvasComponentTestTags {
+    private const val P = "CANVAS_COMPONENT_"
+    private const val S = "_TEST_TAG"
+
+    const val CANVAS_COMPONENT = "${P}$S"
 }

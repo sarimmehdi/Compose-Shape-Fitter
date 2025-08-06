@@ -6,4 +6,5 @@ plugins {
     alias(libs.plugins.androidLibraryPlugin) apply false
     alias(libs.plugins.detektPlugin) apply false
     alias(libs.plugins.spotlessPlugin) apply false
+    alias(libs.plugins.sonarPlugin) apply false
 }

@@ -13,7 +13,7 @@ import kotlinx.parcelize.WriteWith
 class EllipseShape(
     val color: Color,
     val strokeWidth: Float,
-    override var logRegardless: Boolean = DEFAULT_LOG_REGARDLESS
+    override var logRegardless: Boolean = DEFAULT_LOG_REGARDLESS,
 ) : DrawableShape {
     @Parcelize
     data class Ellipse(
@@ -89,7 +89,5 @@ class EllipseShape(
         return result
     }
 
-    override fun toString(): String {
-        return "EllipseShape(color=$color, strokeWidth=$strokeWidth)"
-    }
+    override fun toString(): String = "EllipseShape(color=$color, strokeWidth=$strokeWidth)"
 }

@@ -12,32 +12,52 @@ import org.junit.runner.RunWith
 @AnalyzeClasses(
     packagesOf = [
         DrawingScreenState::class, DrawingScreenToViewModelEvents::class,
-        DrawingScreenUseCases::class, DrawingScreenViewModel::class
-    ]
+        DrawingScreenUseCases::class, DrawingScreenViewModel::class,
+    ],
 )
 class PresentationArchitectureTest {
-
     @ArchTest
     fun packageDependencyTest(importedClasses: JavaClasses) {
-        noClasses().that().resideInAPackage("..presentation..")
-            .should().dependOnClassesThat().resideInAnyPackage(
-                "..data..", "..di.."
-            )
-            .check(importedClasses)
+        noClasses()
+            .that()
+            .resideInAPackage("..presentation..")
+            .should()
+            .dependOnClassesThat()
+            .resideInAnyPackage(
+                "..data..",
+                "..di..",
+            ).check(importedClasses)
     }
 
     @ArchTest
     fun classDependencyTest(importedClasses: JavaClasses) {
-        classes().that().resideInAPackage("..presentation..")
-            .should().onlyHaveDependentClassesThat().resideInAnyPackage(
-                "..domain..", "..utils..", "..presentation.."
-            )
-            .check(importedClasses)
-        classes().that().haveSimpleNameEndingWith("ScreenState")
-            .should().onlyHaveDependentClassesThat().haveSimpleNameEndingWith("ScreenViewModel")
-        classes().that().haveSimpleNameEndingWith("ScreenToViewModelEvents")
-            .should().onlyHaveDependentClassesThat().haveSimpleNameEndingWith("ScreenViewModel")
-        classes().that().haveSimpleNameEndingWith("ScreenUseCases")
-            .should().onlyHaveDependentClassesThat().haveSimpleNameEndingWith("ScreenViewModel")
+        classes()
+            .that()
+            .resideInAPackage("..presentation..")
+            .should()
+            .onlyHaveDependentClassesThat()
+            .resideInAnyPackage(
+                "..domain..",
+                "..utils..",
+                "..presentation..",
+            ).check(importedClasses)
+        classes()
+            .that()
+            .haveSimpleNameEndingWith("ScreenState")
+            .should()
+            .onlyHaveDependentClassesThat()
+            .haveSimpleNameEndingWith("ScreenViewModel")
+        classes()
+            .that()
+            .haveSimpleNameEndingWith("ScreenToViewModelEvents")
+            .should()
+            .onlyHaveDependentClassesThat()
+            .haveSimpleNameEndingWith("ScreenViewModel")
+        classes()
+            .that()
+            .haveSimpleNameEndingWith("ScreenUseCases")
+            .should()
+            .onlyHaveDependentClassesThat()
+            .haveSimpleNameEndingWith("ScreenViewModel")
     }
 }

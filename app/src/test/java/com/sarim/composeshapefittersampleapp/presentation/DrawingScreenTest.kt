@@ -19,19 +19,19 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.sarim.composeshapefittersampleapp.TestDispatchers
 import com.sarim.composeshapefittersampleapp.domain.model.Shape
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenViewModel.Companion.DRAWING_SCREEN_STATE_KEY
-import com.sarim.composeshapefittersampleapp.presentation.component.CANVAS_COMPONENT_TEST_TAG
-import com.sarim.composeshapefittersampleapp.presentation.component.DRAWER_COMPONENT_CLOSE_DRAWER_ICON_BUTTON_TEST_TAG
-import com.sarim.composeshapefittersampleapp.presentation.component.DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG
-import com.sarim.composeshapefittersampleapp.presentation.component.DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_
-import com.sarim.composeshapefittersampleapp.presentation.component.DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_
-import com.sarim.composeshapefittersampleapp.presentation.component.DRAWER_COMPONENT_TEST_TAG
-import com.sarim.composeshapefittersampleapp.presentation.component.TOP_BAR_COMPONENT_OPEN_DRAWER_ICON_BUTTON_TEST_TAG
-import com.sarim.composeshapefittersampleapp.presentation.component.TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TEST_TAG
-import com.sarim.composeshapefittersampleapp.presentation.component.TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TRAILING_ICON_TEST_TAG
-import com.sarim.composeshapefittersampleapp.presentation.component.TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TEST_TAG
-import com.sarim.composeshapefittersampleapp.presentation.component.TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TRAILING_ICON_TEST_TAG
-import com.sarim.composeshapefittersampleapp.presentation.component.TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_TEST_TAG
-import com.sarim.composeshapefittersampleapp.presentation.component.TOP_BAR_COMPONENT_SETTINGS_ICON_BUTTON_TEST_TAG
+import com.sarim.composeshapefittersampleapp.presentation.component.CanvasComponentTestTags.CANVAS_COMPONENT
+import com.sarim.composeshapefittersampleapp.presentation.component.DrawerComponentTestTags.CLOSE_DRAWER_ICON_BUTTON
+import com.sarim.composeshapefittersampleapp.presentation.component.DrawerComponentTestTags.DRAWER_COMPONENT
+import com.sarim.composeshapefittersampleapp.presentation.component.DrawerComponentTestTags.LAZY_COLUMN
+import com.sarim.composeshapefittersampleapp.presentation.component.DrawerComponentTestTags.SELECTED_NAVIGATION_DRAWER_ITEM
+import com.sarim.composeshapefittersampleapp.presentation.component.DrawerComponentTestTags.UNSELECTED_NAVIGATION_DRAWER_ITEM
+import com.sarim.composeshapefittersampleapp.presentation.component.TopBarComponentTestTags.APPROXIMATED_SHAPE
+import com.sarim.composeshapefittersampleapp.presentation.component.TopBarComponentTestTags.APPROXIMATED_SHAPE_TRAILING_ICON
+import com.sarim.composeshapefittersampleapp.presentation.component.TopBarComponentTestTags.FINGER_TRACED_LINES
+import com.sarim.composeshapefittersampleapp.presentation.component.TopBarComponentTestTags.FINGER_TRACED_LINES_TRAILING_ICON
+import com.sarim.composeshapefittersampleapp.presentation.component.TopBarComponentTestTags.OPEN_DRAWER_ICON_BUTTON
+import com.sarim.composeshapefittersampleapp.presentation.component.TopBarComponentTestTags.SETTINGS_DROP_DOWN_MENU
+import com.sarim.composeshapefittersampleapp.presentation.component.TopBarComponentTestTags.SETTINGS_ICON_BUTTON
 import com.sarim.composeshapefittersampleapp.utils.SnackBarController
 import io.mockk.every
 import io.mockk.mockk
@@ -47,7 +47,6 @@ import kotlin.collections.zipWithNext
 
 @RunWith(RobolectricTestRunner::class)
 class DrawingScreenTest {
-
     @get:Rule
     val composeTestRule = createComposeRule()
 
@@ -64,25 +63,32 @@ class DrawingScreenTest {
         mockkObject(SnackBarController)
         savedStateHandle = SavedStateHandle()
         savedStateHandle[DRAWING_SCREEN_STATE_KEY] = DrawingScreenState()
-        drawingScreenUseCases = mockk(relaxed = true) {
-            every { getAllShapesUseCase() } returns Shape.entries
-        }
+        drawingScreenUseCases = mockk(relaxed = true)
         viewModel =
             spyk(
                 DrawingScreenViewModel(
                     dispatchers = testDispatchers,
                     savedStateHandle = savedStateHandle,
                     drawingScreenUseCases = drawingScreenUseCases,
-                )
+                ),
             )
-        every { viewModel.onEvent(match { event -> event is DrawingScreenToViewModelEvents.ToggleSettings }) } answers {
+        every {
+            viewModel.onEvent(
+                match { event -> event is DrawingScreenToViewModelEvents.ToggleSettings },
+            )
+        } answers {
+            val toggleSettingsEvent = firstArg<DrawingScreenToViewModelEvents.ToggleSettings>()
             savedStateHandle[DRAWING_SCREEN_STATE_KEY] =
                 (savedStateHandle[DRAWING_SCREEN_STATE_KEY] as DrawingScreenState?)?.copy(
-                    showFingerTracedLines = firstArg<DrawingScreenToViewModelEvents.ToggleSettings>().showFingerTracedLines,
-                    showApproximatedShape = firstArg<DrawingScreenToViewModelEvents.ToggleSettings>().showApproximatedShape
+                    showFingerTracedLines = toggleSettingsEvent.showFingerTracedLines,
+                    showApproximatedShape = toggleSettingsEvent.showApproximatedShape,
                 )
         }
-        every { viewModel.onEvent(match { event -> event is DrawingScreenToViewModelEvents.SetSelectedShape }) } answers {
+        every {
+            viewModel.onEvent(
+                match { event -> event is DrawingScreenToViewModelEvents.SetSelectedShape },
+            )
+        } answers {
             savedStateHandle[DRAWING_SCREEN_STATE_KEY] =
                 (savedStateHandle[DRAWING_SCREEN_STATE_KEY] as DrawingScreenState?)?.copy(
                     selectedShape = firstArg<DrawingScreenToViewModelEvents.SetSelectedShape>().selectedShape,
@@ -96,38 +102,39 @@ class DrawingScreenTest {
             val drawingScreenState by viewModel.state.collectAsStateWithLifecycle()
             val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
             DrawingScreen(
-                data = DrawingScreenData(
-                    state = drawingScreenState,
-                    drawerState = drawerState
-                ),
+                data =
+                    DrawingScreenData(
+                        state = drawingScreenState,
+                        drawerState = drawerState,
+                    ),
                 onEvent = viewModel::onEvent,
             )
         }
 
-        composeTestRule.onNodeWithTag(DRAWER_COMPONENT_TEST_TAG).assertIsNotDisplayed()
+        composeTestRule.onNodeWithTag(DRAWER_COMPONENT).assertIsNotDisplayed()
 
-        composeTestRule.onNodeWithTag(TOP_BAR_COMPONENT_OPEN_DRAWER_ICON_BUTTON_TEST_TAG).performClick()
+        composeTestRule.onNodeWithTag(OPEN_DRAWER_ICON_BUTTON).performClick()
 
         composeTestRule.runOnIdle {
-            composeTestRule.onNodeWithTag(DRAWER_COMPONENT_TEST_TAG).assertIsDisplayed()
+            composeTestRule.onNodeWithTag(DRAWER_COMPONENT).assertIsDisplayed()
         }
 
-        composeTestRule.onNodeWithTag(DRAWER_COMPONENT_CLOSE_DRAWER_ICON_BUTTON_TEST_TAG).performClick()
+        composeTestRule.onNodeWithTag(CLOSE_DRAWER_ICON_BUTTON).performClick()
 
         composeTestRule.runOnIdle {
-            composeTestRule.onNodeWithTag(DRAWER_COMPONENT_TEST_TAG).assertIsNotDisplayed()
+            composeTestRule.onNodeWithTag(DRAWER_COMPONENT).assertIsNotDisplayed()
         }
 
-        composeTestRule.onNodeWithTag(TOP_BAR_COMPONENT_OPEN_DRAWER_ICON_BUTTON_TEST_TAG).performClick()
+        composeTestRule.onNodeWithTag(OPEN_DRAWER_ICON_BUTTON).performClick()
 
         composeTestRule.runOnIdle {
-            composeTestRule.onNodeWithTag(DRAWER_COMPONENT_TEST_TAG).assertIsDisplayed()
+            composeTestRule.onNodeWithTag(DRAWER_COMPONENT).assertIsDisplayed()
         }
 
-        composeTestRule.onNodeWithTag(TOP_BAR_COMPONENT_OPEN_DRAWER_ICON_BUTTON_TEST_TAG).performClick()
+        composeTestRule.onNodeWithTag(OPEN_DRAWER_ICON_BUTTON).performClick()
 
         composeTestRule.runOnIdle {
-            composeTestRule.onNodeWithTag(DRAWER_COMPONENT_TEST_TAG).assertIsNotDisplayed()
+            composeTestRule.onNodeWithTag(DRAWER_COMPONENT).assertIsNotDisplayed()
         }
     }
 
@@ -137,30 +144,31 @@ class DrawingScreenTest {
             val drawingScreenState by viewModel.state.collectAsStateWithLifecycle()
             val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
             DrawingScreen(
-                data = DrawingScreenData(
-                    state = drawingScreenState,
-                    drawerState = drawerState
-                ),
+                data =
+                    DrawingScreenData(
+                        state = drawingScreenState,
+                        drawerState = drawerState,
+                    ),
                 onEvent = viewModel::onEvent,
             )
         }
 
-        composeTestRule.onNodeWithTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_TEST_TAG).assertIsNotDisplayed()
+        composeTestRule.onNodeWithTag(SETTINGS_DROP_DOWN_MENU).assertIsNotDisplayed()
 
-        composeTestRule.onNodeWithTag(TOP_BAR_COMPONENT_SETTINGS_ICON_BUTTON_TEST_TAG).performClick()
+        composeTestRule.onNodeWithTag(SETTINGS_ICON_BUTTON).performClick()
 
         composeTestRule.runOnIdle {
-            composeTestRule.onNodeWithTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_TEST_TAG).assertIsDisplayed()
-            composeTestRule.onNodeWithTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TEST_TAG).assertIsDisplayed()
-            composeTestRule.onNodeWithTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TEST_TAG).assertIsDisplayed()
+            composeTestRule.onNodeWithTag(SETTINGS_DROP_DOWN_MENU).assertIsDisplayed()
+            composeTestRule.onNodeWithTag(FINGER_TRACED_LINES).assertIsDisplayed()
+            composeTestRule.onNodeWithTag(APPROXIMATED_SHAPE).assertIsDisplayed()
         }
 
-        composeTestRule.onNodeWithTag(TOP_BAR_COMPONENT_SETTINGS_ICON_BUTTON_TEST_TAG).performClick()
+        composeTestRule.onNodeWithTag(SETTINGS_ICON_BUTTON).performClick()
 
         composeTestRule.runOnIdle {
-            composeTestRule.onNodeWithTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_TEST_TAG).assertIsNotDisplayed()
-            composeTestRule.onNodeWithTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TEST_TAG).assertIsNotDisplayed()
-            composeTestRule.onNodeWithTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TEST_TAG).assertIsNotDisplayed()
+            composeTestRule.onNodeWithTag(SETTINGS_DROP_DOWN_MENU).assertIsNotDisplayed()
+            composeTestRule.onNodeWithTag(FINGER_TRACED_LINES).assertIsNotDisplayed()
+            composeTestRule.onNodeWithTag(APPROXIMATED_SHAPE).assertIsNotDisplayed()
         }
     }
 
@@ -170,143 +178,160 @@ class DrawingScreenTest {
             val drawingScreenState by viewModel.state.collectAsStateWithLifecycle()
             val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
             DrawingScreen(
-                data = DrawingScreenData(
-                    state = drawingScreenState,
-                    drawerState = drawerState
-                ),
+                data =
+                    DrawingScreenData(
+                        state = drawingScreenState,
+                        drawerState = drawerState,
+                    ),
                 onEvent = viewModel::onEvent,
             )
         }
 
-        composeTestRule.onNodeWithTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_TEST_TAG).assertIsNotDisplayed()
+        composeTestRule.onNodeWithTag(SETTINGS_DROP_DOWN_MENU).assertIsNotDisplayed()
 
-        composeTestRule.onNodeWithTag(TOP_BAR_COMPONENT_SETTINGS_ICON_BUTTON_TEST_TAG).performClick()
+        composeTestRule.onNodeWithTag(SETTINGS_ICON_BUTTON).performClick()
 
         composeTestRule.runOnIdle {
-            composeTestRule.onNodeWithTag(
-                TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TRAILING_ICON_TEST_TAG,
-                useUnmergedTree = true
-            ).assertIsDisplayed()
-            composeTestRule.onNodeWithTag(
-                TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TRAILING_ICON_TEST_TAG,
-                useUnmergedTree = true
-            ).assertIsDisplayed()
-            composeTestRule.onNodeWithTag(
-                CANVAS_COMPONENT_TEST_TAG +
+            composeTestRule
+                .onNodeWithTag(
+                    FINGER_TRACED_LINES_TRAILING_ICON,
+                    useUnmergedTree = true,
+                ).assertIsDisplayed()
+            composeTestRule
+                .onNodeWithTag(
+                    APPROXIMATED_SHAPE_TRAILING_ICON,
+                    useUnmergedTree = true,
+                ).assertIsDisplayed()
+            composeTestRule
+                .onNodeWithTag(
+                    CANVAS_COMPONENT +
                         "_isDragging=false" +
                         "_showFingerTracedLines=true" +
                         "_showApproximatedShape=true",
-                useUnmergedTree = true
-            ).assertExists()
+                    useUnmergedTree = true,
+                ).assertExists()
         }
 
-        composeTestRule.onNodeWithTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TEST_TAG).performClick()
+        composeTestRule.onNodeWithTag(FINGER_TRACED_LINES).performClick()
 
         composeTestRule.runOnIdle {
-            composeTestRule.onNodeWithTag(
-                TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TRAILING_ICON_TEST_TAG,
-                useUnmergedTree = true
-            ).assertIsNotDisplayed()
-            composeTestRule.onNodeWithTag(
-                TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TRAILING_ICON_TEST_TAG,
-                useUnmergedTree = true
-            ).assertIsDisplayed()
-            composeTestRule.onNodeWithTag(
-                CANVAS_COMPONENT_TEST_TAG +
+            composeTestRule
+                .onNodeWithTag(
+                    FINGER_TRACED_LINES_TRAILING_ICON,
+                    useUnmergedTree = true,
+                ).assertIsNotDisplayed()
+            composeTestRule
+                .onNodeWithTag(
+                    APPROXIMATED_SHAPE_TRAILING_ICON,
+                    useUnmergedTree = true,
+                ).assertIsDisplayed()
+            composeTestRule
+                .onNodeWithTag(
+                    CANVAS_COMPONENT +
                         "_isDragging=false" +
                         "_showFingerTracedLines=false" +
                         "_showApproximatedShape=true",
-                useUnmergedTree = true
-            ).assertExists()
+                    useUnmergedTree = true,
+                ).assertExists()
         }
 
-        composeTestRule.onNodeWithTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TEST_TAG).performClick()
+        composeTestRule.onNodeWithTag(APPROXIMATED_SHAPE).performClick()
 
         composeTestRule.runOnIdle {
-            composeTestRule.onNodeWithTag(
-                TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TRAILING_ICON_TEST_TAG,
-                useUnmergedTree = true
-            ).assertIsNotDisplayed()
-            composeTestRule.onNodeWithTag(
-                TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TRAILING_ICON_TEST_TAG,
-                useUnmergedTree = true
-            ).assertIsNotDisplayed()
-            composeTestRule.onNodeWithTag(
-                CANVAS_COMPONENT_TEST_TAG +
+            composeTestRule
+                .onNodeWithTag(
+                    FINGER_TRACED_LINES_TRAILING_ICON,
+                    useUnmergedTree = true,
+                ).assertIsNotDisplayed()
+            composeTestRule
+                .onNodeWithTag(
+                    APPROXIMATED_SHAPE_TRAILING_ICON,
+                    useUnmergedTree = true,
+                ).assertIsNotDisplayed()
+            composeTestRule
+                .onNodeWithTag(
+                    CANVAS_COMPONENT +
                         "_isDragging=false" +
                         "_showFingerTracedLines=false" +
                         "_showApproximatedShape=false",
-                useUnmergedTree = true
-            ).assertExists()
+                    useUnmergedTree = true,
+                ).assertExists()
         }
 
-        composeTestRule.onNodeWithTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TEST_TAG).performClick()
+        composeTestRule.onNodeWithTag(FINGER_TRACED_LINES).performClick()
 
         composeTestRule.runOnIdle {
-            composeTestRule.onNodeWithTag(
-                TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TRAILING_ICON_TEST_TAG,
-                useUnmergedTree = true
-            ).assertIsDisplayed()
-            composeTestRule.onNodeWithTag(
-                TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TRAILING_ICON_TEST_TAG,
-                useUnmergedTree = true
-            ).assertIsNotDisplayed()
-            composeTestRule.onNodeWithTag(
-                CANVAS_COMPONENT_TEST_TAG +
+            composeTestRule
+                .onNodeWithTag(
+                    FINGER_TRACED_LINES_TRAILING_ICON,
+                    useUnmergedTree = true,
+                ).assertIsDisplayed()
+            composeTestRule
+                .onNodeWithTag(
+                    APPROXIMATED_SHAPE_TRAILING_ICON,
+                    useUnmergedTree = true,
+                ).assertIsNotDisplayed()
+            composeTestRule
+                .onNodeWithTag(
+                    CANVAS_COMPONENT +
                         "_isDragging=false" +
                         "_showFingerTracedLines=true" +
                         "_showApproximatedShape=false",
-                useUnmergedTree = true
-            ).assertExists()
+                    useUnmergedTree = true,
+                ).assertExists()
         }
 
-        composeTestRule.onNodeWithTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TEST_TAG).performClick()
+        composeTestRule.onNodeWithTag(APPROXIMATED_SHAPE).performClick()
 
         composeTestRule.runOnIdle {
-            composeTestRule.onNodeWithTag(
-                TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TRAILING_ICON_TEST_TAG,
-                useUnmergedTree = true
-            ).assertIsDisplayed()
-            composeTestRule.onNodeWithTag(
-                TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TRAILING_ICON_TEST_TAG,
-                useUnmergedTree = true
-            ).assertIsDisplayed()
-            composeTestRule.onNodeWithTag(
-                CANVAS_COMPONENT_TEST_TAG +
+            composeTestRule
+                .onNodeWithTag(
+                    FINGER_TRACED_LINES_TRAILING_ICON,
+                    useUnmergedTree = true,
+                ).assertIsDisplayed()
+            composeTestRule
+                .onNodeWithTag(
+                    APPROXIMATED_SHAPE_TRAILING_ICON,
+                    useUnmergedTree = true,
+                ).assertIsDisplayed()
+            composeTestRule
+                .onNodeWithTag(
+                    CANVAS_COMPONENT +
                         "_isDragging=false" +
                         "_showFingerTracedLines=true" +
                         "_showApproximatedShape=true",
-                useUnmergedTree = true
-            ).assertExists()
+                    useUnmergedTree = true,
+                ).assertExists()
         }
 
-        composeTestRule.onNodeWithTag(TOP_BAR_COMPONENT_SETTINGS_ICON_BUTTON_TEST_TAG).performClick()
+        composeTestRule.onNodeWithTag(SETTINGS_ICON_BUTTON).performClick()
         composeTestRule.runOnIdle {
             composeTestRule.onRoot().performTouchInput {
                 down(Offset(100f, 100f))
                 moveTo(Offset(50f, 100f))
             }
         }
-        composeTestRule.onNodeWithTag(
-            CANVAS_COMPONENT_TEST_TAG +
+        composeTestRule
+            .onNodeWithTag(
+                CANVAS_COMPONENT +
                     "_isDragging=true" +
                     "_showFingerTracedLines=true" +
                     "_showApproximatedShape=true",
-            useUnmergedTree = true
-        ).assertExists()
+                useUnmergedTree = true,
+            ).assertExists()
         composeTestRule.onRoot().performTouchInput {
             up()
         }
-        composeTestRule.onNodeWithTag(
-            CANVAS_COMPONENT_TEST_TAG +
+        composeTestRule
+            .onNodeWithTag(
+                CANVAS_COMPONENT +
                     "_isDragging=false" +
                     "_showFingerTracedLines=true" +
                     "_showApproximatedShape=true",
-            useUnmergedTree = true
-        ).assertExists()
+                useUnmergedTree = true,
+            ).assertExists()
     }
 
-    // TODO: only test interaction between the two separate components and then add jacoco!
     @Test
     fun `test clicking on all shapes in drawer`() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
@@ -315,102 +340,110 @@ class DrawingScreenTest {
             val drawingScreenState by viewModel.state.collectAsStateWithLifecycle()
             val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
             DrawingScreen(
-                data = DrawingScreenData(
-                    state = drawingScreenState,
-                    drawerState = drawerState
-                ),
+                data =
+                    DrawingScreenData(
+                        state = drawingScreenState,
+                        drawerState = drawerState,
+                    ),
                 onEvent = viewModel::onEvent,
             )
         }
 
-        composeTestRule.onNodeWithTag(TOP_BAR_COMPONENT_OPEN_DRAWER_ICON_BUTTON_TEST_TAG).performClick()
+        composeTestRule.onNodeWithTag(OPEN_DRAWER_ICON_BUTTON).performClick()
 
         Shape.entries.zipWithNext().map { consecutiveShapePairs ->
-                val selectedShape = consecutiveShapePairs.first
-                val shapeNotSelectedButWillBeSelectedNext = consecutiveShapePairs.second
+            val selectedShape = consecutiveShapePairs.first
+            val shapeNotSelectedButWillBeSelectedNext = consecutiveShapePairs.second
 
-                composeTestRule.runOnIdle {
-                    composeTestRule.onNodeWithTag(
-                        DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG,
-                        useUnmergedTree = true
+            composeTestRule.runOnIdle {
+                composeTestRule
+                    .onNodeWithTag(
+                        LAZY_COLUMN,
+                        useUnmergedTree = true,
+                    ).performScrollToNode(
+                        hasTestTag(
+                            SELECTED_NAVIGATION_DRAWER_ITEM + context.getString(selectedShape.shapeStringId),
+                        ),
                     )
-                        .performScrollToNode(
+                Shape.entries.filter { it != selectedShape }.forEach { notSelectedShape ->
+                    composeTestRule
+                        .onNodeWithTag(
+                            LAZY_COLUMN,
+                            useUnmergedTree = true,
+                        ).performScrollToNode(
                             hasTestTag(
-                                DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_ + context.getString(selectedShape.shapeStringId)
-                            )
+                                UNSELECTED_NAVIGATION_DRAWER_ITEM +
+                                    context.getString(notSelectedShape.shapeStringId),
+                            ),
                         )
-                    Shape.entries.filter { it != selectedShape }.forEach { notSelectedShape ->
-                        composeTestRule.onNodeWithTag(
-                            DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG,
-                            useUnmergedTree = true
-                        )
-                            .performScrollToNode(
-                                hasTestTag(
-                                    DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_ + context.getString(notSelectedShape.shapeStringId)
-                                )
-                            )
-                    }
-                    composeTestRule.onNodeWithTag(
-                        DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG,
-                        useUnmergedTree = true
+                }
+                composeTestRule
+                    .onNodeWithTag(
+                        LAZY_COLUMN,
+                        useUnmergedTree = true,
+                    ).performScrollToNode(
+                        hasTestTag(
+                            SELECTED_NAVIGATION_DRAWER_ITEM + context.getString(selectedShape.shapeStringId),
+                        ),
                     )
-                        .performScrollToNode(
-                            hasTestTag(
-                                DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_ + context.getString(selectedShape.shapeStringId)
-                            )
-                        )
-                    composeTestRule.onNodeWithTag(
-                        DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_ + context.getString(selectedShape.shapeStringId),
-                        useUnmergedTree = true
+                composeTestRule
+                    .onNodeWithTag(
+                        SELECTED_NAVIGATION_DRAWER_ITEM + context.getString(selectedShape.shapeStringId),
+                        useUnmergedTree = true,
                     ).performClick()
-                }
-
-                composeTestRule.runOnIdle {
-                    composeTestRule.onNodeWithTag(TOP_BAR_COMPONENT_OPEN_DRAWER_ICON_BUTTON_TEST_TAG).performClick()
-                }
-
-                composeTestRule.runOnIdle {
-                    composeTestRule.onNodeWithTag(
-                        DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG,
-                        useUnmergedTree = true
-                    )
-                        .performScrollToNode(
-                            hasTestTag(
-                                DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_ + context.getString(selectedShape.shapeStringId)
-                            )
-                        )
-                    Shape.entries.filter { it != selectedShape }.forEach { notSelectedShape ->
-                        composeTestRule.onNodeWithTag(
-                            DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG,
-                            useUnmergedTree = true
-                        )
-                            .performScrollToNode(
-                                hasTestTag(
-                                    DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_ + context.getString(notSelectedShape.shapeStringId)
-                                )
-                            )
-                    }
-                    composeTestRule.onNodeWithTag(
-                        DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG,
-                        useUnmergedTree = true
-                    )
-                        .performScrollToNode(
-                            hasTestTag(
-                                DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_ + context.getString(shapeNotSelectedButWillBeSelectedNext.shapeStringId)
-                            )
-                        )
-                    composeTestRule.onNodeWithTag(
-                        DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_ + context.getString(shapeNotSelectedButWillBeSelectedNext.shapeStringId),
-                        useUnmergedTree = true
-                    ).performClick()
-                }
-
-                composeTestRule.runOnIdle {
-                    composeTestRule.onNodeWithTag(
-                        TOP_BAR_COMPONENT_OPEN_DRAWER_ICON_BUTTON_TEST_TAG,
-                        useUnmergedTree = true
-                    ).performClick()
-                }
             }
+
+            composeTestRule.runOnIdle {
+                composeTestRule.onNodeWithTag(OPEN_DRAWER_ICON_BUTTON).performClick()
+            }
+
+            composeTestRule.runOnIdle {
+                composeTestRule
+                    .onNodeWithTag(
+                        LAZY_COLUMN,
+                        useUnmergedTree = true,
+                    ).performScrollToNode(
+                        hasTestTag(
+                            SELECTED_NAVIGATION_DRAWER_ITEM + context.getString(selectedShape.shapeStringId),
+                        ),
+                    )
+                Shape.entries.filter { it != selectedShape }.forEach { notSelectedShape ->
+                    composeTestRule
+                        .onNodeWithTag(
+                            LAZY_COLUMN,
+                            useUnmergedTree = true,
+                        ).performScrollToNode(
+                            hasTestTag(
+                                UNSELECTED_NAVIGATION_DRAWER_ITEM +
+                                    context.getString(notSelectedShape.shapeStringId),
+                            ),
+                        )
+                }
+                composeTestRule
+                    .onNodeWithTag(
+                        LAZY_COLUMN,
+                        useUnmergedTree = true,
+                    ).performScrollToNode(
+                        hasTestTag(
+                            UNSELECTED_NAVIGATION_DRAWER_ITEM +
+                                context.getString(shapeNotSelectedButWillBeSelectedNext.shapeStringId),
+                        ),
+                    )
+                composeTestRule
+                    .onNodeWithTag(
+                        UNSELECTED_NAVIGATION_DRAWER_ITEM +
+                            context.getString(shapeNotSelectedButWillBeSelectedNext.shapeStringId),
+                        useUnmergedTree = true,
+                    ).performClick()
+            }
+
+            composeTestRule.runOnIdle {
+                composeTestRule
+                    .onNodeWithTag(
+                        OPEN_DRAWER_ICON_BUTTON,
+                        useUnmergedTree = true,
+                    ).performClick()
+            }
+        }
     }
 }

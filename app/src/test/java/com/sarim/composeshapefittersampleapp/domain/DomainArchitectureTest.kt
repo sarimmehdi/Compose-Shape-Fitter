@@ -4,7 +4,6 @@ import com.sarim.composeshapefittersampleapp.domain.model.Settings
 import com.sarim.composeshapefittersampleapp.domain.model.Shape
 import com.sarim.composeshapefittersampleapp.domain.repository.SettingsRepository
 import com.sarim.composeshapefittersampleapp.domain.repository.ShapesRepository
-import com.sarim.composeshapefittersampleapp.domain.usecase.GetAllShapesUseCase
 import com.sarim.composeshapefittersampleapp.domain.usecase.GetSelectedShapeUseCase
 import com.sarim.composeshapefittersampleapp.domain.usecase.GetSettingsUseCase
 import com.sarim.composeshapefittersampleapp.domain.usecase.UpdateSelectedShapeUseCase
@@ -23,44 +22,67 @@ import org.junit.runner.RunWith
     packagesOf = [
         Settings::class, Shape::class,
         SettingsRepository::class, ShapesRepository::class,
-        GetAllShapesUseCase::class, GetSelectedShapeUseCase::class,
-        GetSettingsUseCase::class, UpdateSelectedShapeUseCase::class,
-        UpdateSettingsUseCase::class,
-    ]
+        GetSelectedShapeUseCase::class, GetSettingsUseCase::class,
+        UpdateSelectedShapeUseCase::class, UpdateSettingsUseCase::class,
+    ],
 )
 class DomainArchitectureTest {
-
     @ArchTest
     fun packageDependencyTest(importedClasses: JavaClasses) {
-        noClasses().that().resideInAPackage("..domain..")
-            .should().dependOnClassesThat().resideInAnyPackage(
-                "..presentation..", "..data..", "..ui..", "..di.."
-            )
-            .check(importedClasses)
+        noClasses()
+            .that()
+            .resideInAPackage("..domain..")
+            .should()
+            .dependOnClassesThat()
+            .resideInAnyPackage(
+                "..presentation..",
+                "..data..",
+                "..ui..",
+                "..di..",
+            ).check(importedClasses)
     }
 
     @ArchTest
     fun classDependencyTest(importedClasses: JavaClasses) {
-        classes().that().resideInAPackage("..domain..")
-            .should().onlyHaveDependentClassesThat().resideInAnyPackage(
-                "..domain..", "..utils..", "..presentation.."
-            )
-            .check(importedClasses)
-        classes().that().resideInAPackage("..domain.model..")
-            .should().onlyHaveDependentClassesThat().resideInAnyPackage(
-                "..domain.repository..", "..domain.usecase..",
-                "..data.repository..", "..data.dto.."
-            ).orShould().onlyHaveDependentClassesThat().haveSimpleNameEndingWith("ViewModel")
+        classes()
+            .that()
+            .resideInAPackage("..domain..")
+            .should()
+            .onlyHaveDependentClassesThat()
+            .resideInAnyPackage(
+                "..domain..",
+                "..utils..",
+                "..presentation..",
+            ).check(importedClasses)
+        classes()
+            .that()
+            .resideInAPackage("..domain.model..")
+            .should()
+            .onlyHaveDependentClassesThat()
+            .resideInAnyPackage(
+                "..domain.repository..",
+                "..domain.usecase..",
+                "..data.repository..",
+                "..data.dto..",
+            ).orShould()
+            .onlyHaveDependentClassesThat()
+            .haveSimpleNameEndingWith("ViewModel")
             .check(importedClasses)
     }
 
     @ArchTest
     fun packageContainmentCheck(importedClasses: JavaClasses) {
-        classes().that().haveSimpleNameEndingWith("UseCase")
-            .should().resideInAPackage("..usecase..")
+        classes()
+            .that()
+            .haveSimpleNameEndingWith("UseCase")
+            .should()
+            .resideInAPackage("..usecase..")
             .check(importedClasses)
-        classes().that().haveSimpleNameEndingWith("Repository")
-            .should().resideInAPackage("..domain.repository..")
+        classes()
+            .that()
+            .haveSimpleNameEndingWith("Repository")
+            .should()
+            .resideInAPackage("..domain.repository..")
             .check(importedClasses)
     }
 
@@ -68,9 +90,12 @@ class DomainArchitectureTest {
     fun layerChecks(importedClasses: JavaClasses) {
         layeredArchitecture()
             .consideringAllDependencies()
-            .layer("Repository").definedBy("..domain.repository..")
-            .layer("Use Case").definedBy("..domain.usecase..")
-            .whereLayer("Repository").mayOnlyBeAccessedByLayers("Use Case")
+            .layer("Repository")
+            .definedBy("..domain.repository..")
+            .layer("Use Case")
+            .definedBy("..domain.usecase..")
+            .whereLayer("Repository")
+            .mayOnlyBeAccessedByLayers("Use Case")
             .check(importedClasses)
     }
 }

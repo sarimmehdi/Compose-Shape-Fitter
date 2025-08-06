@@ -17,7 +17,7 @@ import kotlin.math.sqrt
 class HexagonShape(
     val color: Color,
     val strokeWidth: Float,
-    override var logRegardless: Boolean = DEFAULT_LOG_REGARDLESS
+    override var logRegardless: Boolean = DEFAULT_LOG_REGARDLESS,
 ) : DrawableShape {
     @Parcelize
     data class Hexagon(
@@ -120,7 +120,5 @@ class HexagonShape(
         return result
     }
 
-    override fun toString(): String {
-        return "HexagonShape(color=$color, strokeWidth=$strokeWidth)"
-    }
+    override fun toString(): String = "HexagonShape(color=$color, strokeWidth=$strokeWidth)"
 }

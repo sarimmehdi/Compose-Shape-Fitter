@@ -8,8 +8,27 @@ plugins {
     alias(libs.plugins.ktlintPlugin)
     alias(libs.plugins.detektPlugin)
     alias(libs.plugins.spotlessPlugin)
+    alias(libs.plugins.sonarPlugin)
     id("kotlin-parcelize")
     id("jacoco")
+}
+
+sonarqube {
+    properties {
+        property("sonar.host.url", "http://localhost:9000")
+        property("sonar.token", "sqp_f725693eadebef9986eee82750530feeb63fff7d")
+        property("sonar.projectKey", "Compose-Shape-Fitter")
+        property("sonar.projectName", "Compose Shape Fitter")
+        property("sonar.qualitygate.wait", true)
+        property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
+        property("sonar.kotlin.detekt.reportPaths", "build/reports/detekt/detekt.xml")
+        property("sonar.kotlin.ktlint.reportPaths", "build/reports/ktlint/ktlintMainSourceSetCheck/ktlintMainSourceSetCheck.xml")
+        property("sonar.androidLint.reportPaths", "build/reports/lint-results-debug.xml")
+        property("sonar.android.androidTest.reportPaths", "build/outputs/androidTest-results/connected/TEST-*.xml")
+        property("sonar.sources", "src/main/java")
+        property("sonar.tests", "src/test/java,src/androidTest/java")
+        property("sonar.sourceEncoding", "UTF-8")
+    }
 }
 
 android {
@@ -34,7 +53,7 @@ android {
             enableAndroidTestCoverage = true
         }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
@@ -83,73 +102,82 @@ jacoco {
 }
 
 tasks.register<JacocoReport>("jacocoTestReport") {
+    group = "verification"
+    description = "Generates JaCoCo code coverage reports for the debug build."
+
     dependsOn("testDebugUnitTest", "createDebugCoverageReport")
 
     reports {
         html.required.set(true)
-        xml.required.set(false)
+        xml.required.set(true)
         csv.required.set(false)
     }
 
     val mainSrc = "${project.projectDir}/src/main/java"
     val kotlinSrc = "${project.projectDir}/src/main/kotlin"
     sourceDirectories.setFrom(files(mainSrc, kotlinSrc).filter { it.exists() })
-    val fileFilter = listOf(
-        "**/R.class",
-        "**/R$*.class",
-        "**/Manifest*.*",
-        "**/BuildConfig.class",
-        "**/*Test.class",
-        "**/*Test$*.class",
-        "**/*Tests.class",
-        "**/*Tests$*.class",
-        "**/*UnitTest.class",
-        "**/*UnitTest$*.class",
-        "**/*InstrumentedTest.class",
-        "**/*InstrumentedTest$*.class",
-        "**/*Spec.class",
-        "**/*Spec$*.class",
-
-        "android/**/*.*",
-        "androidx/**/*.*",
-        "com/android/**/*.*",
-        "com/google/android/material/**/*.*",
-        "kotlinx/**/*.*",
-        "kotlin/coroutines/**/*.*",
-        "java/**/*.*",
-        "javax/**/*.*",
-        "org/intellij/lang/annotations/**/*.*",
-        "org/jetbrains/annotations/**/*.*",
-
-        "**/*ComposableSingletons*.*",
-        "**/*Kt$ années*.*",
-        "**/*Kt$*.class",
-        "**/databinding/*Binding.class",
-        "androidx/databinding/**/*.*",
-        "**/*\$ViewInjector*.*",
-        "**/*\$ViewBinder*.*",
-        "**/*Module.class",
-        "**/*Module$*.class",
-        "**/$*$.class",
-        "timber/**/*.*",
-        "com/jakewharton/timber/**/*.*",
-        "org/mockito/**/*.*",
-        "io/mockk/**/*.*",
-        "**/*\$MockitoMock*$.class",
-        "**/*\$MockK*.class"
-    )
+    val fileFilter =
+        listOf(
+            "**/R.class",
+            "**/R$*.class",
+            "**/Manifest*.*",
+            "**/BuildConfig.class",
+            "**/*Test.class",
+            "**/*Test$*.class",
+            "**/*Tests.class",
+            "**/*Tests$*.class",
+            "**/*UnitTest.class",
+            "**/*UnitTest$*.class",
+            "**/*InstrumentedTest.class",
+            "**/*InstrumentedTest$*.class",
+            "**/*Spec.class",
+            "**/*Spec$*.class",
+            "android/**/*.*",
+            "androidx/**/*.*",
+            "com/android/**/*.*",
+            "com/google/android/material/**/*.*",
+            "kotlinx/**/*.*",
+            "kotlin/coroutines/**/*.*",
+            "java/**/*.*",
+            "javax/**/*.*",
+            "org/intellij/lang/annotations/**/*.*",
+            "org/jetbrains/annotations/**/*.*",
+            "**/*ComposableSingletons*.*",
+            "**/*Kt$ années*.*",
+            "**/*Kt$*.class",
+            "**/databinding/*Binding.class",
+            "androidx/databinding/**/*.*",
+            "**/*\$ViewInjector*.*",
+            "**/*\$ViewBinder*.*",
+            "**/*Module.class",
+            "**/*Module$*.class",
+            "**/$*$.class",
+            "timber/**/*.*",
+            "com/jakewharton/timber/**/*.*",
+            "org/mockito/**/*.*",
+            "io/mockk/**/*.*",
+            "**/*\$MockitoMock*$.class",
+            "**/*\$MockK*.class",
+        )
 
     val kotlinClassesDirProvider = layout.buildDirectory.dir("tmp/kotlin-classes/debug")
-    classDirectories.from(kotlinClassesDirProvider.map { dir ->
-        project.fileTree(dir) {
-            exclude(fileFilter)
-        }
-    })
+    classDirectories.from(
+        kotlinClassesDirProvider.map { dir ->
+            project.fileTree(dir) {
+                exclude(fileFilter)
+            }
+        },
+    )
     executionData.setFrom(
         fileTree(layout.buildDirectory.dir("outputs/unit_test_code_coverage/debugUnitTest")) {
             include("*.exec")
-        }
+        },
     )
+}
+
+detekt {
+    parallel = true
+    config.setFrom("${project.rootDir}/config/detekt/detekt.yml")
 }
 
 ktlint {
@@ -182,12 +210,15 @@ dependencies {
     implementation(libs.bundles.composeImplementationBundle)
     implementation(libs.bundles.dataStorageBundle)
     implementation(kotlin("reflect"))
+    implementation(project(":compose-shape-fitter"))
+
     debugImplementation(libs.bundles.composeDebugImplementationBundle)
+
     testImplementation(platform(libs.androidxComposeBomLibrary))
     testImplementation(libs.composeJunit4Library)
+    testImplementation(libs.bundles.testBundle)
+
     androidTestImplementation(platform(libs.androidxComposeBomLibrary))
     androidTestImplementation(libs.composeJunit4Library)
-    testImplementation(libs.bundles.testBundle)
     androidTestImplementation(libs.bundles.androidTestBundle)
-    implementation(project(":compose-shape-fitter"))
 }

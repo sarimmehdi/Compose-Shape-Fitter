@@ -11,7 +11,7 @@ import kotlin.math.max
 class SquareShape(
     val color: Color,
     val strokeWidth: Float,
-    override var logRegardless: Boolean = DEFAULT_LOG_REGARDLESS
+    override var logRegardless: Boolean = DEFAULT_LOG_REGARDLESS,
 ) : DrawableShape {
     private fun findSmallestEnclosingSquare(points: List<Offset>): RectangleShape.Rectangle? {
         if (points.isEmpty()) {
@@ -83,7 +83,5 @@ class SquareShape(
         return result
     }
 
-    override fun toString(): String {
-        return "SquareShape(color=$color, strokeWidth=$strokeWidth)"
-    }
+    override fun toString(): String = "SquareShape(color=$color, strokeWidth=$strokeWidth)"
 }

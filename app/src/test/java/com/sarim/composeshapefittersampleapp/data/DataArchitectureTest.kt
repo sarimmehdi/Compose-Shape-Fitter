@@ -23,28 +23,42 @@ import org.junit.runner.RunWith
         SettingsDto::class, SettingsDtoSerializer::class,
         ShapeDto::class, ShapeDtoSerializer::class,
         SettingsRepositoryImpl::class, ShapesRepositoryImpl::class,
-    ]
+    ],
 )
 class DataArchitectureTest {
-
     @ArchTest
     fun packageDependencyTest(importedClasses: JavaClasses) {
-        noClasses().that().resideInAPackage("..data..")
-            .should().dependOnClassesThat().resideInAnyPackage(
-                "..presentation..", "..ui..", "..di.."
+        noClasses()
+            .that()
+            .resideInAPackage("..data..")
+            .should()
+            .dependOnClassesThat()
+            .resideInAnyPackage(
+                "..presentation..",
+                "..ui..",
+                "..di..",
             ).check(importedClasses)
     }
 
     @ArchTest
     fun packageContainmentCheck(importedClasses: JavaClasses) {
-        classes().that().haveSimpleNameEndingWith("Dto")
-            .should().resideInAPackage("..dto..")
+        classes()
+            .that()
+            .haveSimpleNameEndingWith("Dto")
+            .should()
+            .resideInAPackage("..dto..")
             .check(importedClasses)
-        classes().that().haveSimpleNameEndingWith("DtoSerializer")
-            .should().resideInAPackage("..dto..")
+        classes()
+            .that()
+            .haveSimpleNameEndingWith("DtoSerializer")
+            .should()
+            .resideInAPackage("..dto..")
             .check(importedClasses)
-        classes().that().haveSimpleNameEndingWith("RepositoryImpl")
-            .should().resideInAPackage("..data.repository..")
+        classes()
+            .that()
+            .haveSimpleNameEndingWith("RepositoryImpl")
+            .should()
+            .resideInAPackage("..data.repository..")
             .check(importedClasses)
     }
 
@@ -52,20 +66,24 @@ class DataArchitectureTest {
     fun layerChecks(importedClasses: JavaClasses) {
         layeredArchitecture()
             .consideringAllDependencies()
-            .layer("Repository").definedBy("..data.repository..")
-            .whereLayer("Repository").mayNotBeAccessedByAnyLayer()
+            .layer("Repository")
+            .definedBy("..data.repository..")
+            .whereLayer("Repository")
+            .mayNotBeAccessedByAnyLayer()
             .check(importedClasses)
     }
 
     @ArchTest
     fun inheritanceCheck(importedClasses: JavaClasses) {
-        classes().that()
-            .implement(object : DescribedPredicate<JavaClass>("an interface ending with 'Repository'") {
-                override fun test(input: JavaClass?): Boolean {
-                    return input != null && input.isInterface && input.simpleName.endsWith("Repository")
-                }
-            })
-            .should().haveSimpleNameEndingWith("RepositoryImpl")
+        classes()
+            .that()
+            .implement(
+                object : DescribedPredicate<JavaClass>("an interface ending with 'Repository'") {
+                    override fun test(input: JavaClass?): Boolean =
+                        input != null && input.isInterface && input.simpleName.endsWith("Repository")
+                },
+            ).should()
+            .haveSimpleNameEndingWith("RepositoryImpl")
             .check(importedClasses)
     }
 }

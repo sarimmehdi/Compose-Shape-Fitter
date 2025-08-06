@@ -15,7 +15,7 @@ import kotlin.math.sqrt
 class CircleShape(
     val color: Color,
     val strokeWidth: Float,
-    override var logRegardless: Boolean = DEFAULT_LOG_REGARDLESS
+    override var logRegardless: Boolean = DEFAULT_LOG_REGARDLESS,
 ) : DrawableShape {
     @Parcelize
     data class Circle(
@@ -89,7 +89,5 @@ class CircleShape(
         return result
     }
 
-    override fun toString(): String {
-        return "CircleShape(color=$color, strokeWidth=$strokeWidth)"
-    }
+    override fun toString(): String = "CircleShape(color=$color, strokeWidth=$strokeWidth)"
 }

@@ -23,7 +23,7 @@ class MainApplication :
             lazyModules(
                 drawingScreenModule(
                     scopeQualifier = named(DrawingFeature::class.java.simpleName),
-                    moduleType = ModuleType.ACTUAL
+                    moduleType = ModuleType.ACTUAL,
                 ),
             )
         }

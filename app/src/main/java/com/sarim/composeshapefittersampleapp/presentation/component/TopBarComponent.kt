@@ -24,17 +24,16 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import com.sarim.composeshapefittersampleapp.R
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenToViewModelEvents
+import com.sarim.composeshapefittersampleapp.presentation.component.TopBarComponentTestTags.APPROXIMATED_SHAPE
+import com.sarim.composeshapefittersampleapp.presentation.component.TopBarComponentTestTags.APPROXIMATED_SHAPE_TRAILING_ICON
+import com.sarim.composeshapefittersampleapp.presentation.component.TopBarComponentTestTags.FINGER_TRACED_LINES
+import com.sarim.composeshapefittersampleapp.presentation.component.TopBarComponentTestTags.FINGER_TRACED_LINES_TRAILING_ICON
+import com.sarim.composeshapefittersampleapp.presentation.component.TopBarComponentTestTags.OPEN_DRAWER_ICON_BUTTON
+import com.sarim.composeshapefittersampleapp.presentation.component.TopBarComponentTestTags.SETTINGS_DROP_DOWN_MENU
+import com.sarim.composeshapefittersampleapp.presentation.component.TopBarComponentTestTags.SETTINGS_ICON_BUTTON
 import com.sarim.composeshapefittersampleapp.utils.LogType
 import com.sarim.composeshapefittersampleapp.utils.log
 import kotlinx.coroutines.launch
-
-const val TOP_BAR_COMPONENT_OPEN_DRAWER_ICON_BUTTON_TEST_TAG = "TOP_BAR_COMPONENT_OPEN_DRAWER_ICON_BUTTON_TEST_TAG"
-const val TOP_BAR_COMPONENT_SETTINGS_ICON_BUTTON_TEST_TAG = "TOP_BAR_COMPONENT_SETTINGS_ICON_BUTTON_TEST_TAG"
-const val TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_TEST_TAG = "TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_TEST_TAG"
-const val TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TEST_TAG = "TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TEST_TAG"
-const val TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TRAILING_ICON_TEST_TAG = "TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TRAILING_ICON_TEST_TAG"
-const val TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TEST_TAG = "TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TEST_TAG"
-const val TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TRAILING_ICON_TEST_TAG = "TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TRAILING_ICON_TEST_TAG"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,7 +47,7 @@ fun TopBarComponent(
         messageBuilder = {
             "data = $data"
         },
-        logType = LogType.DEBUG
+        logType = LogType.DEBUG,
     )
 
     val scope = rememberCoroutineScope()
@@ -62,9 +61,10 @@ fun TopBarComponent(
                         data.currentDrawerState.open()
                     }
                 },
-                modifier = Modifier
-                    .semantics { testTagsAsResourceId = true }
-                    .testTag(TOP_BAR_COMPONENT_OPEN_DRAWER_ICON_BUTTON_TEST_TAG)
+                modifier =
+                    Modifier
+                        .semantics { testTagsAsResourceId = true }
+                        .testTag(OPEN_DRAWER_ICON_BUTTON),
             ) {
                 Icon(
                     Icons.Filled.Menu,
@@ -77,9 +77,10 @@ fun TopBarComponent(
                 onClick = {
                     onEvent(DrawingScreenToViewModelEvents.ToggleSettingsDropDown)
                 },
-                modifier = Modifier
-                    .semantics { testTagsAsResourceId = true }
-                    .testTag(TOP_BAR_COMPONENT_SETTINGS_ICON_BUTTON_TEST_TAG)
+                modifier =
+                    Modifier
+                        .semantics { testTagsAsResourceId = true }
+                        .testTag(SETTINGS_ICON_BUTTON),
             ) {
                 Icon(
                     imageVector = Icons.Filled.Settings,
@@ -89,9 +90,10 @@ fun TopBarComponent(
             DropdownMenu(
                 expanded = data.showSettingsDropDown,
                 onDismissRequest = { onEvent(DrawingScreenToViewModelEvents.ToggleSettingsDropDown) },
-                modifier = Modifier
-                    .semantics { testTagsAsResourceId = true }
-                    .testTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_TEST_TAG)
+                modifier =
+                    Modifier
+                        .semantics { testTagsAsResourceId = true }
+                        .testTag(SETTINGS_DROP_DOWN_MENU),
             ) {
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.finger_traced_lines)) },
@@ -99,7 +101,7 @@ fun TopBarComponent(
                         onEvent(
                             DrawingScreenToViewModelEvents.ToggleSettings(
                                 showFingerTracedLines = !data.showFingerTracedLines,
-                                showApproximatedShape = data.showApproximatedShape
+                                showApproximatedShape = data.showApproximatedShape,
                             ),
                         )
                     },
@@ -108,15 +110,17 @@ fun TopBarComponent(
                             Icon(
                                 imageVector = Icons.Filled.Check,
                                 contentDescription = stringResource(R.string.settings),
-                                modifier = Modifier
-                                    .semantics { testTagsAsResourceId = true }
-                                    .testTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TRAILING_ICON_TEST_TAG)
+                                modifier =
+                                    Modifier
+                                        .semantics { testTagsAsResourceId = true }
+                                        .testTag(FINGER_TRACED_LINES_TRAILING_ICON),
                             )
                         }
                     },
-                    modifier = Modifier
-                        .semantics { testTagsAsResourceId = true }
-                        .testTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_FINGER_TRACED_LINES_TEST_TAG)
+                    modifier =
+                        Modifier
+                            .semantics { testTagsAsResourceId = true }
+                            .testTag(FINGER_TRACED_LINES),
                 )
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.approximated_shape)) },
@@ -124,7 +128,7 @@ fun TopBarComponent(
                         onEvent(
                             DrawingScreenToViewModelEvents.ToggleSettings(
                                 showFingerTracedLines = data.showFingerTracedLines,
-                                showApproximatedShape = !data.showApproximatedShape
+                                showApproximatedShape = !data.showApproximatedShape,
                             ),
                         )
                     },
@@ -133,15 +137,17 @@ fun TopBarComponent(
                             Icon(
                                 imageVector = Icons.Filled.Check,
                                 contentDescription = stringResource(R.string.settings),
-                                modifier = Modifier
-                                    .semantics { testTagsAsResourceId = true }
-                                    .testTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TRAILING_ICON_TEST_TAG)
+                                modifier =
+                                    Modifier
+                                        .semantics { testTagsAsResourceId = true }
+                                        .testTag(APPROXIMATED_SHAPE_TRAILING_ICON),
                             )
                         }
                     },
-                    modifier = Modifier
-                        .semantics { testTagsAsResourceId = true }
-                        .testTag(TOP_BAR_COMPONENT_SETTINGS_DROP_DOWN_MENU_ITEM_APPROXIMATED_SHAPE_TEST_TAG)
+                    modifier =
+                        Modifier
+                            .semantics { testTagsAsResourceId = true }
+                            .testTag(APPROXIMATED_SHAPE),
                 )
             }
         },
@@ -151,7 +157,7 @@ fun TopBarComponent(
                 titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
             ),
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -163,11 +169,29 @@ data class TopBarComponentData(
 ) {
     override fun toString(): String {
         val indent = "  "
-        return """TopBarComponentData(
+        return """
+            TopBarComponentData(
 ${indent}showSettingsDropDown: $showSettingsDropDown,
 ${indent}showFingerTracedLines: $showFingerTracedLines,
 ${indent}showApproximatedShape: $showApproximatedShape,
 ${indent}currentDrawerState: $currentDrawerState
-)""".trimIndent()
+)
+            """.trimIndent()
     }
+}
+
+object TopBarComponentTestTags {
+    private const val P = "TOP_BAR_COMPONENT_"
+    private const val S = "_TEST_TAG"
+
+    const val OPEN_DRAWER_ICON_BUTTON = "${P}OPEN_DRAWER_ICON_BUTTON$S"
+    const val SETTINGS_ICON_BUTTON = "${P}SETTINGS_ICON_BUTTON$S"
+    const val SETTINGS_DROP_DOWN_MENU = "${P}SETTINGS_DROP_DOWN_MENU$S"
+
+    private const val SDDMI = "SETTINGS_DROP_DOWN_MENU_ITEM_"
+
+    const val FINGER_TRACED_LINES = "${P}${SDDMI}FINGER_TRACED_LINES$S"
+    const val FINGER_TRACED_LINES_TRAILING_ICON = "${P}${SDDMI}FINGER_TRACED_LINES_TRAILING_ICON$S"
+    const val APPROXIMATED_SHAPE = "${P}${SDDMI}APPROXIMATED_SHAPE$S"
+    const val APPROXIMATED_SHAPE_TRAILING_ICON = "${P}${SDDMI}APPROXIMATED_SHAPE_TRAILING_ICON$S"
 }

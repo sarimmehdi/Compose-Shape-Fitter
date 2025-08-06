@@ -21,7 +21,7 @@ class ObbShape(
     val color: Color,
     val strokeWidth: Float,
     val allSidesEqual: Boolean,
-    override var logRegardless: Boolean = DEFAULT_LOG_REGARDLESS
+    override var logRegardless: Boolean = DEFAULT_LOG_REGARDLESS,
 ) : DrawableShape {
     @Parcelize
     data class OrientedBoundingBox(
@@ -90,6 +90,7 @@ class ObbShape(
         )
     }
 
+    @Suppress("LongMethod")
     private fun findSmallestEnclosingObb(
         points: List<Offset>,
         allSidesEqual: Boolean,
@@ -101,7 +102,7 @@ class ObbShape(
                     "Point list is empty, cannot fit ellipse to derive OBB."
                 },
                 logType = LogType.WARN,
-                logRegardless = logRegardless
+                logRegardless = logRegardless,
             )
             return null
         }
@@ -135,10 +136,10 @@ class ObbShape(
                         tag = ObbShape::class.java.simpleName,
                         messageBuilder = {
                             "Native method returned invalid ellipse radii for OBB: " +
-                                    "rX=$ellipseRadiusX, rY=$ellipseRadiusY"
+                                "rX=$ellipseRadiusX, rY=$ellipseRadiusY"
                         },
                         logType = LogType.WARN,
-                        logRegardless = logRegardless
+                        logRegardless = logRegardless,
                     )
                 }
             } else {
@@ -146,10 +147,10 @@ class ObbShape(
                     tag = ObbShape::class.java.simpleName,
                     messageBuilder = {
                         "Native method 'fitEllipseNative' returned null or an array of unexpected size " +
-                                "for OBB: ${ellipseParamsArray?.size ?: "null"}. Expected $MAX_ELLIPSE_PARAMS."
+                            "for OBB: ${ellipseParamsArray?.size ?: "null"}. Expected $MAX_ELLIPSE_PARAMS."
                     },
                     logType = LogType.WARN,
-                    logRegardless = logRegardless
+                    logRegardless = logRegardless,
                 )
             }
         } catch (e: UnsatisfiedLinkError) {
@@ -159,7 +160,7 @@ class ObbShape(
                     "JNI UnsatisfiedLinkError in findOBBForFittedEllipse: ${e.message}"
                 },
                 logType = LogType.ERROR,
-                logRegardless = logRegardless
+                logRegardless = logRegardless,
             )
         } catch (
             @Suppress("TooGenericExceptionCaught") e: Exception,
@@ -170,7 +171,7 @@ class ObbShape(
                     "Exception during JNI ellipse fitting for OBB: ${e.message}"
                 },
                 logType = LogType.ERROR,
-                logRegardless = logRegardless
+                logRegardless = logRegardless,
             )
         }
 
@@ -230,7 +231,5 @@ class ObbShape(
         return result
     }
 
-    override fun toString(): String {
-        return "ObbShape(color=$color, strokeWidth=$strokeWidth, allSidesEqual=$allSidesEqual)"
-    }
+    override fun toString(): String = "ObbShape(color=$color, strokeWidth=$strokeWidth, allSidesEqual=$allSidesEqual)"
 }

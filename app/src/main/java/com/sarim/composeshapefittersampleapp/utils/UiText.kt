@@ -33,6 +33,7 @@ sealed class UiText {
         }
     }
 
+    @Suppress("SpreadOperator")
     @Composable
     fun asString(): String =
         when (this) {
@@ -40,6 +41,7 @@ sealed class UiText {
             is StringResource -> stringResource(this.resId, *this.args)
         }
 
+    @Suppress("SpreadOperator")
     fun asString(context: Context): String =
         when (this) {
             is DynamicString -> value

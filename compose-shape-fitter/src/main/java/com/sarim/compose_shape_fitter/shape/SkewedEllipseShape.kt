@@ -27,14 +27,14 @@ internal object EllipseFitterJNI {
     external fun fitEllipseNative(
         pointsX: FloatArray,
         pointsY: FloatArray,
-        shouldLog: Boolean
+        shouldLog: Boolean,
     ): FloatArray?
 }
 
 class SkewedEllipseShape(
     val color: Color,
     val strokeWidth: Float,
-    override var logRegardless: Boolean = DEFAULT_LOG_REGARDLESS
+    override var logRegardless: Boolean = DEFAULT_LOG_REGARDLESS,
 ) : DrawableShape {
     @Parcelize
     data class RotatedEllipse(
@@ -44,6 +44,7 @@ class SkewedEllipseShape(
         val angleRad: Float,
     ) : ApproximatedShape
 
+    @Suppress("LongMethod")
     private fun findSmallestEnclosingSkewedEllipse(points: List<Offset>): RotatedEllipse? {
         if (points.isEmpty()) {
             log(
@@ -52,7 +53,7 @@ class SkewedEllipseShape(
                     "Point list is empty, cannot fit ellipse."
                 },
                 logType = LogType.WARN,
-                logRegardless = logRegardless
+                logRegardless = logRegardless,
             )
             return null
         }
@@ -62,9 +63,12 @@ class SkewedEllipseShape(
         val pointsY = FloatArray(points.size) { points[it].y }
 
         try {
-            val ellipseParamsArray: FloatArray? = EllipseFitterJNI.fitEllipseNative(
-                pointsX, pointsY, BuildConfig.DEBUG || logRegardless
-            )
+            val ellipseParamsArray: FloatArray? =
+                EllipseFitterJNI.fitEllipseNative(
+                    pointsX,
+                    pointsY,
+                    BuildConfig.DEBUG || logRegardless,
+                )
 
             if (ellipseParamsArray != null && ellipseParamsArray.size == MAX_ELLIPSE_PARAMS) {
                 val centerX = ellipseParamsArray[CENTER_X_IDX]
@@ -88,7 +92,7 @@ class SkewedEllipseShape(
                             "Native method returned invalid ellipse radii: rX=$radiusX, rY=$radiusY"
                         },
                         logType = LogType.WARN,
-                        logRegardless = logRegardless
+                        logRegardless = logRegardless,
                     )
                 }
             } else {
@@ -96,10 +100,10 @@ class SkewedEllipseShape(
                     tag = SkewedEllipseShape::class.java.simpleName,
                     messageBuilder = {
                         "Native method 'fitEllipseNative' returned null or an array of unexpected size: " +
-                                "${ellipseParamsArray?.size ?: "null"}. Expected $MAX_ELLIPSE_PARAMS."
+                            "${ellipseParamsArray?.size ?: "null"}. Expected $MAX_ELLIPSE_PARAMS."
                     },
                     logType = LogType.WARN,
-                    logRegardless = logRegardless
+                    logRegardless = logRegardless,
                 )
             }
         } catch (e: UnsatisfiedLinkError) {
@@ -109,7 +113,7 @@ class SkewedEllipseShape(
                     "JNI UnsatisfiedLinkError in findEllipseUsingJNI: ${e.message}"
                 },
                 logType = LogType.ERROR,
-                logRegardless = logRegardless
+                logRegardless = logRegardless,
             )
         } catch (
             @Suppress("TooGenericExceptionCaught") e: Exception,
@@ -120,7 +124,7 @@ class SkewedEllipseShape(
                     "Exception during JNI ellipse fitting: ${e.message}"
                 },
                 logType = LogType.ERROR,
-                logRegardless = logRegardless
+                logRegardless = logRegardless,
             )
         }
 
@@ -183,7 +187,5 @@ class SkewedEllipseShape(
         return result
     }
 
-    override fun toString(): String {
-        return "SkewedEllipseShape(color=$color, strokeWidth=$strokeWidth)"
-    }
+    override fun toString(): String = "SkewedEllipseShape(color=$color, strokeWidth=$strokeWidth)"
 }

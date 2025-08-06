@@ -11,6 +11,11 @@ class MainInitializer :
     KoinComponent {
     @Suppress("EmptyFunctionBlock")
     override fun create(context: Context) {
+        // This function is empty because the primary purpose of this Initializer
+        // is to ensure Koin is initialized via its dependency on KoinInitializer.
+        // Koin itself handles its setup within KoinInitializer.
+        // If there were any application-specific initialization tasks
+        // that needed to run after Koin is ready, they would be placed here.
     }
 
     @OptIn(KoinExperimentalAPI::class)

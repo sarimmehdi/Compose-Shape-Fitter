@@ -17,17 +17,23 @@ import com.sarim.composeshapefittersampleapp.domain.model.Shape
 import com.sarim.composeshapefittersampleapp.utils.OffsetParceler
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.WriteWith
+
+typealias ParcelableOffsetPair = Pair<
+    @WriteWith<OffsetParceler> Offset,
+    @WriteWith<OffsetParceler> Offset,
+>
 
 @Parcelize
 data class DrawingScreenState(
     val selectedShape: Shape = Shape.Circle,
-    val allShapes: ImmutableList<Shape> = persistentListOf(),
+    val allShapes: ImmutableList<Shape> = Shape.entries.toImmutableList(),
     val isDragging: Boolean = false,
     val approximatedShape: ApproximatedShape? = null,
     val points: ImmutableList<@WriteWith<OffsetParceler> Offset> = persistentListOf(),
-    val lines: ImmutableList<Pair<@WriteWith<OffsetParceler> Offset, @WriteWith<OffsetParceler> Offset>> = persistentListOf(),
+    val lines: ImmutableList<ParcelableOffsetPair> = persistentListOf(),
     val showFingerTracedLines: Boolean = true,
     val showApproximatedShape: Boolean = true,
     val showSettingsDropDown: Boolean = false,

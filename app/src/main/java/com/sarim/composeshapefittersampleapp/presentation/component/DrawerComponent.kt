@@ -32,17 +32,16 @@ import androidx.compose.ui.unit.sp
 import com.sarim.composeshapefittersampleapp.R
 import com.sarim.composeshapefittersampleapp.domain.model.Shape
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenToViewModelEvents
+import com.sarim.composeshapefittersampleapp.presentation.component.DrawerComponentTestTags.CLOSE_DRAWER_ICON_BUTTON
+import com.sarim.composeshapefittersampleapp.presentation.component.DrawerComponentTestTags.DRAWER_COMPONENT
+import com.sarim.composeshapefittersampleapp.presentation.component.DrawerComponentTestTags.LAZY_COLUMN
+import com.sarim.composeshapefittersampleapp.presentation.component.DrawerComponentTestTags.SELECTED_NAVIGATION_DRAWER_ITEM
+import com.sarim.composeshapefittersampleapp.presentation.component.DrawerComponentTestTags.UNSELECTED_NAVIGATION_DRAWER_ITEM
 import com.sarim.composeshapefittersampleapp.utils.LogType
 import com.sarim.composeshapefittersampleapp.utils.log
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
-
-const val DRAWER_COMPONENT_TEST_TAG = "DRAWER_COMPONENT_TEST_TAG"
-const val DRAWER_COMPONENT_CLOSE_DRAWER_ICON_BUTTON_TEST_TAG = "DRAWER_COMPONENT_CLOSE_DRAWER_ICON_BUTTON_TEST_TAG"
-const val DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG = "DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG"
-const val DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_ = "DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_"
-const val DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_ = "DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_"
 
 @Composable
 fun DrawerComponent(
@@ -55,16 +54,17 @@ fun DrawerComponent(
         messageBuilder = {
             "data = $data"
         },
-        logType = LogType.DEBUG
+        logType = LogType.DEBUG,
     )
 
     val scope = rememberCoroutineScope()
 
     Column(
-        modifier = modifier
-            .padding(16.dp)
-            .semantics { testTagsAsResourceId = true }
-            .testTag(DRAWER_COMPONENT_TEST_TAG)
+        modifier =
+            modifier
+                .padding(16.dp)
+                .semantics { testTagsAsResourceId = true }
+                .testTag(DRAWER_COMPONENT),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -76,9 +76,10 @@ fun DrawerComponent(
                         data.currentDrawerState.close()
                     }
                 },
-                modifier = Modifier
-                    .semantics { testTagsAsResourceId = true }
-                    .testTag(DRAWER_COMPONENT_CLOSE_DRAWER_ICON_BUTTON_TEST_TAG)
+                modifier =
+                    Modifier
+                        .semantics { testTagsAsResourceId = true }
+                        .testTag(CLOSE_DRAWER_ICON_BUTTON),
             ) {
                 Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.close_nav_menu))
             }
@@ -95,9 +96,10 @@ fun DrawerComponent(
             color = DividerDefaults.color,
         )
         LazyColumn(
-            modifier = Modifier
-                .semantics { testTagsAsResourceId = true }
-                .testTag(DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG)
+            modifier =
+                Modifier
+                    .semantics { testTagsAsResourceId = true }
+                    .testTag(LAZY_COLUMN),
         ) {
             items(data.allShapes.size) { i ->
                 val shape = data.allShapes[i]
@@ -116,16 +118,23 @@ fun DrawerComponent(
                             data.currentDrawerState.close()
                         }
                     },
-                    modifier = Modifier
-                        .padding(NavigationDrawerItemDefaults.ItemPadding)
-                        .semantics { testTagsAsResourceId = true }
-                        .testTag(
-                            if (shape == data.selectedShape) {
-                                DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_ + stringResource(shape.shapeStringId)
-                            } else {
-                                DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_ + stringResource(shape.shapeStringId)
-                            }
-                        ),
+                    modifier =
+                        Modifier
+                            .padding(NavigationDrawerItemDefaults.ItemPadding)
+                            .semantics { testTagsAsResourceId = true }
+                            .testTag(
+                                if (shape == data.selectedShape) {
+                                    SELECTED_NAVIGATION_DRAWER_ITEM +
+                                        stringResource(
+                                            shape.shapeStringId,
+                                        )
+                                } else {
+                                    UNSELECTED_NAVIGATION_DRAWER_ITEM +
+                                        stringResource(
+                                            shape.shapeStringId,
+                                        )
+                                },
+                            ),
                 )
             }
         }
@@ -140,18 +149,34 @@ data class DrawerComponentData(
     override fun toString(): String {
         val indent = "  "
 
-        val allShapesString = if (allShapes.isEmpty()) {
-            "allShapes: []"
-        } else {
-            "allShapes: [\n" + allShapes.joinToString(separator = ",\n") { shape ->
-                "${indent}${indent}${shape}"
-            } + "\n${indent}]"
-        }
+        val allShapesString =
+            if (allShapes.isEmpty()) {
+                "allShapes: []"
+            } else {
+                "allShapes: [\n" +
+                    allShapes.joinToString(separator = ",\n") { shape ->
+                        "${indent}${indent}$shape"
+                    } + "\n$indent]"
+            }
 
-        return """DrawerComponentData(
+        return """
+            DrawerComponentData(
 ${indent}$allShapesString,
 ${indent}selectedShape: $selectedShape,
 ${indent}currentDrawerState: $currentDrawerState
-)""".trimIndent()
+)
+            """.trimIndent()
     }
+}
+
+object DrawerComponentTestTags {
+    private const val P = "DRAWER_COMPONENT_"
+    private const val S = "_TEST_TAG"
+
+    const val DRAWER_COMPONENT = "${P}$S"
+    const val CLOSE_DRAWER_ICON_BUTTON = "${P}CLOSE_DRAWER_ICON_BUTTON$S"
+    const val LAZY_COLUMN = "${P}LAZY_COLUMN$S"
+
+    const val SELECTED_NAVIGATION_DRAWER_ITEM = "${P}SELECTED_NAVIGATION_DRAWER_ITEM${S}_FOR_"
+    const val UNSELECTED_NAVIGATION_DRAWER_ITEM = "${P}UNSELECTED_NAVIGATION_DRAWER_ITEM${S}_FOR_"
 }

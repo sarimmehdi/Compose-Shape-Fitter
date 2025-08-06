@@ -13,7 +13,7 @@ import kotlinx.parcelize.WriteWith
 class PentagonShape(
     val color: Color,
     val strokeWidth: Float,
-    override var logRegardless: Boolean = DEFAULT_LOG_REGARDLESS
+    override var logRegardless: Boolean = DEFAULT_LOG_REGARDLESS,
 ) : DrawableShape {
     @Parcelize
     data class Pentagon(
@@ -130,7 +130,5 @@ class PentagonShape(
         return result
     }
 
-    override fun toString(): String {
-        return "PentagonShape(color=$color, strokeWidth=$strokeWidth)"
-    }
+    override fun toString(): String = "PentagonShape(color=$color, strokeWidth=$strokeWidth)"
 }

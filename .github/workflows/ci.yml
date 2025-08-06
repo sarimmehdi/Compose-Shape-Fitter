@@ -11,6 +11,23 @@ on:
   workflow_dispatch:
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup Common Environment
+        uses: ./.github/actions/setup-environment
+
+      - name: Run Android Lint (Debug)
+        run: ./gradlew :app:lintDebug
+
+      - name: Upload Lint Report
+        uses: actions/upload-artifact@v4.6.2
+        if: always()
+        with:
+          name: lint-reports-debug
+          path: app/build/reports/lint-results-debug.xml
+
   ktlint:
     runs-on: ubuntu-latest
 

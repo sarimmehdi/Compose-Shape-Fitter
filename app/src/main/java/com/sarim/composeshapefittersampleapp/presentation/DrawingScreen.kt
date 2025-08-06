@@ -33,11 +33,12 @@ fun DrawingScreen(
         drawerContent = {
             ModalDrawerSheet(modifier = modifier) {
                 DrawerComponent(
-                    data = DrawerComponentData(
-                        allShapes = data.state.allShapes,
-                        selectedShape = data.state.selectedShape,
-                        currentDrawerState = data.drawerState,
-                    ),
+                    data =
+                        DrawerComponentData(
+                            allShapes = data.state.allShapes,
+                            selectedShape = data.state.selectedShape,
+                            currentDrawerState = data.drawerState,
+                        ),
                     onEvent = onEvent,
                 )
             }
@@ -46,12 +47,13 @@ fun DrawingScreen(
         Scaffold(
             topBar = {
                 TopBarComponent(
-                    data = TopBarComponentData(
-                        showSettingsDropDown = data.state.showSettingsDropDown,
-                        showFingerTracedLines = data.state.showFingerTracedLines,
-                        showApproximatedShape = data.state.showApproximatedShape,
-                        currentDrawerState = data.drawerState,
-                    ),
+                    data =
+                        TopBarComponentData(
+                            showSettingsDropDown = data.state.showSettingsDropDown,
+                            showFingerTracedLines = data.state.showFingerTracedLines,
+                            showApproximatedShape = data.state.showApproximatedShape,
+                            currentDrawerState = data.drawerState,
+                        ),
                     onEvent = onEvent,
                 )
             },
@@ -79,7 +81,7 @@ fun DrawingScreen(
 
 data class DrawingScreenData(
     val state: DrawingScreenState = DrawingScreenState(),
-    val drawerState: DrawerState = DrawerState(DrawerValue.Closed)
+    val drawerState: DrawerState = DrawerState(DrawerValue.Closed),
 )
 
 @Serializable

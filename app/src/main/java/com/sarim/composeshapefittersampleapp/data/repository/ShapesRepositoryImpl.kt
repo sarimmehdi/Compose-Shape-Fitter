@@ -21,11 +21,13 @@ class ShapesRepositoryImpl(
                 dataStore.data.map {
                     Log.i(
                         ShapesRepositoryImpl::class.java.simpleName,
-                        "shapeDto = $it, selectedShapeType = ${it.selectedShapeType}"
+                        "shapeDto = $it, selectedShapeType = ${it.selectedShapeType}",
                     )
                     Resource.Success(it.selectedShapeType)
                 }
-            } catch (e: Exception) {
+            } catch (
+                @Suppress("TooGenericExceptionCaught") e: Exception,
+            ) {
                 flowOf(
                     Resource.Error(
                         message =
@@ -40,7 +42,7 @@ class ShapesRepositoryImpl(
         try {
             Log.i(
                 ShapesRepositoryImpl::class.java.simpleName,
-                "called updateSelectedShape with $selectedShape"
+                "called updateSelectedShape with $selectedShape",
             )
             dataStore.updateData {
                 it.copy(
@@ -48,7 +50,9 @@ class ShapesRepositoryImpl(
                 )
             }
             Resource.Success(true)
-        } catch (e: Exception) {
+        } catch (
+            @Suppress("TooGenericExceptionCaught") e: Exception,
+        ) {
             Resource.Error(
                 message =
                     e.localizedMessage?.let {

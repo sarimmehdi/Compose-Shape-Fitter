@@ -6,9 +6,9 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import com.google.common.truth.Truth.assertThat
 import com.sarim.composeshapefittersampleapp.domain.model.Shape
-import com.sarim.composeshapefittersampleapp.presentation.component.DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_
-import com.sarim.composeshapefittersampleapp.presentation.component.DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_
-import com.sarim.composeshapefittersampleapp.presentation.component.TOP_BAR_COMPONENT_OPEN_DRAWER_ICON_BUTTON_TEST_TAG
+import com.sarim.composeshapefittersampleapp.presentation.component.DrawerComponentTestTags.SELECTED_NAVIGATION_DRAWER_ITEM
+import com.sarim.composeshapefittersampleapp.presentation.component.DrawerComponentTestTags.UNSELECTED_NAVIGATION_DRAWER_ITEM
+import com.sarim.composeshapefittersampleapp.presentation.component.TopBarComponentTestTags.OPEN_DRAWER_ICON_BUTTON
 import com.sarim.composeshapefittersampleapp.startApp
 import com.sarim.composeshapefittersampleapp.utils.shuffleListExceptOne
 import org.junit.Test
@@ -22,8 +22,8 @@ data class TestDataDrawingScreenSelectedShapeTest(
 ) {
     val testDescription =
         "when input node with $testTagToClickOn is clicked, \n" +
-                "these test tags must be enabled before the click action: $enabledTestTags, and \n" +
-                "these test tags must be disabled before the click action: $disabledTestTags"
+            "these test tags must be enabled before the click action: $enabledTestTags, and \n" +
+            "these test tags must be disabled before the click action: $disabledTestTags"
 }
 
 @RunWith(Parameterized::class)
@@ -31,24 +31,23 @@ class DrawingScreenSelectedShapeTest(
     @Suppress("UNUSED_PARAMETER") private val testDescription: String,
     private val testData: TestDataDrawingScreenSelectedShapeTest,
 ) {
-
     @Test
     fun test() {
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         device.startApp()
 
-        device.wait(Until.hasObject(By.res(TOP_BAR_COMPONENT_OPEN_DRAWER_ICON_BUTTON_TEST_TAG)), MAX_TIMEOUT)
-        device.findObject(By.res(TOP_BAR_COMPONENT_OPEN_DRAWER_ICON_BUTTON_TEST_TAG)).click()
+        device.wait(Until.hasObject(By.res(OPEN_DRAWER_ICON_BUTTON)), MAX_TIMEOUT)
+        device.findObject(By.res(OPEN_DRAWER_ICON_BUTTON)).click()
 
         testData.enabledTestTags.forEach {
             assertThat(
-                device.wait(Until.hasObject(By.res(it)), MAX_TIMEOUT)
+                device.wait(Until.hasObject(By.res(it)), MAX_TIMEOUT),
             ).isTrue()
         }
 
         testData.disabledTestTags.forEach {
             assertThat(
-                device.wait(Until.hasObject(By.res(it)), MAX_TIMEOUT)
+                device.wait(Until.hasObject(By.res(it)), MAX_TIMEOUT),
             ).isTrue()
         }
 
@@ -66,15 +65,17 @@ class DrawingScreenSelectedShapeTest(
         fun getParameters(): Collection<Array<Any>> {
             val context = InstrumentationRegistry.getInstrumentation().targetContext
             return shuffleListExceptOne(Shape.entries.toMutableList(), 0)
-                .zipWithNext().map { consecutiveShapePairs ->
+                .zipWithNext()
+                .map { consecutiveShapePairs ->
                     val selectedShapeName = context.getString(consecutiveShapePairs.first.shapeStringId)
                     val notSelectedShapeName = context.getString(consecutiveShapePairs.second.shapeStringId)
                     TestDataDrawingScreenSelectedShapeTest(
-                        testTagToClickOn = DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_ + notSelectedShapeName,
-                        enabledTestTags = listOf(DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_ + selectedShapeName),
-                        disabledTestTags = Shape.entries.filter { it != consecutiveShapePairs.first }.map {
-                            DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_ + context.getString(it.shapeStringId)
-                        }
+                        testTagToClickOn = UNSELECTED_NAVIGATION_DRAWER_ITEM + notSelectedShapeName,
+                        enabledTestTags = listOf(SELECTED_NAVIGATION_DRAWER_ITEM + selectedShapeName),
+                        disabledTestTags =
+                            Shape.entries.filter { it != consecutiveShapePairs.first }.map {
+                                UNSELECTED_NAVIGATION_DRAWER_ITEM + context.getString(it.shapeStringId)
+                            },
                     )
                 }.map { data ->
                     arrayOf(

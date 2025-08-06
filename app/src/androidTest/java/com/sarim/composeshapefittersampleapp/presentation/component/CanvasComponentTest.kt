@@ -36,9 +36,9 @@ data class TestDataDrawingScreenTest(
 ) {
     val testDescription =
         "when you start dragging from $dragStart, \n" +
-                "and go through points: $dragPositions \n" +
-                "with data $data \n" +
-                "the expected sequence of events should be $expectedEvents"
+            "and go through points: $dragPositions \n" +
+            "with data $data \n" +
+            "the expected sequence of events should be $expectedEvents"
 }
 
 @RunWith(Parameterized::class)
@@ -268,15 +268,15 @@ class CanvasComponentTest(
                                         DrawingScreenToViewModelEvents.SetLines(persistentListOf()),
                                         mockk<DrawingScreenToViewModelEvents.SetPoints>(),
                                     ) +
-                                            it.dragPositions.drop(1).flatMapIndexed { index, currentDragPosition ->
-                                                listOf(
-                                                    mockk<DrawingScreenToViewModelEvents.UpdateLines>(),
-                                                    mockk<DrawingScreenToViewModelEvents.UpdatePoints>(),
-                                                )
-                                            } +
+                                        it.dragPositions.drop(1).flatMapIndexed { index, currentDragPosition ->
                                             listOf(
-                                                DrawingScreenToViewModelEvents.SetDragging(false),
-                                            ),
+                                                mockk<DrawingScreenToViewModelEvents.UpdateLines>(),
+                                                mockk<DrawingScreenToViewModelEvents.UpdatePoints>(),
+                                            )
+                                        } +
+                                        listOf(
+                                            DrawingScreenToViewModelEvents.SetDragging(false),
+                                        ),
                             ),
                             TestDataDrawingScreenTest(
                                 dragStart = it.dragStart,
@@ -296,28 +296,28 @@ class CanvasComponentTest(
                                         DrawingScreenToViewModelEvents.SetLines(persistentListOf()),
                                         mockk<DrawingScreenToViewModelEvents.SetPoints>(),
                                     ) +
-                                            it.dragPositions.drop(1).flatMapIndexed { index, currentDragPosition ->
-                                                listOf(
-                                                    mockk<DrawingScreenToViewModelEvents.UpdateLines>(),
-                                                    mockk<DrawingScreenToViewModelEvents.UpdatePoints>(),
-                                                )
-                                            } +
+                                        it.dragPositions.drop(1).flatMapIndexed { index, currentDragPosition ->
                                             listOf(
-                                                DrawingScreenToViewModelEvents.SetDragging(false),
-                                                DrawingScreenToViewModelEvents.SetApproximateShape(
-                                                    when (it.drawableShape) {
-                                                        is CircleShape -> mockk<CircleShape.Circle>(relaxed = true)
-                                                        is EllipseShape -> mockk<EllipseShape.Ellipse>(relaxed = true)
-                                                        is HexagonShape -> mockk<HexagonShape.Hexagon>(relaxed = true)
-                                                        is ObbShape -> mockk<ObbShape.OrientedBoundingBox>(relaxed = true)
-                                                        is PentagonShape -> mockk<PentagonShape.Pentagon>(relaxed = true)
-                                                        is RectangleShape -> mockk<RectangleShape.Rectangle>(relaxed = true)
-                                                        is SkewedEllipseShape -> mockk<SkewedEllipseShape.RotatedEllipse>(relaxed = true)
-                                                        is SquareShape -> mockk<RectangleShape.Rectangle>(relaxed = true)
-                                                        is TriangleShape -> mockk<TriangleShape.Triangle>(relaxed = true)
-                                                    },
-                                                ),
+                                                mockk<DrawingScreenToViewModelEvents.UpdateLines>(),
+                                                mockk<DrawingScreenToViewModelEvents.UpdatePoints>(),
+                                            )
+                                        } +
+                                        listOf(
+                                            DrawingScreenToViewModelEvents.SetDragging(false),
+                                            DrawingScreenToViewModelEvents.SetApproximateShape(
+                                                when (it.drawableShape) {
+                                                    is CircleShape -> mockk<CircleShape.Circle>(relaxed = true)
+                                                    is EllipseShape -> mockk<EllipseShape.Ellipse>(relaxed = true)
+                                                    is HexagonShape -> mockk<HexagonShape.Hexagon>(relaxed = true)
+                                                    is ObbShape -> mockk<ObbShape.OrientedBoundingBox>(relaxed = true)
+                                                    is PentagonShape -> mockk<PentagonShape.Pentagon>(relaxed = true)
+                                                    is RectangleShape -> mockk<RectangleShape.Rectangle>(relaxed = true)
+                                                    is SkewedEllipseShape -> mockk<SkewedEllipseShape.RotatedEllipse>(relaxed = true)
+                                                    is SquareShape -> mockk<RectangleShape.Rectangle>(relaxed = true)
+                                                    is TriangleShape -> mockk<TriangleShape.Triangle>(relaxed = true)
+                                                },
                                             ),
+                                        ),
                             ),
                         )
                     }.flatten()

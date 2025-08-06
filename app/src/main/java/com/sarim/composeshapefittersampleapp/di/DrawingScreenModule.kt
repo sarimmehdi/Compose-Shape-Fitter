@@ -9,7 +9,6 @@ import com.sarim.composeshapefittersampleapp.data.repository.SettingsRepositoryI
 import com.sarim.composeshapefittersampleapp.data.repository.ShapesRepositoryImpl
 import com.sarim.composeshapefittersampleapp.domain.repository.SettingsRepository
 import com.sarim.composeshapefittersampleapp.domain.repository.ShapesRepository
-import com.sarim.composeshapefittersampleapp.domain.usecase.GetAllShapesUseCase
 import com.sarim.composeshapefittersampleapp.domain.usecase.GetSelectedShapeUseCase
 import com.sarim.composeshapefittersampleapp.domain.usecase.GetSettingsUseCase
 import com.sarim.composeshapefittersampleapp.domain.usecase.UpdateSelectedShapeUseCase
@@ -22,10 +21,6 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.StringQualifier
 import org.koin.dsl.lazyModule
 
-enum class ModuleType {
-    ACTUAL, TEST
-}
-
 fun drawingScreenModule(
     shapeDtoDataStoreName: String,
     settingsDtoDataStoreName: String,
@@ -34,9 +29,9 @@ fun drawingScreenModule(
     Log.d(
         "DrawingScreenModule",
         "called drawingScreenModule " +
-                "with shapeDtoDataStoreName = $shapeDtoDataStoreName, " +
-                "settingsDtoDataStoreName = $settingsDtoDataStoreName, " +
-                "and scope = $scope"
+            "with shapeDtoDataStoreName = $shapeDtoDataStoreName, " +
+            "settingsDtoDataStoreName = $settingsDtoDataStoreName, " +
+            "and scope = $scope",
     )
     single<ShapesRepository> {
         ShapesRepositoryImpl(
@@ -66,7 +61,6 @@ fun drawingScreenModule(
                 DrawingScreenUseCases(
                     getSettingsUseCase = GetSettingsUseCase(get()),
                     getSelectedShapeUseCase = GetSelectedShapeUseCase(get()),
-                    getAllShapesUseCase = GetAllShapesUseCase(),
                     updateSelectedShapeUseCase = UpdateSelectedShapeUseCase(get()),
                     updateSettingsUseCase = UpdateSettingsUseCase(get()),
                 ),
@@ -74,15 +68,24 @@ fun drawingScreenModule(
     }
 }
 
-fun drawingScreenModule(scopeQualifier: StringQualifier, moduleType: ModuleType) =
-    drawingScreenModule(
-        shapeDtoDataStoreName = when (moduleType) {
+fun drawingScreenModule(
+    scopeQualifier: StringQualifier,
+    moduleType: ModuleType,
+) = drawingScreenModule(
+    shapeDtoDataStoreName =
+        when (moduleType) {
             ModuleType.ACTUAL -> ShapeDtoSerializer.SHAPE_DTO_DATA_STORE_NAME
             ModuleType.TEST -> ShapeDtoSerializer.SHAPE_DTO_TEST_DATA_STORE_NAME
         },
-        settingsDtoDataStoreName = when (moduleType) {
+    settingsDtoDataStoreName =
+        when (moduleType) {
             ModuleType.ACTUAL -> SettingsDtoSerializer.SETTINGS_DTO_DATA_STORE_NAME
             ModuleType.TEST -> SettingsDtoSerializer.SETTINGS_DTO_TEST_DATA_STORE_NAME
         },
-        scope = scopeQualifier,
-    )
+    scope = scopeQualifier,
+)
+
+enum class ModuleType {
+    ACTUAL,
+    TEST,
+}

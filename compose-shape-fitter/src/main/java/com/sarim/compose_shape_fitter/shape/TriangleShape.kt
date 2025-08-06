@@ -13,7 +13,7 @@ import kotlinx.parcelize.WriteWith
 class TriangleShape(
     val color: Color,
     val strokeWidth: Float,
-    override var logRegardless: Boolean = DEFAULT_LOG_REGARDLESS
+    override var logRegardless: Boolean = DEFAULT_LOG_REGARDLESS,
 ) : DrawableShape {
     @Parcelize
     data class Triangle(
@@ -92,7 +92,5 @@ class TriangleShape(
         return result
     }
 
-    override fun toString(): String {
-        return "TriangleShape(color=$color, strokeWidth=$strokeWidth)"
-    }
+    override fun toString(): String = "TriangleShape(color=$color, strokeWidth=$strokeWidth)"
 }

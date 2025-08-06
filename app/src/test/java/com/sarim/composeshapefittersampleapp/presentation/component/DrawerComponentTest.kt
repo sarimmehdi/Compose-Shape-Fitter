@@ -9,6 +9,9 @@ import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.performScrollToNode
 import com.sarim.composeshapefittersampleapp.domain.model.Shape
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenToViewModelEvents
+import com.sarim.composeshapefittersampleapp.presentation.component.DrawerComponentTestTags.LAZY_COLUMN
+import com.sarim.composeshapefittersampleapp.presentation.component.DrawerComponentTestTags.SELECTED_NAVIGATION_DRAWER_ITEM
+import com.sarim.composeshapefittersampleapp.presentation.component.DrawerComponentTestTags.UNSELECTED_NAVIGATION_DRAWER_ITEM
 import io.mockk.mockk
 import io.mockk.verifyOrder
 import junit.framework.TestCase.fail
@@ -20,14 +23,14 @@ import org.robolectric.ParameterizedRobolectricTestRunner
 
 data class TestDataDrawerComponentTestSelectShape(
     val selectedShape: Shape,
-    val shapeToClickOn: Shape
+    val shapeToClickOn: Shape,
 ) {
     val testDescription =
         "$selectedShape must be selected and you must click on $shapeToClickOn to close drawer"
 }
 
 @RunWith(ParameterizedRobolectricTestRunner::class)
-class DrawerComponentTestSelectShape(
+class DrawerComponentTest(
     @Suppress("UNUSED_PARAMETER") private val testDescription: String,
     private val testData: TestDataDrawerComponentTestSelectShape,
 ) {
@@ -48,61 +51,74 @@ class DrawerComponentTestSelectShape(
             shapeToClickOnString = stringResource(testData.shapeToClickOn.shapeStringId)
             allShapeStrings = allShapes.map { stringResource(it.shapeStringId) }
             DrawerComponent(
-                data = DrawerComponentData(
-                    allShapes = allShapes,
-                    selectedShape = testData.selectedShape
-                ),
+                data =
+                    DrawerComponentData(
+                        allShapes = allShapes,
+                        selectedShape = testData.selectedShape,
+                    ),
                 onEvent = onEvent,
             )
         }
 
         if (::selectedShapeString.isInitialized && ::allShapeStrings.isInitialized) {
-
-            composeTestRule.onNodeWithTag(DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG)
-                .performScrollToNode(hasTestTag(DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_ + selectedShapeString))
-            composeTestRule.onNodeWithTag(DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG)
+            composeTestRule
+                .onNodeWithTag(LAZY_COLUMN)
+                .performScrollToNode(hasTestTag(SELECTED_NAVIGATION_DRAWER_ITEM + selectedShapeString))
+            composeTestRule
+                .onNodeWithTag(LAZY_COLUMN)
                 .performScrollToIndex(0)
 
             repeat(allShapes.size) { i ->
-                composeTestRule.onNodeWithTag(DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG)
+                composeTestRule
+                    .onNodeWithTag(LAZY_COLUMN)
                     .performScrollToIndex(i)
-                composeTestRule.onNodeWithTag(
-                    DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_ + selectedShapeString
-                ).assertDoesNotExist()
+                composeTestRule
+                    .onNodeWithTag(
+                        UNSELECTED_NAVIGATION_DRAWER_ITEM + selectedShapeString,
+                    ).assertDoesNotExist()
             }
-            composeTestRule.onNodeWithTag(DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG)
+            composeTestRule
+                .onNodeWithTag(LAZY_COLUMN)
                 .performScrollToIndex(0)
 
             allShapeStrings.filter { it != selectedShapeString }.forEach {
-
-                composeTestRule.onNodeWithTag(DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG)
-                    .performScrollToNode(hasTestTag(DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_ + it))
-                composeTestRule.onNodeWithTag(DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG)
+                composeTestRule
+                    .onNodeWithTag(LAZY_COLUMN)
+                    .performScrollToNode(hasTestTag(UNSELECTED_NAVIGATION_DRAWER_ITEM + it))
+                composeTestRule
+                    .onNodeWithTag(LAZY_COLUMN)
                     .performScrollToIndex(0)
 
                 repeat(allShapes.size) { i ->
-                    composeTestRule.onNodeWithTag(DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG)
+                    composeTestRule
+                        .onNodeWithTag(LAZY_COLUMN)
                         .performScrollToIndex(i)
-                    composeTestRule.onNodeWithTag(
-                        DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_ + it
-                    ).assertDoesNotExist()
+                    composeTestRule
+                        .onNodeWithTag(
+                            SELECTED_NAVIGATION_DRAWER_ITEM + it,
+                        ).assertDoesNotExist()
                 }
-                composeTestRule.onNodeWithTag(DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG)
+                composeTestRule
+                    .onNodeWithTag(LAZY_COLUMN)
                     .performScrollToIndex(0)
             }
 
             if (testData.shapeToClickOn == testData.selectedShape) {
-                composeTestRule.onNodeWithTag(DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG)
-                    .performScrollToNode(hasTestTag(DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_ + shapeToClickOnString))
-                composeTestRule.onNodeWithTag(
-                    DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_SELECTED_FOR_ + shapeToClickOnString
-                ).performClick()
+                composeTestRule
+                    .onNodeWithTag(LAZY_COLUMN)
+                    .performScrollToNode(hasTestTag(SELECTED_NAVIGATION_DRAWER_ITEM + shapeToClickOnString))
+                composeTestRule
+                    .onNodeWithTag(
+                        SELECTED_NAVIGATION_DRAWER_ITEM + shapeToClickOnString,
+                    ).performClick()
             } else {
-                composeTestRule.onNodeWithTag(DRAWER_COMPONENT_LAZY_COLUMN_TEST_TAG)
-                    .performScrollToNode(hasTestTag(DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_ + shapeToClickOnString))
-                composeTestRule.onNodeWithTag(
-                    DRAWER_COMPONENT_SELECTED_NAVIGATION_DRAWER_ITEM_TEST_TAG_NOT_SELECTED_FOR_ + shapeToClickOnString
-                ).performClick()
+                composeTestRule
+                    .onNodeWithTag(LAZY_COLUMN)
+                    .performScrollToNode(hasTestTag(UNSELECTED_NAVIGATION_DRAWER_ITEM + shapeToClickOnString))
+                composeTestRule
+                    .onNodeWithTag(
+                        UNSELECTED_NAVIGATION_DRAWER_ITEM + shapeToClickOnString,
+                    ).performClick()
             }
 
             composeTestRule.runOnIdle {
@@ -111,8 +127,8 @@ class DrawerComponentTestSelectShape(
                         eq(
                             DrawingScreenToViewModelEvents.SetSelectedShape(
                                 testData.shapeToClickOn,
-                            )
-                        )
+                            ),
+                        ),
                     )
                 }
             }
@@ -132,20 +148,20 @@ class DrawerComponentTestSelectShape(
             name = "{0}",
         )
         @Suppress("unused")
-        fun getParameters(): Collection<Array<Any>> {
-            return Shape.entries.flatMap { selectedShape ->
-                Shape.entries.map { shapeToClickOn ->
-                    TestDataDrawerComponentTestSelectShape(
-                        selectedShape = selectedShape,
-                        shapeToClickOn = shapeToClickOn
+        fun getParameters(): Collection<Array<Any>> =
+            Shape.entries
+                .flatMap { selectedShape ->
+                    Shape.entries.map { shapeToClickOn ->
+                        TestDataDrawerComponentTestSelectShape(
+                            selectedShape = selectedShape,
+                            shapeToClickOn = shapeToClickOn,
+                        )
+                    }
+                }.map { data ->
+                    arrayOf(
+                        data.testDescription,
+                        data,
                     )
                 }
-            }.map { data ->
-                arrayOf(
-                    data.testDescription,
-                    data,
-                )
-            }
-        }
     }
 }

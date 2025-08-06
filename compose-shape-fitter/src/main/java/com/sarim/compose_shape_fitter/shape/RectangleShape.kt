@@ -36,7 +36,7 @@ internal fun findSmallestEnclosingRectangle(points: List<Offset>): RectangleShap
 class RectangleShape(
     val color: Color,
     val strokeWidth: Float,
-    override var logRegardless: Boolean = DEFAULT_LOG_REGARDLESS
+    override var logRegardless: Boolean = DEFAULT_LOG_REGARDLESS,
 ) : DrawableShape {
     @Parcelize
     data class Rectangle(
@@ -86,7 +86,5 @@ class RectangleShape(
         return result
     }
 
-    override fun toString(): String {
-        return "RectangleShape(color=$color, strokeWidth=$strokeWidth)"
-    }
+    override fun toString(): String = "RectangleShape(color=$color, strokeWidth=$strokeWidth)"
 }

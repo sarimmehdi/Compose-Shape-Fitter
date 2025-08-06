@@ -22,11 +22,13 @@ class SettingsRepositoryImpl(
                 dataStore.data.map {
                     Log.i(
                         SettingsRepositoryImpl::class.java.simpleName,
-                        "settingsDto = $it, settings = ${it.toSettings()}"
+                        "settingsDto = $it, settings = ${it.toSettings()}",
                     )
                     Resource.Success(it.toSettings())
                 }
-            } catch (e: Exception) {
+            } catch (
+                @Suppress("TooGenericExceptionCaught") e: Exception,
+            ) {
                 flowOf(
                     Resource.Error(
                         message =
@@ -41,7 +43,7 @@ class SettingsRepositoryImpl(
         try {
             Log.i(
                 SettingsRepositoryImpl::class.java.simpleName,
-                "called updateSettings with $settings"
+                "called updateSettings with $settings",
             )
             dataStore.updateData {
                 it.copy(
@@ -50,7 +52,9 @@ class SettingsRepositoryImpl(
                 )
             }
             Resource.Success(true)
-        } catch (e: Exception) {
+        } catch (
+            @Suppress("TooGenericExceptionCaught") e: Exception,
+        ) {
             Resource.Error(
                 message =
                     e.localizedMessage?.let {

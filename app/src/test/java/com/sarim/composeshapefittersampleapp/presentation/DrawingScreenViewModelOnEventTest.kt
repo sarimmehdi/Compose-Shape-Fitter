@@ -79,23 +79,28 @@ class DrawingScreenViewModelOnEventTest(
             testData.outputUseCase?.let {
                 when (it) {
                     is UpdateSelectedShapeUseCase -> {
-                        assertThat(testData.inputEvent).isInstanceOf(DrawingScreenToViewModelEvents.SetSelectedShape::class.java)
+                        assertThat(testData.inputEvent)
+                            .isInstanceOf(DrawingScreenToViewModelEvents.SetSelectedShape::class.java)
                         testDispatchers.testDispatcher.scheduler.advanceUntilIdle()
                         coVerify {
+                            val inputEvent = testData.inputEvent as DrawingScreenToViewModelEvents.SetSelectedShape
                             it(
-                                selectedShape = (testData.inputEvent as DrawingScreenToViewModelEvents.SetSelectedShape).selectedShape,
+                                selectedShape = inputEvent.selectedShape,
                             )
                         }
                     }
                     is UpdateSettingsUseCase -> {
-                        assertThat(testData.inputEvent).isInstanceOf(DrawingScreenToViewModelEvents.ToggleSettings::class.java)
+                        assertThat(testData.inputEvent)
+                            .isInstanceOf(DrawingScreenToViewModelEvents.ToggleSettings::class.java)
                         testDispatchers.testDispatcher.scheduler.advanceUntilIdle()
                         coVerify {
+                            val inputEvent = testData.inputEvent as DrawingScreenToViewModelEvents.ToggleSettings
                             it(
-                                settings = Settings(
-                                    showFingerTracedLines = (testData.inputEvent as DrawingScreenToViewModelEvents.ToggleSettings).showFingerTracedLines,
-                                    showApproximatedShape = testData.inputEvent.showApproximatedShape
-                                )
+                                settings =
+                                    Settings(
+                                        showFingerTracedLines = inputEvent.showFingerTracedLines,
+                                        showApproximatedShape = inputEvent.showApproximatedShape,
+                                    ),
                             )
                         }
                     }
@@ -122,7 +127,7 @@ class DrawingScreenViewModelOnEventTest(
         @Parameterized.Parameters(
             name = "{0}",
         )
-        @Suppress("unused")
+        @Suppress("unused", "LongMethod")
         fun getParameters(): Collection<Array<Any>> {
             val testDataList =
                 DrawingScreenToViewModelEvents::class.sealedSubclasses.flatMap {
@@ -290,20 +295,23 @@ class DrawingScreenViewModelOnEventTest(
                             )
                         }
                         DrawingScreenToViewModelEvents.ToggleSettings::class -> {
-                            Exhaustive.boolean().flatMap { showFingerTracedLines ->
-                                Exhaustive.boolean().map { showApproximatedShape ->
-                                    TestDataDrawingScreenViewModelOnEventTest(
-                                        inputEvent = DrawingScreenToViewModelEvents.ToggleSettings(
-                                            showFingerTracedLines = showFingerTracedLines,
-                                            showApproximatedShape = showApproximatedShape,
-                                        ),
-                                        inputState = DrawingScreenState(),
-                                        outputState = DrawingScreenState(),
-                                        outputUseCase = drawingScreenUseCases.updateSettingsUseCase,
-                                        outputEvent = null,
-                                    )
-                                }
-                            }.values
+                            Exhaustive
+                                .boolean()
+                                .flatMap { showFingerTracedLines ->
+                                    Exhaustive.boolean().map { showApproximatedShape ->
+                                        TestDataDrawingScreenViewModelOnEventTest(
+                                            inputEvent =
+                                                DrawingScreenToViewModelEvents.ToggleSettings(
+                                                    showFingerTracedLines = showFingerTracedLines,
+                                                    showApproximatedShape = showApproximatedShape,
+                                                ),
+                                            inputState = DrawingScreenState(),
+                                            outputState = DrawingScreenState(),
+                                            outputUseCase = drawingScreenUseCases.updateSettingsUseCase,
+                                            outputEvent = null,
+                                        )
+                                    }
+                                }.values
                         }
                         DrawingScreenToViewModelEvents.ToggleSettingsDropDown::class -> {
                             listOf(
@@ -381,7 +389,10 @@ class DrawingScreenViewModelOnEventTest(
                             )
                         }
                         else -> {
-                            throw IllegalStateException("Warning: Unhandled sealed subclass ${it.simpleName}. Please handle this new event type.")
+                            error(
+                                "Warning: Unhandled sealed subclass ${it.simpleName}. " +
+                                    "Please handle this new event type.",
+                            )
                         }
                     }
                 }
