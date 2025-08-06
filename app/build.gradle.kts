@@ -24,7 +24,6 @@ sonarqube {
         property("sonar.kotlin.detekt.reportPaths", "build/reports/detekt/detekt.xml")
         property("sonar.kotlin.ktlint.reportPaths", "build/reports/ktlint/ktlintMainSourceSetCheck/ktlintMainSourceSetCheck.xml")
         property("sonar.androidLint.reportPaths", "build/reports/lint-results-debug.xml")
-        property("sonar.android.androidTest.reportPaths", "build/outputs/androidTest-results/connected/TEST-*.xml")
         property("sonar.sources", "src/main/java")
         property("sonar.tests", "src/test/java,src/androidTest/java")
         property("sonar.sourceEncoding", "UTF-8")
@@ -171,6 +170,9 @@ tasks.register<JacocoReport>("jacocoTestReport") {
     executionData.setFrom(
         fileTree(layout.buildDirectory.dir("outputs/unit_test_code_coverage/debugUnitTest")) {
             include("*.exec")
+        },
+        fileTree(layout.buildDirectory.dir("outputs/code_coverage/debugAndroidTest/connected/")) {
+            include("**/*.ec")
         },
     )
 }
