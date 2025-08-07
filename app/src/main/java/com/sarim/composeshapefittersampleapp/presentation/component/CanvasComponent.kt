@@ -76,7 +76,7 @@ fun CanvasComponent(
         if (data.isDragging && data.showFingerTracedLines) {
             data.lines.forEach { line ->
                 drawLine(
-                    color = Color.Black,
+                    color = Color.Blue,
                     start = line.first,
                     end = line.second,
                     strokeWidth = 5f,

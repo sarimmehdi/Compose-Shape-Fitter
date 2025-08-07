@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import com.sarim.compose_shape_fitter.shape.DrawableShape.Companion.DEFAULT_IN_PREVIEW_MODE
 import com.sarim.compose_shape_fitter.shape.DrawableShape.Companion.DEFAULT_LOG_REGARDLESS
 import com.sarim.compose_shape_fitter.utils.OffsetParceler
 import kotlinx.parcelize.Parcelize
@@ -18,6 +19,7 @@ class HexagonShape(
     val color: Color,
     val strokeWidth: Float,
     override var logRegardless: Boolean = DEFAULT_LOG_REGARDLESS,
+    override var inPreviewMode: Boolean = DEFAULT_IN_PREVIEW_MODE,
 ) : DrawableShape {
     @Parcelize
     data class Hexagon(

@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.detektPlugin)
     alias(libs.plugins.spotlessPlugin)
     alias(libs.plugins.sonarPlugin)
+    alias(libs.plugins.paparazziPlugin)
     id("kotlin-parcelize")
     id("jacoco")
 }
@@ -206,6 +207,7 @@ dependencies {
     implementation(libs.androidxCoreKtxLibrary)
     implementation(libs.androidxLifecycleRuntimeKtxLibrary)
     implementation(libs.androidxActivityComposeLibrary)
+    implementation(libs.kotestPropertyLibrary)
     implementation(platform(libs.koinBomLibrary))
     implementation(libs.bundles.koinBundle)
     implementation(platform(libs.androidxComposeBomLibrary))

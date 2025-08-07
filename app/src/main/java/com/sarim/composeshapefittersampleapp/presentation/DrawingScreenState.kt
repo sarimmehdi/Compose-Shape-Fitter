@@ -1,8 +1,10 @@
 package com.sarim.composeshapefittersampleapp.presentation
 
 import android.os.Parcelable
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalInspectionMode
 import com.sarim.compose_shape_fitter.shape.ApproximatedShape
 import com.sarim.compose_shape_fitter.shape.CircleShape
 import com.sarim.compose_shape_fitter.shape.EllipseShape
@@ -38,6 +40,7 @@ data class DrawingScreenState(
     val showApproximatedShape: Boolean = true,
     val showSettingsDropDown: Boolean = false,
 ) : Parcelable {
+    @Composable
     fun getDrawableShape(
         color: Color,
         strokeWidth: Float,
@@ -46,53 +49,63 @@ data class DrawingScreenState(
             CircleShape(
                 color,
                 strokeWidth,
+                inPreviewMode = LocalInspectionMode.current
             )
         Shape.Ellipse ->
             EllipseShape(
                 color,
                 strokeWidth,
+                inPreviewMode = LocalInspectionMode.current
             )
         Shape.Hexagon ->
             HexagonShape(
                 color,
                 strokeWidth,
+                inPreviewMode = LocalInspectionMode.current
             )
         Shape.OrientedRectangle ->
             ObbShape(
                 color,
                 strokeWidth,
                 false,
+                inPreviewMode = LocalInspectionMode.current
             )
         Shape.OrientedSquare ->
             ObbShape(
                 color,
                 strokeWidth,
                 true,
+                inPreviewMode = LocalInspectionMode.current
             )
         Shape.Pentagon ->
             PentagonShape(
                 color,
                 strokeWidth,
+                inPreviewMode = LocalInspectionMode.current
             )
         Shape.Rectangle ->
             RectangleShape(
                 color,
                 strokeWidth,
+                inPreviewMode = LocalInspectionMode.current
             )
         Shape.OrientedEllipse ->
             SkewedEllipseShape(
                 color,
                 strokeWidth,
+                inPreviewMode = LocalInspectionMode.current
             )
         Shape.Square ->
             SquareShape(
                 color,
                 strokeWidth,
+                inPreviewMode = LocalInspectionMode.current
             )
         Shape.Triangle ->
             TriangleShape(
                 color,
                 strokeWidth,
+                inPreviewMode = LocalInspectionMode.current
             )
     }
 }

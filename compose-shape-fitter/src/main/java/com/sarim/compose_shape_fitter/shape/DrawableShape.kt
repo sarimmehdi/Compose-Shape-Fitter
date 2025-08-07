@@ -10,6 +10,7 @@ sealed interface ApproximatedShape : Parcelable
 
 sealed interface DrawableShape {
     var logRegardless: Boolean
+    var inPreviewMode: Boolean
 
     fun draw(
         drawScope: DrawScope,
@@ -20,5 +21,6 @@ sealed interface DrawableShape {
 
     companion object {
         const val DEFAULT_LOG_REGARDLESS = false
+        const val DEFAULT_IN_PREVIEW_MODE = false
     }
 }

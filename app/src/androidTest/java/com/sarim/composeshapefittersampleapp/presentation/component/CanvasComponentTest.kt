@@ -16,6 +16,8 @@ import com.sarim.compose_shape_fitter.shape.SkewedEllipseShape
 import com.sarim.compose_shape_fitter.shape.SquareShape
 import com.sarim.compose_shape_fitter.shape.TriangleShape
 import com.sarim.composeshapefittersampleapp.presentation.DrawingScreenToViewModelEvents
+import com.sarim.composeshapefittersampleapp.utils.generateEllipsePoints
+import com.sarim.composeshapefittersampleapp.utils.generatePolygonPoints
 import io.mockk.mockk
 import io.mockk.verifyOrder
 import junit.framework.TestCase.fail
@@ -94,34 +96,7 @@ class CanvasComponentTest(
     }
 
     companion object {
-        private fun generateEllipsePoints(
-            centerX: Float,
-            centerY: Float,
-            radiusX: Float,
-            radiusY: Float,
-            numPoints: Int = 36,
-        ): List<Offset> {
-            val points = mutableListOf<Offset>()
-            for (i in 0..numPoints) {
-                val angle = i * (2 * PI / numPoints)
-                val x = centerX + radiusX * cos(angle).toFloat()
-                val y = centerY + radiusY * sin(angle).toFloat()
-                points.add(Offset(x, y))
-            }
-            return points
-        }
 
-        private fun generatePolygonPoints(sides: Int): List<Offset> {
-            val points = mutableListOf<Offset>()
-            val angleStep = 2 * PI / sides
-            for (i in 0..sides) { // iterate one extra time to close the polygon
-                val angle = i * angleStep
-                val x = 200 * cos(angle).toFloat()
-                val y = 200 * sin(angle).toFloat()
-                points.add(Offset(x, y))
-            }
-            return points
-        }
 
         @JvmStatic
         @Parameterized.Parameters(
