@@ -1,8 +1,8 @@
 package com.sarim.composeshapefittersampleapp
 
 import android.app.Application
-import com.sarim.composeshapefittersampleapp.di.ModuleType
-import com.sarim.composeshapefittersampleapp.di.drawingScreenModule
+import com.sarim.example_app_di.ModuleType
+import com.sarim.example_app_di.drawingScreenModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androix.startup.KoinStartup

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_bar_title">Compose Shape Fitter Sample App</string>
+    <string name="open_drawer">Open Drawer</string>
+    <string name="close_nav_menu">Close Drawer</string>
+    <string name="select_shape">Select Shape</string>
+    <string name="settings">Settings</string>
+    <string name="finger_traced_lines">Show Finger-Traced Lines</string>
+    <string name="approximated_shape">Show Approximated Shape</string>
+    <string name="unable_to_get_settings">Unable to get settings because of %1$s</string>
+    <string name="error">Error</string>
+    <string name="unable_to_get_selected_shape">Unable to get selected shape because of %1$s</string>
+</resources>

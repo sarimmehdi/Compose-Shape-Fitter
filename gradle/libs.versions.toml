@@ -9,7 +9,7 @@ ktlintVersion = "13.0.0"
 detektVersion = "1.23.8"
 spotlessVersion = "7.2.1"
 junitVersion = "4.13.2"
-assertJVersion = "3.27.3"
+assertJVersion = "3.27.4"
 truthVersion = "1.4.4"
 roboelectricVersion = "4.15.1"
 vanniktechVersion = "0.34.0"
@@ -18,7 +18,7 @@ kotlinxSerializationVersion = "1.9.0"
 kotlinxImmutableCollectionsVersion = "0.4.0"
 koinBomVersion = "4.1.0"
 navigationVersion = "2.9.3"
-kotestVersion = "6.0.0.M9"
+kotestVersion = "6.0.0.M12"
 mockkVersion = "1.14.5"
 turbineVersion = "1.2.1"
 androidXTestRunnerVersion = "1.7.0"
@@ -28,6 +28,9 @@ archUnitJUnit4Version = "1.4.1"
 jacocoVersion = "0.8.13"
 sonarVersion = "6.2.0.5505"
 paparazziVersion = "2.0.0-alpha02"
+espressoCoreVersion = "3.7.0"
+appcompatVersion = "1.7.1"
+materialVersion = "1.12.0"
 
 [libraries]
 androidxCoreKtxLibrary = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtxVersion" }
@@ -65,6 +68,9 @@ koinComposeLibrary = { group = "io.insert-koin", name = "koin-androidx-compose" 
 koinComposeNavigationLibrary = { group = "io.insert-koin", name = "koin-androidx-compose-navigation" }
 composeNavigationLibrary = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationVersion" }
 jacocoFakeDoNotUseThisLibrary = { group = "org.jacoco", name = "org.jacoco.agent", version.ref = "jacocoVersion" }
+espressoCore = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCoreVersion" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompatVersion" }
+material = { group = "com.google.android.material", name = "material", version.ref = "materialVersion" }
 
 [bundles]
 composeImplementationBundle = [

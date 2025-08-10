@@ -1,34 +1,9 @@
-import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
-
 plugins {
     alias(libs.plugins.androidApplicationPlugin)
     alias(libs.plugins.kotlinAndroidPlugin)
     alias(libs.plugins.kotlinComposePlugin)
     alias(libs.plugins.kotlinSerializationPlugin)
-    alias(libs.plugins.ktlintPlugin)
-    alias(libs.plugins.detektPlugin)
-    alias(libs.plugins.spotlessPlugin)
-    alias(libs.plugins.sonarPlugin)
-    alias(libs.plugins.paparazziPlugin)
-    id("kotlin-parcelize")
     id("jacoco")
-}
-
-sonarqube {
-    properties {
-        property("sonar.host.url", "http://localhost:9000")
-        property("sonar.token", "sqp_f725693eadebef9986eee82750530feeb63fff7d")
-        property("sonar.projectKey", "Compose-Shape-Fitter")
-        property("sonar.projectName", "Compose Shape Fitter")
-        property("sonar.qualitygate.wait", true)
-        property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
-        property("sonar.kotlin.detekt.reportPaths", "build/reports/detekt/detekt.xml")
-        property("sonar.kotlin.ktlint.reportPaths", "build/reports/ktlint/ktlintMainSourceSetCheck/ktlintMainSourceSetCheck.xml")
-        property("sonar.androidLint.reportPaths", "build/reports/lint-results-debug.xml")
-        property("sonar.sources", "src/main/java")
-        property("sonar.tests", "src/test/java,src/androidTest/java")
-        property("sonar.sourceEncoding", "UTF-8")
-    }
 }
 
 android {
@@ -93,6 +68,11 @@ android {
             pickFirsts.add("META-INF/LGPL2.1")
             pickFirsts.add("META-INF/LICENSE.md")
             pickFirsts.add("META-INF/LICENSE-notice.md")
+        }
+    }
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
         }
     }
 }
@@ -178,43 +158,18 @@ tasks.register<JacocoReport>("jacocoTestReport") {
     )
 }
 
-detekt {
-    parallel = true
-    config.setFrom("${project.rootDir}/config/detekt/detekt.yml")
-}
-
-ktlint {
-    android = true
-    ignoreFailures = false
-    reporters {
-        reporter(ReporterType.PLAIN)
-        reporter(ReporterType.CHECKSTYLE)
-        reporter(ReporterType.SARIF)
-    }
-}
-
-spotless {
-    kotlin {
-        target("src/**/*.kt")
-        ktlint().setEditorConfigPath("${project.rootDir}/.editorconfig")
-        trimTrailingWhitespace()
-        endWithNewline()
-    }
-}
-
 dependencies {
 
     implementation(libs.androidxCoreKtxLibrary)
     implementation(libs.androidxLifecycleRuntimeKtxLibrary)
     implementation(libs.androidxActivityComposeLibrary)
-    implementation(libs.kotestPropertyLibrary)
     implementation(platform(libs.koinBomLibrary))
     implementation(libs.bundles.koinBundle)
     implementation(platform(libs.androidxComposeBomLibrary))
     implementation(libs.bundles.composeImplementationBundle)
-    implementation(libs.bundles.dataStorageBundle)
-    implementation(kotlin("reflect"))
-    implementation(project(":compose-shape-fitter"))
+    implementation(project(":example-app:example-app-di"))
+    implementation(project(":example-app:example-app-presentation"))
+    implementation(project(":utils"))
 
     debugImplementation(libs.bundles.composeDebugImplementationBundle)
 

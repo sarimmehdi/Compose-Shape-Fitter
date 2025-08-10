@@ -1,12 +1,7 @@
-import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
-
 plugins {
     alias(libs.plugins.androidLibraryPlugin)
     alias(libs.plugins.kotlinAndroidPlugin)
     alias(libs.plugins.kotlinComposePlugin)
-    alias(libs.plugins.ktlintPlugin)
-    alias(libs.plugins.detektPlugin)
-    alias(libs.plugins.spotlessPlugin)
     alias(libs.plugins.vanniktechMavenPublishingPlugin)
     id("kotlin-parcelize")
 }
@@ -53,25 +48,6 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
-    }
-}
-
-ktlint {
-    android = true
-    ignoreFailures = false
-    reporters {
-        reporter(ReporterType.PLAIN)
-        reporter(ReporterType.CHECKSTYLE)
-        reporter(ReporterType.SARIF)
-    }
-}
-
-spotless {
-    kotlin {
-        target("src/**/*.kt")
-        ktlint().setEditorConfigPath("${project.rootDir}/.editorconfig")
-        trimTrailingWhitespace()
-        endWithNewline()
     }
 }
 

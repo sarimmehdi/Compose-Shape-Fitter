@@ -139,7 +139,7 @@ jobs:
           api-level: 35
           target: google_apis
           arch: x86_64
-          profile: Nexus 6
+          profile: Pixel 6 Pro
           script: ./gradlew connectedCheck
 
       - name: Upload Integration Test Results
