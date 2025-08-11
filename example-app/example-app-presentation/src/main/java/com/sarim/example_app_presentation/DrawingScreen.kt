@@ -62,10 +62,11 @@ fun DrawingScreen(
             CanvasComponent(
                 data =
                     CanvasComponentData(
-                        drawableShape = data.state.getDrawableShape(
-                            Color.Blue,
-                            DEFAULT_STROKE_WIDTH
-                        ),
+                        drawableShape =
+                            data.state.getDrawableShape(
+                                Color.Blue,
+                                DEFAULT_STROKE_WIDTH,
+                            ),
                         isDragging = data.state.isDragging,
                         points = data.state.points,
                         lines = data.state.lines,
@@ -89,3 +90,6 @@ data class DrawingScreenData(
 
 @Serializable
 object DrawingScreenNavigationDestination
+
+@Serializable
+data object DrawingFeature

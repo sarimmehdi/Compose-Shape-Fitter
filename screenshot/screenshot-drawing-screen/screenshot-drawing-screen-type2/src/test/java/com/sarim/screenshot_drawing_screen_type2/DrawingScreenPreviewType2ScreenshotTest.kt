@@ -23,9 +23,10 @@ class DrawingScreenPreviewType2ScreenshotTest(
     private val testData: TestDataDrawingScreenPreviewType2ScreenshotTest,
 ) {
     @get:Rule
-    val paparazzi = Paparazzi(
-        deviceConfig = DeviceConfig.PIXEL_6_PRO,
-    )
+    val paparazzi =
+        Paparazzi(
+            deviceConfig = DeviceConfig.PIXEL_6_PRO,
+        )
 
     private var binding: ComposeViewBinding? = null
 
@@ -38,11 +39,13 @@ class DrawingScreenPreviewType2ScreenshotTest(
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
                     DrawingScreen(
-                        data = testData.data.copy(
-                            state = testData.data.state.copy(
-                                inPreviewMode = true
-                            )
-                        )
+                        data =
+                            testData.data.copy(
+                                state =
+                                    testData.data.state.copy(
+                                        inPreviewMode = true,
+                                    ),
+                            ),
                     )
                 }
             }
@@ -52,21 +55,21 @@ class DrawingScreenPreviewType2ScreenshotTest(
     }
 
     companion object {
-
         @JvmStatic
         @Parameterized.Parameters(
             name = "{0}",
         )
         @Suppress("unused")
-        fun getParameters(): Collection<Array<Any>> {
-            return DrawingScreenDataProviderType2().values.mapIndexed { index, data ->
-                arrayOf(
-                    index.toString(),
-                    TestDataDrawingScreenPreviewType2ScreenshotTest(
-                        data = data
-                    ),
-                )
-            }.toList()
-        }
+        fun getParameters(): Collection<Array<Any>> =
+            DrawingScreenDataProviderType2()
+                .values
+                .mapIndexed { index, data ->
+                    arrayOf(
+                        index.toString(),
+                        TestDataDrawingScreenPreviewType2ScreenshotTest(
+                            data = data,
+                        ),
+                    )
+                }.toList()
     }
 }

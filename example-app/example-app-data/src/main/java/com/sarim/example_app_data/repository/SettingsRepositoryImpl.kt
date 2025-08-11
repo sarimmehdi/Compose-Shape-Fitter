@@ -28,7 +28,7 @@ class SettingsRepositoryImpl(
                             "settingsDto = $it, settings = ${it.toSettings()}"
                         },
                         logType = LogType.INFO,
-                        shouldLog = BuildConfig.DEBUG
+                        shouldLog = BuildConfig.DEBUG,
                     )
                     Resource.Success(it.toSettings())
                 }
@@ -53,7 +53,7 @@ class SettingsRepositoryImpl(
                     "called updateSettings with $settings"
                 },
                 logType = LogType.INFO,
-                shouldLog = BuildConfig.DEBUG
+                shouldLog = BuildConfig.DEBUG,
             )
             dataStore.updateData {
                 it.copy(

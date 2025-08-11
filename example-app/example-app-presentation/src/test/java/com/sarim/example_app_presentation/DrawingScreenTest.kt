@@ -1,4 +1,4 @@
-package com.sarim.composeshapefittersampleapp.presentation
+package com.sarim.example_app_presentation
 
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.rememberDrawerState
@@ -17,14 +17,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.test.platform.app.InstrumentationRegistry
 import com.sarim.example_app_domain.model.Shape
-import com.sarim.example_app_presentation.DrawingScreen
-import com.sarim.example_app_presentation.DrawingScreenData
-import com.sarim.example_app_presentation.DrawingScreenState
-import com.sarim.example_app_presentation.DrawingScreenToViewModelEvents
-import com.sarim.example_app_presentation.DrawingScreenUseCases
-import com.sarim.example_app_presentation.DrawingScreenViewModel
 import com.sarim.example_app_presentation.DrawingScreenViewModel.Companion.DRAWING_SCREEN_STATE_KEY
-import com.sarim.example_app_presentation.TestDispatchers
 import com.sarim.example_app_presentation.component.CanvasComponentTestTags.CANVAS_COMPONENT
 import com.sarim.example_app_presentation.component.DrawerComponentTestTags.CLOSE_DRAWER_ICON_BUTTON
 import com.sarim.example_app_presentation.component.DrawerComponentTestTags.DRAWER_COMPONENT
@@ -38,10 +31,8 @@ import com.sarim.example_app_presentation.component.TopBarComponentTestTags.FING
 import com.sarim.example_app_presentation.component.TopBarComponentTestTags.OPEN_DRAWER_ICON_BUTTON
 import com.sarim.example_app_presentation.component.TopBarComponentTestTags.SETTINGS_DROP_DOWN_MENU
 import com.sarim.example_app_presentation.component.TopBarComponentTestTags.SETTINGS_ICON_BUTTON
-import com.sarim.utils.SnackBarController
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkObject
 import io.mockk.spyk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
@@ -66,7 +57,6 @@ class DrawingScreenTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
-        mockkObject(SnackBarController)
         savedStateHandle = SavedStateHandle()
         savedStateHandle[DRAWING_SCREEN_STATE_KEY] = DrawingScreenState()
         drawingScreenUseCases = mockk(relaxed = true)

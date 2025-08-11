@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidLibraryPlugin)
     alias(libs.plugins.kotlinAndroidPlugin)
+    alias(libs.plugins.kotlinComposePlugin)
 }
 
 android {
@@ -19,7 +20,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -32,10 +33,12 @@ android {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
         }
     }
+    buildFeatures {
+        compose = true
+    }
 }
 
 dependencies {
-
     implementation(platform(libs.koinBomLibrary))
     implementation(libs.bundles.koinBundle)
     implementation(libs.bundles.dataStorageBundle)

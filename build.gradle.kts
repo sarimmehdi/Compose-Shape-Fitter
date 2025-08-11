@@ -14,6 +14,7 @@ plugins {
     alias(libs.plugins.spotlessPlugin) apply false
     alias(libs.plugins.sonarPlugin) apply false
     alias(libs.plugins.paparazziPlugin) apply false
+    alias(libs.plugins.jetbrainsKotlinJvm) apply false
 }
 
 subprojects {

@@ -93,138 +93,92 @@ class ObbShape(
         )
     }
 
-    @Suppress("LongMethod")
-    private fun findSmallestEnclosingObb(
-        points: List<Offset>,
-        allSidesEqual: Boolean,
-    ): OrientedBoundingBox? {
-        if (points.isEmpty()) {
-            log(
-                tag = ObbShape::class.java.simpleName,
-                messageBuilder = {
-                    "Point list is empty, cannot fit ellipse to derive OBB."
-                },
-                logType = LogType.WARN,
-                logRegardless = logRegardless,
-            )
-            return null
+    private fun createTiltedObb(points: List<Offset>): OrientedBoundingBox {
+        var minX = points[0].x
+        var maxX = points[0].x
+        var minY = points[0].y
+        var maxY = points[0].y
+
+        for (i in 1 until points.size) {
+            minX = min(minX, points[i].x)
+            maxX = max(maxX, points[i].x)
+            minY = min(minY, points[i].y)
+            maxY = max(maxY, points[i].y)
         }
 
-        var obb: OrientedBoundingBox? = null
-        val pointsX = FloatArray(points.size) { points[it].x }
-        val pointsY = FloatArray(points.size) { points[it].y }
+        val estimatedWidth = max(1f, maxX - minX)
+        val estimatedHeight = max(1f, maxY - minY)
 
-        if (inPreviewMode) {
-            var minX = points[0].x
-            var maxX = points[0].x
-            var minY = points[0].y
-            var maxY = points[0].y
+        val previewCenterX = minX + estimatedWidth / 2f
+        val previewCenterY = minY + estimatedHeight / 2f
+        val previewCenter = Offset(previewCenterX, previewCenterY)
 
-            for (i in 1 until points.size) {
-                minX = min(minX, points[i].x)
-                maxX = max(maxX, points[i].x)
-                minY = min(minY, points[i].y)
-                maxY = max(maxY, points[i].y)
-            }
+        val rectWidth: Float
+        val rectHeight: Float
 
-            val estimatedWidth = max(1f, maxX - minX)
-            val estimatedHeight = max(1f, maxY - minY)
+        if (allSidesEqual) {
+            val sideLength = max(estimatedWidth, estimatedHeight)
+            rectWidth = sideLength
+            rectHeight = sideLength
+        } else {
+            rectWidth = estimatedWidth
+            rectHeight = estimatedHeight
+        }
 
-            val previewCenterX = minX + estimatedWidth / 2f
-            val previewCenterY = minY + estimatedHeight / 2f
-            val previewCenter = Offset(previewCenterX, previewCenterY)
+        val cosA = cos(QUARTER_PI)
+        val sinA = sin(QUARTER_PI)
+        val hw = rectWidth / 2f
+        val hh = rectHeight / 2f
 
-            val rectWidth: Float
-            val rectHeight: Float
-
-            if (allSidesEqual) {
-                val sideLength = max(estimatedWidth, estimatedHeight)
-                rectWidth = sideLength
-                rectHeight = sideLength
-            } else {
-                rectWidth = estimatedWidth
-                rectHeight = estimatedHeight
-            }
-
-            val previewAngleRad = (PI / 4).toFloat()
-
-            val cosA = cos(previewAngleRad)
-            val sinA = sin(previewAngleRad)
-            val hw = rectWidth / 2f
-            val hh = rectHeight / 2f
-
-            val localCorners = listOf(
+        val localCorners =
+            listOf(
                 Offset(-hw, -hh),
                 Offset(hw, -hh),
                 Offset(hw, hh),
-                Offset(-hw, hh)
+                Offset(-hw, hh),
             )
 
-            val worldCorners = localCorners.map { localCorner ->
+        val worldCorners =
+            localCorners.map { localCorner ->
                 val worldX = previewCenterX + localCorner.x * cosA - localCorner.y * sinA
                 val worldY = previewCenterY + localCorner.x * sinA + localCorner.y * cosA
                 Offset(worldX, worldY)
             }
 
-            obb = OrientedBoundingBox(
-                center = previewCenter,
-                width = rectWidth,
-                height = rectHeight,
-                angleRad = previewAngleRad,
-                corner1 = worldCorners[0],
-                corner2 = worldCorners[1],
-                corner3 = worldCorners[2],
-                corner4 = worldCorners[3]
+        return OrientedBoundingBox(
+            center = previewCenter,
+            width = rectWidth,
+            height = rectHeight,
+            angleRad = QUARTER_PI,
+            corner1 = worldCorners[0],
+            corner2 = worldCorners[1],
+            corner3 = worldCorners[2],
+            corner4 = worldCorners[3],
+        )
+    }
+
+    private fun findSmallestEnclosingObb(
+        points: List<Offset>,
+        allSidesEqual: Boolean,
+    ): OrientedBoundingBox? {
+        var result: OrientedBoundingBox? = null
+
+        if (points.isEmpty()) {
+            log(
+                tag = ObbShape::class.java.simpleName,
+                messageBuilder = { "Point list is empty, cannot fit ellipse to derive OBB." },
+                logType = LogType.WARN,
+                logRegardless = logRegardless,
             )
+        } else if (inPreviewMode) {
+            result = createTiltedObb(points)
         } else {
             try {
-                val ellipseParamsArray: FloatArray? = EllipseFitterJNI.fitEllipseNative(pointsX, pointsY, logRegardless)
-
-                if (ellipseParamsArray != null && ellipseParamsArray.size == MAX_ELLIPSE_PARAMS) {
-                    val centerX = ellipseParamsArray[CENTER_X_IDX]
-                    val centerY = ellipseParamsArray[CENTER_Y_IDX]
-
-                    val ellipseRadiusX = ellipseParamsArray[ELLIPSE_RAD_X_IDX]
-                    val ellipseRadiusY = ellipseParamsArray[ELLIPSE_RAD_Y_IDX]
-                    val ellipseAngleRad = ellipseParamsArray[ELLIPSE_ANGLE_RAD_IDX]
-
-                    if (ellipseRadiusX > 0f && ellipseRadiusY > 0f) {
-                        val fittedEllipse =
-                            SkewedEllipseShape.RotatedEllipse(
-                                center = Offset(centerX, centerY),
-                                radiusX = ellipseRadiusX,
-                                radiusY = ellipseRadiusY,
-                                angleRad = ellipseAngleRad,
-                            )
-                        obb = createOBBFromEllipse(fittedEllipse, allSidesEqual) // Assign to obb
-                    } else {
-                        log(
-                            tag = ObbShape::class.java.simpleName,
-                            messageBuilder = {
-                                "Native method returned invalid ellipse radii for OBB: " +
-                                        "rX=$ellipseRadiusX, rY=$ellipseRadiusY"
-                            },
-                            logType = LogType.WARN,
-                            logRegardless = logRegardless,
-                        )
-                    }
-                } else {
-                    log(
-                        tag = ObbShape::class.java.simpleName,
-                        messageBuilder = {
-                            "Native method 'fitEllipseNative' returned null or an array of unexpected size " +
-                                    "for OBB: ${ellipseParamsArray?.size ?: "null"}. Expected $MAX_ELLIPSE_PARAMS."
-                        },
-                        logType = LogType.WARN,
-                        logRegardless = logRegardless,
-                    )
-                }
+                result = fitEllipseAndCreateObb(points, allSidesEqual)
             } catch (e: UnsatisfiedLinkError) {
                 log(
                     tag = ObbShape::class.java.simpleName,
-                    messageBuilder = {
-                        "JNI UnsatisfiedLinkError in findOBBForFittedEllipse: ${e.message}"
-                    },
+                    messageBuilder = { "JNI UnsatisfiedLinkError in findOBBForFittedEllipse: ${e.message}" },
                     logType = LogType.ERROR,
                     logRegardless = logRegardless,
                 )
@@ -233,15 +187,64 @@ class ObbShape(
             ) {
                 log(
                     tag = ObbShape::class.java.simpleName,
-                    messageBuilder = {
-                        "Exception during JNI ellipse fitting for OBB: ${e.message}"
-                    },
+                    messageBuilder = { "Exception during JNI ellipse fitting for OBB: ${e.message}" },
                     logType = LogType.ERROR,
                     logRegardless = logRegardless,
                 )
             }
         }
+        return result
+    }
 
+    private fun fitEllipseAndCreateObb(
+        points: List<Offset>,
+        allSidesEqual: Boolean,
+    ): OrientedBoundingBox? {
+        val pointsX = FloatArray(points.size) { points[it].x }
+        val pointsY = FloatArray(points.size) { points[it].y }
+
+        val ellipseParamsArray: FloatArray? = EllipseFitterJNI.fitEllipseNative(pointsX, pointsY, logRegardless)
+
+        var obb: OrientedBoundingBox? = null
+
+        if (ellipseParamsArray == null || ellipseParamsArray.size != MAX_ELLIPSE_PARAMS) {
+            log(
+                tag = ObbShape::class.java.simpleName,
+                messageBuilder = {
+                    "Native method 'fitEllipseNative' returned null or an array of unexpected size " +
+                        "for OBB: ${ellipseParamsArray?.size ?: "null"}. Expected $MAX_ELLIPSE_PARAMS."
+                },
+                logType = LogType.WARN,
+                logRegardless = logRegardless,
+            )
+        } else {
+            val centerX = ellipseParamsArray[CENTER_X_IDX]
+            val centerY = ellipseParamsArray[CENTER_Y_IDX]
+            val ellipseRadiusX = ellipseParamsArray[ELLIPSE_RAD_X_IDX]
+            val ellipseRadiusY = ellipseParamsArray[ELLIPSE_RAD_Y_IDX]
+            val ellipseAngleRad = ellipseParamsArray[ELLIPSE_ANGLE_RAD_IDX]
+
+            if (ellipseRadiusX <= 0f || ellipseRadiusY <= 0f) {
+                log(
+                    tag = ObbShape::class.java.simpleName,
+                    messageBuilder = {
+                        "Native method returned invalid ellipse radii for OBB: " +
+                            "rX=$ellipseRadiusX, rY=$ellipseRadiusY"
+                    },
+                    logType = LogType.WARN,
+                    logRegardless = logRegardless,
+                )
+            } else {
+                val fittedEllipse =
+                    SkewedEllipseShape.RotatedEllipse(
+                        center = Offset(centerX, centerY),
+                        radiusX = ellipseRadiusX,
+                        radiusY = ellipseRadiusY,
+                        angleRad = ellipseAngleRad,
+                    )
+                obb = createOBBFromEllipse(fittedEllipse, allSidesEqual)
+            }
+        }
         return obb
     }
 
@@ -249,72 +252,21 @@ class ObbShape(
         drawScope: DrawScope,
         points: List<Offset>,
     ) {
-        if (inPreviewMode) {
-            if (points.size >= 2) {
-                drawScope.apply {
-                    var minX = points[0].x
-                    var maxX = points[0].x
-                    var minY = points[0].y
-                    var maxY = points[0].y
-
-                    for (i in 1 until points.size) {
-                        minX = min(minX, points[i].x)
-                        maxX = max(maxX, points[i].x)
-                        minY = min(minY, points[i].y)
-                        maxY = max(maxY, points[i].y)
-                    }
-
-                    val estimatedWidth = max(1f, maxX - minX)
-                    val estimatedHeight = max(1f, maxY - minY)
-                    val previewCenterX = minX + estimatedWidth / 2f
-                    val previewCenterY = minY + estimatedHeight / 2f
-                    val previewCenter = Offset(previewCenterX, previewCenterY)
-
-                    val rectWidth: Float
-                    val rectHeight: Float
-
-                    if (allSidesEqual) {
-                        val sideLength = max(estimatedWidth, estimatedHeight)
-                        rectWidth = sideLength
-                        rectHeight = sideLength
-                    } else {
-                        rectWidth = estimatedWidth
-                        rectHeight = estimatedHeight
-                    }
-
-                    rotate(
-                        degrees = 45f,
-                        pivot = previewCenter,
-                    ) {
-                        drawRect(
-                            color = color,
-                            topLeft = Offset(
-                                previewCenterX - rectWidth / 2f,
-                                previewCenterY - rectHeight / 2f,
-                            ),
-                            size = Size(rectWidth, rectHeight),
-                            style = Stroke(width = strokeWidth),
-                        )
-                    }
-                }
-            }
-        } else {
-            findSmallestEnclosingObb(points, allSidesEqual)?.let { obb ->
-                drawScope.rotate(
-                    degrees = obb.angleRad * (180f / PI.toFloat()),
-                    pivot = obb.center,
-                ) {
-                    drawRect(
-                        color = color,
-                        topLeft =
-                            Offset(
-                                obb.center.x - obb.width / 2f,
-                                obb.center.y - obb.height / 2f,
-                            ),
-                        size = Size(obb.width, obb.height),
-                        style = Stroke(width = strokeWidth),
-                    )
-                }
+        findSmallestEnclosingObb(points, allSidesEqual)?.let { obb ->
+            drawScope.rotate(
+                degrees = obb.angleRad * (180f / PI.toFloat()),
+                pivot = obb.center,
+            ) {
+                drawRect(
+                    color = color,
+                    topLeft =
+                        Offset(
+                            obb.center.x - obb.width / 2f,
+                            obb.center.y - obb.height / 2f,
+                        ),
+                    size = Size(obb.width, obb.height),
+                    style = Stroke(width = strokeWidth),
+                )
             }
         }
     }
@@ -328,6 +280,7 @@ class ObbShape(
         private const val ELLIPSE_RAD_Y_IDX = 2
         private const val ELLIPSE_ANGLE_RAD_IDX = 4
         private const val MAX_ELLIPSE_PARAMS = 5
+        private const val QUARTER_PI = (PI / 4).toFloat()
     }
 
     override fun equals(other: Any?): Boolean {

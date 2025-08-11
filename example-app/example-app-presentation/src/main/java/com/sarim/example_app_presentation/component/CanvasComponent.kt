@@ -36,7 +36,7 @@ fun CanvasComponent(
             "data = $data"
         },
         logType = LogType.DEBUG,
-        shouldLog = BuildConfig.DEBUG
+        shouldLog = BuildConfig.DEBUG,
     )
     Canvas(
         modifier =

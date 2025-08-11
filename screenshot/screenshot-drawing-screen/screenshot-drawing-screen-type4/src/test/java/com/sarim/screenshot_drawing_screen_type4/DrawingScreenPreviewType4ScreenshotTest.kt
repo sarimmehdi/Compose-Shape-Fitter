@@ -20,39 +20,42 @@ class DrawingScreenPreviewType4ScreenshotTest(
     private val testData: TestDataDrawingScreenPreviewType4ScreenshotTest,
 ) {
     @get:Rule
-    val paparazzi = Paparazzi(
-        deviceConfig = DeviceConfig.PIXEL_6_PRO,
-    )
+    val paparazzi =
+        Paparazzi(
+            deviceConfig = DeviceConfig.PIXEL_6_PRO,
+        )
 
     @Test
     fun test() {
         paparazzi.snapshot {
             DrawingScreen(
-                data = testData.data.copy(
-                    state = testData.data.state.copy(
-                        inPreviewMode = true
-                    )
-                )
+                data =
+                    testData.data.copy(
+                        state =
+                            testData.data.state.copy(
+                                inPreviewMode = true,
+                            ),
+                    ),
             )
         }
     }
 
     companion object {
-
         @JvmStatic
         @Parameterized.Parameters(
             name = "{0}",
         )
         @Suppress("unused")
-        fun getParameters(): Collection<Array<Any>> {
-            return DrawingScreenDataProviderType4().values.mapIndexed { index, data ->
-                arrayOf(
-                    index.toString(),
-                    TestDataDrawingScreenPreviewType4ScreenshotTest(
-                        data = data
-                    ),
-                )
-            }.toList()
-        }
+        fun getParameters(): Collection<Array<Any>> =
+            DrawingScreenDataProviderType4()
+                .values
+                .mapIndexed { index, data ->
+                    arrayOf(
+                        index.toString(),
+                        TestDataDrawingScreenPreviewType4ScreenshotTest(
+                            data = data,
+                        ),
+                    )
+                }.toList()
     }
 }

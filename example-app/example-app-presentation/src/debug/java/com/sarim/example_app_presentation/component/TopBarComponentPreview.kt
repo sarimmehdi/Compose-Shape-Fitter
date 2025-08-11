@@ -18,32 +18,36 @@ import io.kotest.property.exhaustive.map
 @Composable
 @Preview(
     apiLevel = 35,
-    device = PIXEL_6_PRO
+    device = PIXEL_6_PRO,
 )
 internal fun TopBarComponentPreview(
-    @PreviewParameter(TopBarComponentDataProvider::class) data: TopBarComponentData
+    @PreviewParameter(TopBarComponentDataProvider::class) data: TopBarComponentData,
 ) {
     TopBarComponent(
         data = data,
-        modifier = Modifier
-            .fillMaxSize()
+        modifier =
+            Modifier
+                .fillMaxSize(),
     )
 }
 
 class TopBarComponentDataProvider : PreviewParameterProvider<TopBarComponentData> {
     override val values: Sequence<TopBarComponentData> =
-        Exhaustive.boolean().flatMap { showSettingsDropDown ->
-            Exhaustive.boolean().flatMap { showFingerTracedLines ->
-                Exhaustive.boolean().flatMap { showApproximatedShape ->
-                    exhaustive(DrawerValue.entries).map { drawerValue ->
-                        TopBarComponentData(
-                            showSettingsDropDown = showSettingsDropDown,
-                            showFingerTracedLines = showFingerTracedLines,
-                            showApproximatedShape = showApproximatedShape,
-                            currentDrawerState = DrawerState(drawerValue)
-                        )
+        Exhaustive
+            .boolean()
+            .flatMap { showSettingsDropDown ->
+                Exhaustive.boolean().flatMap { showFingerTracedLines ->
+                    Exhaustive.boolean().flatMap { showApproximatedShape ->
+                        exhaustive(DrawerValue.entries).map { drawerValue ->
+                            TopBarComponentData(
+                                showSettingsDropDown = showSettingsDropDown,
+                                showFingerTracedLines = showFingerTracedLines,
+                                showApproximatedShape = showApproximatedShape,
+                                currentDrawerState = DrawerState(drawerValue),
+                            )
+                        }
                     }
                 }
-            }
-        }.values.asSequence()
-    }
+            }.values
+            .asSequence()
+}

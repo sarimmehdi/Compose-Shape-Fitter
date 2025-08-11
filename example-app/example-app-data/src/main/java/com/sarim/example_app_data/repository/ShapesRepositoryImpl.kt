@@ -27,7 +27,7 @@ class ShapesRepositoryImpl(
                             "shapeDto = $it, selectedShapeType = ${it.selectedShapeType}"
                         },
                         logType = LogType.INFO,
-                        shouldLog = BuildConfig.DEBUG
+                        shouldLog = BuildConfig.DEBUG,
                     )
                     Resource.Success(it.selectedShapeType)
                 }
@@ -52,7 +52,7 @@ class ShapesRepositoryImpl(
                     "called updateSelectedShape with $selectedShape"
                 },
                 logType = LogType.INFO,
-                shouldLog = BuildConfig.DEBUG
+                shouldLog = BuildConfig.DEBUG,
             )
             dataStore.updateData {
                 it.copy(

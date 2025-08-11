@@ -13,30 +13,37 @@ import io.kotest.property.exhaustive.map
 @Composable
 @Preview(
     apiLevel = 35,
-    device = PIXEL_6_PRO
+    device = PIXEL_6_PRO,
 )
 internal fun DrawingScreenPreviewType3(
-    @PreviewParameter(DrawingScreenDataProviderType3::class) data: DrawingScreenData
+    @PreviewParameter(DrawingScreenDataProviderType3::class) data: DrawingScreenData,
 ) {
     DrawingScreen(
-        data = data.copy(
-            state = data.state.copy(
-                inPreviewMode = true
-            )
-        )
+        data =
+            data.copy(
+                state =
+                    data.state.copy(
+                        inPreviewMode = true,
+                    ),
+            ),
     )
 }
 
 class DrawingScreenDataProviderType3 : PreviewParameterProvider<DrawingScreenData> {
-    override val values = Exhaustive.boolean().flatMap { showFingerTracedLinesValue ->
-        Exhaustive.boolean().map { showApproximatedShapeValue ->
-            DrawingScreenData(
-                state = DrawingScreenState(
-                    showSettingsDropDown = true,
-                    showFingerTracedLines = showFingerTracedLinesValue,
-                    showApproximatedShape = showApproximatedShapeValue
-                )
-            )
-        }
-    }.values.asSequence()
+    override val values =
+        Exhaustive
+            .boolean()
+            .flatMap { showFingerTracedLinesValue ->
+                Exhaustive.boolean().map { showApproximatedShapeValue ->
+                    DrawingScreenData(
+                        state =
+                            DrawingScreenState(
+                                showSettingsDropDown = true,
+                                showFingerTracedLines = showFingerTracedLinesValue,
+                                showApproximatedShape = showApproximatedShapeValue,
+                            ),
+                    )
+                }
+            }.values
+            .asSequence()
 }

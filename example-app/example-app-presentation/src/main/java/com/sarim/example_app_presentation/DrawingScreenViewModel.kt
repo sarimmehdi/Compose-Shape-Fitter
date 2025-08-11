@@ -34,7 +34,7 @@ class DrawingScreenViewModel(
                         "getSettingsUseCase() returned $it"
                     },
                     logType = LogType.DEBUG,
-                    shouldLog = BuildConfig.DEBUG
+                    shouldLog = BuildConfig.DEBUG,
                 )
                 when (it) {
                     is Resource.Error -> {
@@ -83,7 +83,7 @@ class DrawingScreenViewModel(
                         "getSelectedShapeUseCase() returned $it"
                     },
                     logType = LogType.DEBUG,
-                    shouldLog = BuildConfig.DEBUG
+                    shouldLog = BuildConfig.DEBUG,
                 )
                 when (it) {
                     is Resource.Error -> {

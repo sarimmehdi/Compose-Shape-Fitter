@@ -18,7 +18,7 @@ android {
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -40,11 +40,10 @@ configurations.configureEach {
     if (name == "debugUnitTestRuntimeClasspath") {
         exclude(
             group = libs.archUnitJUnit4Library.get().group,
-            module = libs.archUnitJUnit4Library.get().name
+            module = libs.archUnitJUnit4Library.get().name,
         )
     }
 }
-
 
 dependencies {
 

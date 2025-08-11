@@ -16,25 +16,26 @@ import kotlinx.collections.immutable.toImmutableList
 @Composable
 @Preview(
     apiLevel = 35,
-    device = PIXEL_6_PRO
+    device = PIXEL_6_PRO,
 )
 internal fun DrawerComponentPreview(
-    @PreviewParameter(DrawerComponentDataParameterProvider::class) data: DrawerComponentData
+    @PreviewParameter(DrawerComponentDataParameterProvider::class) data: DrawerComponentData,
 ) {
     DrawerComponent(
         data = data,
-        modifier = Modifier.background(Color.White)
+        modifier = Modifier.background(Color.White),
     )
 }
 
 class DrawerComponentDataParameterProvider : PreviewParameterProvider<DrawerComponentData> {
-    override val values = Shape.entries.asSequence().flatMap { selectedShape ->
-        DrawerValue.entries.map { drawerValue ->
-            DrawerComponentData(
-                allShapes = Shape.entries.toImmutableList(),
-                selectedShape = selectedShape,
-                currentDrawerState = DrawerState(drawerValue)
-            )
+    override val values =
+        Shape.entries.asSequence().flatMap { selectedShape ->
+            DrawerValue.entries.map { drawerValue ->
+                DrawerComponentData(
+                    allShapes = Shape.entries.toImmutableList(),
+                    selectedShape = selectedShape,
+                    currentDrawerState = DrawerState(drawerValue),
+                )
+            }
         }
-    }
 }

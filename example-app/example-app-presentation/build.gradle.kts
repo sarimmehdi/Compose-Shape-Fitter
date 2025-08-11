@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlinAndroidPlugin)
     alias(libs.plugins.kotlinComposePlugin)
     alias(libs.plugins.kotlinSerializationPlugin)
+    alias(libs.plugins.conventionPluginJacocoId)
     id("kotlin-parcelize")
 }
 
@@ -22,13 +23,21 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
+    }
+    packaging {
+        resources {
+            pickFirsts.add("META-INF/AL2.0")
+            pickFirsts.add("META-INF/LGPL2.1")
+            pickFirsts.add("META-INF/LICENSE.md")
+            pickFirsts.add("META-INF/LICENSE-notice.md")
+        }
     }
     kotlin {
         compilerOptions {
@@ -38,6 +47,20 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+    }
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+            all { test ->
+                test.testLogging {
+                    showStandardStreams = true
+
+                    events("started", "passed", "skipped", "failed", "standard_out", "standard_error")
+                    exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+                }
+            }
+        }
     }
 }
 
@@ -60,8 +83,4 @@ dependencies {
     testImplementation(libs.composeJunit4Library)
     testImplementation(libs.bundles.testBundle)
     testImplementation(kotlin("reflect"))
-
-    androidTestImplementation(platform(libs.androidxComposeBomLibrary))
-    androidTestImplementation(libs.composeJunit4Library)
-    androidTestImplementation(libs.bundles.androidTestBundle)
 }

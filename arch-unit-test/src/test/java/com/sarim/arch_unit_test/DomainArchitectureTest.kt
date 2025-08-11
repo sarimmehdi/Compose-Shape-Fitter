@@ -1,4 +1,4 @@
-package com.sarim.example_app_domain
+package com.sarim.arch_unit_test
 
 import com.sarim.example_app_domain.model.Settings
 import com.sarim.example_app_domain.model.Shape
@@ -31,14 +31,13 @@ class DomainArchitectureTest {
     fun packageDependencyTest(importedClasses: JavaClasses) {
         noClasses()
             .that()
-            .resideInAPackage("..domain..")
+            .resideInAPackage("..*domain..")
             .should()
             .dependOnClassesThat()
             .resideInAnyPackage(
-                "..presentation..",
-                "..data..",
-                "..ui..",
-                "..di..",
+                "..*presentation..",
+                "..*data..",
+                "..*di..",
             ).check(importedClasses)
     }
 
@@ -46,24 +45,23 @@ class DomainArchitectureTest {
     fun classDependencyTest(importedClasses: JavaClasses) {
         classes()
             .that()
-            .resideInAPackage("..domain..")
+            .resideInAPackage("..*domain..")
             .should()
             .onlyHaveDependentClassesThat()
             .resideInAnyPackage(
-                "..domain..",
-                "..utils..",
-                "..presentation..",
+                "..*domain..",
+                "..*presentation..",
             ).check(importedClasses)
         classes()
             .that()
-            .resideInAPackage("..domain.model..")
+            .resideInAPackage("..*domain.model..")
             .should()
             .onlyHaveDependentClassesThat()
             .resideInAnyPackage(
-                "..domain.repository..",
-                "..domain.usecase..",
-                "..data.repository..",
-                "..data.dto..",
+                "..*domain.repository..",
+                "..*domain.usecase..",
+                "..*data.repository..",
+                "..*data.dto..",
             ).orShould()
             .onlyHaveDependentClassesThat()
             .haveSimpleNameEndingWith("ViewModel")
@@ -82,7 +80,7 @@ class DomainArchitectureTest {
             .that()
             .haveSimpleNameEndingWith("Repository")
             .should()
-            .resideInAPackage("..domain.repository..")
+            .resideInAPackage("..*domain.repository..")
             .check(importedClasses)
     }
 
@@ -91,9 +89,9 @@ class DomainArchitectureTest {
         layeredArchitecture()
             .consideringAllDependencies()
             .layer("Repository")
-            .definedBy("..domain.repository..")
+            .definedBy("..*domain.repository..")
             .layer("Use Case")
-            .definedBy("..domain.usecase..")
+            .definedBy("..*domain.usecase..")
             .whereLayer("Repository")
             .mayOnlyBeAccessedByLayers("Use Case")
             .check(importedClasses)

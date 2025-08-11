@@ -15,37 +15,40 @@ import kotlinx.collections.immutable.toImmutableList
 @Composable
 @Preview(
     apiLevel = 35,
-    device = PIXEL_6_PRO
+    device = PIXEL_6_PRO,
 )
 internal fun DrawingScreenPreviewType5(
-    @PreviewParameter(DrawingScreenDataProviderType5::class) data: DrawingScreenData
+    @PreviewParameter(DrawingScreenDataProviderType5::class) data: DrawingScreenData,
 ) {
     DrawingScreen(
-        data = data
+        data = data,
     )
 }
 
 class DrawingScreenDataProviderType5 : PreviewParameterProvider<DrawingScreenData> {
-    override val values = Shape.entries.asSequence().flatMap { selectedShape ->
-        val drawableShape = getDrawableShapeFromShape(selectedShape)
-        val points = generateDummyPoints(drawableShape)
-        val lines = points.zipWithNext { currentPoint, nextPoint ->
-            Pair(currentPoint, nextPoint)
-        }
-        Exhaustive.boolean().values.flatMap { showFingerTracedLines ->
-            Exhaustive.boolean().values.map { showApproximatedShape ->
-                DrawingScreenData(
-                    state = DrawingScreenState(
-                        selectedShape = selectedShape,
-                        approximatedShape = drawableShape.getApproximatedShape(points),
-                        points = points.toImmutableList(),
-                        lines = lines.toImmutableList(),
-                        showSettingsDropDown = true,
-                        showFingerTracedLines = showFingerTracedLines,
-                        showApproximatedShape = showFingerTracedLines
-                    ),
-                )
+    override val values =
+        Shape.entries.asSequence().flatMap { selectedShape ->
+            val drawableShape = getDrawableShapeFromShape(selectedShape)
+            val points = generateDummyPoints(drawableShape)
+            val lines =
+                points.zipWithNext { currentPoint, nextPoint ->
+                    Pair(currentPoint, nextPoint)
+                }
+            Exhaustive.boolean().values.flatMap { showFingerTracedLines ->
+                Exhaustive.boolean().values.map { showApproximatedShape ->
+                    DrawingScreenData(
+                        state =
+                            DrawingScreenState(
+                                selectedShape = selectedShape,
+                                approximatedShape = drawableShape.getApproximatedShape(points),
+                                points = points.toImmutableList(),
+                                lines = lines.toImmutableList(),
+                                showSettingsDropDown = true,
+                                showFingerTracedLines = showFingerTracedLines,
+                                showApproximatedShape = showFingerTracedLines,
+                            ),
+                    )
+                }
             }
         }
-    }
 }

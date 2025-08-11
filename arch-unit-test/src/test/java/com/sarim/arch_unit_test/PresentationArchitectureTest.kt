@@ -1,5 +1,9 @@
-package com.sarim.example_app_presentation
+package com.sarim.arch_unit_test
 
+import com.sarim.example_app_presentation.DrawingScreenState
+import com.sarim.example_app_presentation.DrawingScreenToViewModelEvents
+import com.sarim.example_app_presentation.DrawingScreenUseCases
+import com.sarim.example_app_presentation.DrawingScreenViewModel
 import com.tngtech.archunit.core.domain.JavaClasses
 import com.tngtech.archunit.junit.AnalyzeClasses
 import com.tngtech.archunit.junit.ArchTest
@@ -20,12 +24,12 @@ class PresentationArchitectureTest {
     fun packageDependencyTest(importedClasses: JavaClasses) {
         noClasses()
             .that()
-            .resideInAPackage("..presentation..")
+            .resideInAPackage("..*presentation..")
             .should()
             .dependOnClassesThat()
             .resideInAnyPackage(
-                "..data..",
-                "..di..",
+                "..*data..",
+                "..*di..",
             ).check(importedClasses)
     }
 
@@ -33,13 +37,12 @@ class PresentationArchitectureTest {
     fun classDependencyTest(importedClasses: JavaClasses) {
         classes()
             .that()
-            .resideInAPackage("..presentation..")
+            .resideInAPackage("..*presentation..")
             .should()
             .onlyHaveDependentClassesThat()
             .resideInAnyPackage(
-                "..domain..",
-                "..utils..",
-                "..presentation..",
+                "..*domain..",
+                "..*presentation..",
             ).check(importedClasses)
         classes()
             .that()

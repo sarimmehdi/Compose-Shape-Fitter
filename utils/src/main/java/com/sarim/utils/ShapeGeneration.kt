@@ -5,6 +5,8 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
+private const val DEFAULT_RADIUS = 200
+
 fun generateEllipsePoints(
     centerX: Float,
     centerY: Float,
@@ -22,13 +24,17 @@ fun generateEllipsePoints(
     return points
 }
 
-fun generatePolygonPoints(sides: Int, xOffset: Float = 0f, yOffset: Float = 0f): List<Offset> {
+fun generatePolygonPoints(
+    sides: Int,
+    xOffset: Float = 0f,
+    yOffset: Float = 0f,
+): List<Offset> {
     val points = mutableListOf<Offset>()
     val angleStep = 2 * PI / sides
     for (i in 0..sides) {
         val angle = i * angleStep
-        val x = xOffset + 200 * cos(angle).toFloat()
-        val y = yOffset + 200 * sin(angle).toFloat()
+        val x = xOffset + DEFAULT_RADIUS * cos(angle).toFloat()
+        val y = yOffset + DEFAULT_RADIUS * sin(angle).toFloat()
         points.add(Offset(x, y))
     }
     return points

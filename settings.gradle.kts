@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google {
             content {
@@ -38,3 +39,4 @@ include(":screenshot:screenshot-drawing-screen:screenshot-drawing-screen-type2")
 include(":screenshot:screenshot-drawing-screen:screenshot-drawing-screen-type3")
 include(":screenshot:screenshot-drawing-screen:screenshot-drawing-screen-type4")
 include(":screenshot:screenshot-drawing-screen:screenshot-drawing-screen-type5")
+include(":arch-unit-test")

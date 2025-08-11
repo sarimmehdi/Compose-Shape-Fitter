@@ -49,7 +49,7 @@ fun TopBarComponent(
             "data = $data"
         },
         logType = LogType.DEBUG,
-        shouldLog = BuildConfig.DEBUG
+        shouldLog = BuildConfig.DEBUG,
     )
 
     val scope = rememberCoroutineScope()

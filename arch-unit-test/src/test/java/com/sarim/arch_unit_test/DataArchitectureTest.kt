@@ -1,4 +1,4 @@
-package com.sarim.example_app_data
+package com.sarim.arch_unit_test
 
 import com.sarim.example_app_data.dto.settings.SettingsDto
 import com.sarim.example_app_data.dto.settings.SettingsDtoSerializer
@@ -30,13 +30,12 @@ class DataArchitectureTest {
     fun packageDependencyTest(importedClasses: JavaClasses) {
         noClasses()
             .that()
-            .resideInAPackage("..data..")
+            .resideInAPackage("..*data..")
             .should()
             .dependOnClassesThat()
             .resideInAnyPackage(
-                "..presentation..",
-                "..ui..",
-                "..di..",
+                "..*presentation..",
+                "..*di..",
             ).check(importedClasses)
     }
 
@@ -58,7 +57,7 @@ class DataArchitectureTest {
             .that()
             .haveSimpleNameEndingWith("RepositoryImpl")
             .should()
-            .resideInAPackage("..data.repository..")
+            .resideInAPackage("..*data.repository..")
             .check(importedClasses)
     }
 
@@ -67,7 +66,7 @@ class DataArchitectureTest {
         layeredArchitecture()
             .consideringAllDependencies()
             .layer("Repository")
-            .definedBy("..data.repository..")
+            .definedBy("..*data.repository..")
             .whereLayer("Repository")
             .mayNotBeAccessedByAnyLayer()
             .check(importedClasses)

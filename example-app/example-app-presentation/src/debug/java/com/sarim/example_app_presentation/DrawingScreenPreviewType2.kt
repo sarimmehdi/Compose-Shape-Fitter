@@ -14,34 +14,38 @@ import io.kotest.property.exhaustive.boolean
 @Composable
 @Preview(
     apiLevel = 35,
-    device = PIXEL_6_PRO
+    device = PIXEL_6_PRO,
 )
 internal fun DrawingScreenPreviewType2(
-    @PreviewParameter(DrawingScreenDataProviderType2::class) data: DrawingScreenData
+    @PreviewParameter(DrawingScreenDataProviderType2::class) data: DrawingScreenData,
 ) {
     DrawingScreen(
-        data = data.copy(
-            state = data.state.copy(
-                inPreviewMode = true
-            )
-        )
+        data =
+            data.copy(
+                state =
+                    data.state.copy(
+                        inPreviewMode = true,
+                    ),
+            ),
     )
 }
 
 class DrawingScreenDataProviderType2 : PreviewParameterProvider<DrawingScreenData> {
-    override val values = Shape.entries.asSequence().flatMap { selectedShape ->
-        Exhaustive.boolean().values.flatMap { showFingerTracedLines ->
-            Exhaustive.boolean().values.map { showApproximatedShape ->
-                DrawingScreenData(
-                    state = DrawingScreenState(
-                        selectedShape = selectedShape,
-                        showSettingsDropDown = true,
-                        showFingerTracedLines = showFingerTracedLines,
-                        showApproximatedShape = showApproximatedShape,
-                    ),
-                    drawerState = DrawerState(DrawerValue.Open)
-                )
+    override val values =
+        Shape.entries.asSequence().flatMap { selectedShape ->
+            Exhaustive.boolean().values.flatMap { showFingerTracedLines ->
+                Exhaustive.boolean().values.map { showApproximatedShape ->
+                    DrawingScreenData(
+                        state =
+                            DrawingScreenState(
+                                selectedShape = selectedShape,
+                                showSettingsDropDown = true,
+                                showFingerTracedLines = showFingerTracedLines,
+                                showApproximatedShape = showApproximatedShape,
+                            ),
+                        drawerState = DrawerState(DrawerValue.Open),
+                    )
+                }
             }
         }
-    }
 }

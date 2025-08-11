@@ -84,11 +84,11 @@ class TopBarComponentTestSettingsMenuOpenClosed(
                                         } else {
                                             emptyList()
                                         } +
-                                                if (showApproximatedShape) {
-                                                    listOf(APPROXIMATED_SHAPE_TRAILING_ICON)
-                                                } else {
-                                                    emptyList()
-                                                }
+                                            if (showApproximatedShape) {
+                                                listOf(APPROXIMATED_SHAPE_TRAILING_ICON)
+                                            } else {
+                                                emptyList()
+                                            }
                                     } else {
                                         emptyList()
                                     },
@@ -103,16 +103,16 @@ class TopBarComponentTestSettingsMenuOpenClosed(
                                     } else {
                                         emptyList()
                                     } +
-                                            if (!showFingerTracedLines) {
-                                                listOf(FINGER_TRACED_LINES_TRAILING_ICON)
-                                            } else {
-                                                emptyList()
-                                            } +
-                                            if (!showApproximatedShape) {
-                                                listOf(APPROXIMATED_SHAPE_TRAILING_ICON)
-                                            } else {
-                                                emptyList()
-                                            },
+                                        if (!showFingerTracedLines) {
+                                            listOf(FINGER_TRACED_LINES_TRAILING_ICON)
+                                        } else {
+                                            emptyList()
+                                        } +
+                                        if (!showApproximatedShape) {
+                                            listOf(APPROXIMATED_SHAPE_TRAILING_ICON)
+                                        } else {
+                                            emptyList()
+                                        },
                             )
                         }
                     }

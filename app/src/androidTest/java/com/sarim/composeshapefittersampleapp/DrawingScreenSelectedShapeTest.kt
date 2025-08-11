@@ -1,4 +1,4 @@
-package com.sarim.example_app_presentation
+package com.sarim.composeshapefittersampleapp
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By

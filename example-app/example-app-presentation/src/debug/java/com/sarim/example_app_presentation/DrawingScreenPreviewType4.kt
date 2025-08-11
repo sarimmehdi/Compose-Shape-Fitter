@@ -13,34 +13,39 @@ import kotlinx.collections.immutable.toImmutableList
 @Composable
 @Preview(
     apiLevel = 35,
-    device = PIXEL_6_PRO
+    device = PIXEL_6_PRO,
 )
 internal fun DrawingScreenPreviewType4(
-    @PreviewParameter(DrawingScreenDataProviderType4::class) data: DrawingScreenData
+    @PreviewParameter(DrawingScreenDataProviderType4::class) data: DrawingScreenData,
 ) {
     DrawingScreen(
-        data = data.copy(
-            state = data.state.copy(
-                inPreviewMode = true
-            )
-        )
+        data =
+            data.copy(
+                state =
+                    data.state.copy(
+                        inPreviewMode = true,
+                    ),
+            ),
     )
 }
 
 class DrawingScreenDataProviderType4 : PreviewParameterProvider<DrawingScreenData> {
-    override val values = Shape.entries.asSequence().map { selectedShape ->
-        val drawableShape = getDrawableShapeFromShape(selectedShape)
-        val points = generateDummyPoints(drawableShape)
-        val lines = points.zipWithNext { currentPoint, nextPoint ->
-            Pair(currentPoint, nextPoint)
+    override val values =
+        Shape.entries.asSequence().map { selectedShape ->
+            val drawableShape = getDrawableShapeFromShape(selectedShape)
+            val points = generateDummyPoints(drawableShape)
+            val lines =
+                points.zipWithNext { currentPoint, nextPoint ->
+                    Pair(currentPoint, nextPoint)
+                }
+            DrawingScreenData(
+                state =
+                    DrawingScreenState(
+                        selectedShape = selectedShape,
+                        approximatedShape = drawableShape.getApproximatedShape(points),
+                        points = points.toImmutableList(),
+                        lines = lines.toImmutableList(),
+                    ),
+            )
         }
-        DrawingScreenData(
-            state = DrawingScreenState(
-                selectedShape = selectedShape,
-                approximatedShape = drawableShape.getApproximatedShape(points),
-                points = points.toImmutableList(),
-                lines = lines.toImmutableList()
-            ),
-        )
-    }
 }

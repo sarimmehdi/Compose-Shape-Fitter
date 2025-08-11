@@ -39,7 +39,7 @@ data class DrawingScreenState(
     val showSettingsDropDown: Boolean = false,
     val inPreviewMode: Boolean = false,
 ) : Parcelable {
-    
+    @Suppress("LongMethod")
     fun getDrawableShape(
         color: Color,
         strokeWidth: Float,
@@ -48,63 +48,63 @@ data class DrawingScreenState(
             CircleShape(
                 color,
                 strokeWidth,
-                inPreviewMode = inPreviewMode
+                inPreviewMode = inPreviewMode,
             )
         Shape.Ellipse ->
             EllipseShape(
                 color,
                 strokeWidth,
-                inPreviewMode = inPreviewMode
+                inPreviewMode = inPreviewMode,
             )
         Shape.Hexagon ->
             HexagonShape(
                 color,
                 strokeWidth,
-                inPreviewMode = inPreviewMode
+                inPreviewMode = inPreviewMode,
             )
         Shape.OrientedRectangle ->
             ObbShape(
                 color,
                 strokeWidth,
                 false,
-                inPreviewMode = inPreviewMode
+                inPreviewMode = inPreviewMode,
             )
         Shape.OrientedSquare ->
             ObbShape(
                 color,
                 strokeWidth,
                 true,
-                inPreviewMode = inPreviewMode
+                inPreviewMode = inPreviewMode,
             )
         Shape.Pentagon ->
             PentagonShape(
                 color,
                 strokeWidth,
-                inPreviewMode = inPreviewMode
+                inPreviewMode = inPreviewMode,
             )
         Shape.Rectangle ->
             RectangleShape(
                 color,
                 strokeWidth,
-                inPreviewMode = inPreviewMode
+                inPreviewMode = inPreviewMode,
             )
         Shape.OrientedEllipse ->
             SkewedEllipseShape(
                 color,
                 strokeWidth,
-                inPreviewMode = inPreviewMode
+                inPreviewMode = inPreviewMode,
             )
         Shape.Square ->
             SquareShape(
                 color,
                 strokeWidth,
-                inPreviewMode = inPreviewMode
+                inPreviewMode = inPreviewMode,
             )
         Shape.Triangle ->
             TriangleShape(
                 color,
                 strokeWidth,
-                inPreviewMode = inPreviewMode
+                inPreviewMode = inPreviewMode,
             )
     }
 }

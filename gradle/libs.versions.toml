@@ -28,6 +28,9 @@ archUnitJUnit4Version = "1.4.1"
 jacocoVersion = "0.8.13"
 sonarVersion = "6.2.0.5505"
 paparazziVersion = "2.0.0-alpha02"
+jetbrainsKotlinJvmVersion = "2.2.0"
+conventionPluginJacocoName = "jacocoPlugin"
+conventionPluginJacocoClass = "com.sarim.convention.JacocoConventionPlugin"
 espressoCoreVersion = "3.7.0"
 appcompatVersion = "1.7.1"
 materialVersion = "1.12.0"
@@ -67,6 +70,8 @@ koinStartupLibrary = { group = "io.insert-koin", name = "koin-androidx-startup" 
 koinComposeLibrary = { group = "io.insert-koin", name = "koin-androidx-compose" }
 koinComposeNavigationLibrary = { group = "io.insert-koin", name = "koin-androidx-compose-navigation" }
 composeNavigationLibrary = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationVersion" }
+androidGradlePluginLibrary = { group = "com.android.tools.build", name = "gradle", version.ref = "agpVersion" }
+kotlinGradlePluginLibrary = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlinVersion" }
 jacocoFakeDoNotUseThisLibrary = { group = "org.jacoco", name = "org.jacoco.agent", version.ref = "jacocoVersion" }
 espressoCore = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCoreVersion" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompatVersion" }
@@ -130,4 +135,5 @@ spotlessPlugin = { id = "com.diffplug.spotless", version.ref = "spotlessVersion"
 vanniktechMavenPublishingPlugin = { id = "com.vanniktech.maven.publish", version.ref = "vanniktechVersion" }
 sonarPlugin = { id = "org.sonarqube", version.ref = "sonarVersion" }
 paparazziPlugin = { id = "app.cash.paparazzi", version.ref = "paparazziVersion" }
-
+jetbrainsKotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvmVersion" }
+conventionPluginJacocoId = { id = "com.sarim.convention.jacoco.plugin", version = "unspecified" }

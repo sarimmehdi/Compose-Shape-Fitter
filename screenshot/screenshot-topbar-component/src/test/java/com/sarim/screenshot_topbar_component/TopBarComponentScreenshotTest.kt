@@ -27,9 +27,10 @@ class CanvasComponentScreenshotTest(
     private val testData: TestDataTopBarComponentScreenshotTest,
 ) {
     @get:Rule
-    val paparazzi = Paparazzi(
-        deviceConfig = DeviceConfig.PIXEL_6_PRO,
-    )
+    val paparazzi =
+        Paparazzi(
+            deviceConfig = DeviceConfig.PIXEL_6_PRO,
+        )
 
     private var binding: ComposeViewBinding? = null
 
@@ -43,9 +44,10 @@ class CanvasComponentScreenshotTest(
                 setContent {
                     TopBarComponent(
                         data = testData.data,
-                        modifier = Modifier
-                            .background(Color.White)
-                            .fillMaxSize()
+                        modifier =
+                            Modifier
+                                .background(Color.White)
+                                .fillMaxSize(),
                     )
                 }
             }
@@ -55,21 +57,21 @@ class CanvasComponentScreenshotTest(
     }
 
     companion object {
-
         @JvmStatic
         @Parameterized.Parameters(
             name = "{0}",
         )
         @Suppress("unused")
-        fun getParameters(): Collection<Array<Any>> {
-            return TopBarComponentDataProvider().values.mapIndexed { index, data ->
-                arrayOf(
-                    index.toString(),
-                    TestDataTopBarComponentScreenshotTest(
-                        data = data
-                    ),
-                )
-            }.toList()
-        }
+        fun getParameters(): Collection<Array<Any>> =
+            TopBarComponentDataProvider()
+                .values
+                .mapIndexed { index, data ->
+                    arrayOf(
+                        index.toString(),
+                        TestDataTopBarComponentScreenshotTest(
+                            data = data,
+                        ),
+                    )
+                }.toList()
     }
 }

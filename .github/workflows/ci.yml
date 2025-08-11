@@ -115,14 +115,22 @@ jobs:
         uses: ./.github/actions/setup-environment
 
       - name: Run unit tests
-        run: ./gradlew testDebugUnitTest
+        run: |
+          ./gradlew :arch-unit-test \
+                    :example-app:example-app-data:testDebugUnitTest \
+                    :example-app:example-app-domain:testDebugUnitTest \
+                    :example-app:example-app-presentation:testDebugUnitTest
 
       - name: Upload Test Results
         if: always()
         uses: actions/upload-artifact@v4.6.2
         with:
           name: unit-test-results
-          path: app/build/reports/tests/testDebugUnitTest/
+          path: |
+            arch-unit-test/build/reports/tests/testDebugUnitTest/
+            example-app/example-app-data/build/reports/tests/testDebugUnitTest/
+            example-app/example-app-domain/build/reports/tests/testDebugUnitTest/
+            example-app/example-app-presentation/build/reports/tests/testDebugUnitTest/
 
   integration_test:
     name: Run Integration Tests
@@ -140,14 +148,14 @@ jobs:
           target: google_apis
           arch: x86_64
           profile: Pixel 6 Pro
-          script: ./gradlew connectedCheck
+          script: ./gradlew :example-app:example-app-di:connectedDebugAndroidTest
 
       - name: Upload Integration Test Results
         if: always()
         uses: actions/upload-artifact@v4.6.2
         with:
           name: integration-test-results
-          path: app/build/reports/androidTests/connected/
+          path: example-app/example-app-di/build/reports/androidTests/connected/
 
   publish:
     name: Release build and publish

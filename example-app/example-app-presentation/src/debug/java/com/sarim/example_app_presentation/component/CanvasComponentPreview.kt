@@ -27,49 +27,52 @@ import kotlinx.collections.immutable.toImmutableList
 @Composable
 @Preview(
     apiLevel = 35,
-    device = PIXEL_6_PRO
+    device = PIXEL_6_PRO,
 )
 internal fun CanvasComponentPreview(
-    @PreviewParameter(CanvasComponentDataParameterProvider::class) data: CanvasComponentData
+    @PreviewParameter(CanvasComponentDataParameterProvider::class) data: CanvasComponentData,
 ) {
     CanvasComponent(
         data = data,
-        modifier = Modifier.background(Color.White)
+        modifier = Modifier.background(Color.White),
     )
 }
 
 class CanvasComponentDataParameterProvider : PreviewParameterProvider<CanvasComponentData> {
-    override val values = listOf(
-        CircleShape(Color.Blue, DEFAULT_STROKE_WIDTH, inPreviewMode = true),
-        EllipseShape(Color.Blue, DEFAULT_STROKE_WIDTH, inPreviewMode = true),
-        HexagonShape(Color.Blue, DEFAULT_STROKE_WIDTH, inPreviewMode = true),
-        ObbShape(Color.Blue, DEFAULT_STROKE_WIDTH, allSidesEqual = true, inPreviewMode = true),
-        ObbShape(Color.Blue, DEFAULT_STROKE_WIDTH, allSidesEqual = false, inPreviewMode = true),
-        PentagonShape(Color.Blue, DEFAULT_STROKE_WIDTH, inPreviewMode = true),
-        RectangleShape(Color.Blue, DEFAULT_STROKE_WIDTH, inPreviewMode = true),
-        SkewedEllipseShape(Color.Blue, DEFAULT_STROKE_WIDTH, inPreviewMode = true),
-        SquareShape(Color.Blue, DEFAULT_STROKE_WIDTH, inPreviewMode = true),
-        TriangleShape(Color.Blue, DEFAULT_STROKE_WIDTH, inPreviewMode = true),
-    ).asSequence().map { drawableShape ->
-        Exhaustive.boolean().flatMap { isDragging ->
-            Exhaustive.boolean().flatMap { showFingerTracedLines ->
-                Exhaustive.boolean().map { showApproximatedShape ->
-                    val points = generateDummyPoints(drawableShape)
-                    val lines = points.zipWithNext { currentPoint, nextPoint ->
-                        Pair(currentPoint, nextPoint)
+    override val values =
+        listOf(
+            CircleShape(Color.Blue, DEFAULT_STROKE_WIDTH, inPreviewMode = true),
+            EllipseShape(Color.Blue, DEFAULT_STROKE_WIDTH, inPreviewMode = true),
+            HexagonShape(Color.Blue, DEFAULT_STROKE_WIDTH, inPreviewMode = true),
+            ObbShape(Color.Blue, DEFAULT_STROKE_WIDTH, allSidesEqual = true, inPreviewMode = true),
+            ObbShape(Color.Blue, DEFAULT_STROKE_WIDTH, allSidesEqual = false, inPreviewMode = true),
+            PentagonShape(Color.Blue, DEFAULT_STROKE_WIDTH, inPreviewMode = true),
+            RectangleShape(Color.Blue, DEFAULT_STROKE_WIDTH, inPreviewMode = true),
+            SkewedEllipseShape(Color.Blue, DEFAULT_STROKE_WIDTH, inPreviewMode = true),
+            SquareShape(Color.Blue, DEFAULT_STROKE_WIDTH, inPreviewMode = true),
+            TriangleShape(Color.Blue, DEFAULT_STROKE_WIDTH, inPreviewMode = true),
+        ).asSequence()
+            .map { drawableShape ->
+                Exhaustive.boolean().flatMap { isDragging ->
+                    Exhaustive.boolean().flatMap { showFingerTracedLines ->
+                        Exhaustive.boolean().map { showApproximatedShape ->
+                            val points = generateDummyPoints(drawableShape)
+                            val lines =
+                                points.zipWithNext { currentPoint, nextPoint ->
+                                    Pair(currentPoint, nextPoint)
+                                }
+                            CanvasComponentData(
+                                drawableShape = drawableShape,
+                                isDragging = isDragging,
+                                points = points.toImmutableList(),
+                                lines = lines.toImmutableList(),
+                                showFingerTracedLines = showFingerTracedLines,
+                                showApproximatedShape = showApproximatedShape,
+                            )
+                        }
                     }
-                    CanvasComponentData(
-                        drawableShape = drawableShape,
-                        isDragging = isDragging,
-                        points = points.toImmutableList(),
-                        lines = lines.toImmutableList(),
-                        showFingerTracedLines = showFingerTracedLines,
-                        showApproximatedShape = showApproximatedShape
-                    )
                 }
+            }.flatMap { exhaustiveData ->
+                exhaustiveData.values
             }
-        }
-    }.flatMap { exhaustiveData ->
-        exhaustiveData.values
-    }
 }

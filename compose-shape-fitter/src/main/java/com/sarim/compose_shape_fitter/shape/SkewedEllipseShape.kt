@@ -6,10 +6,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
-import androidx.compose.ui.unit.max
-import androidx.compose.ui.unit.min
-import kotlin.math.min as mathMin
-import kotlin.math.max as mathMax
 import com.sarim.compose_shape_fitter.BuildConfig
 import com.sarim.compose_shape_fitter.shape.DrawableShape.Companion.DEFAULT_IN_PREVIEW_MODE
 import com.sarim.compose_shape_fitter.shape.DrawableShape.Companion.DEFAULT_LOG_REGARDLESS
@@ -19,6 +15,8 @@ import com.sarim.compose_shape_fitter.utils.log
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.WriteWith
 import kotlin.math.PI
+import kotlin.math.max as mathMax
+import kotlin.math.min as mathMin
 
 internal object EllipseFitterJNI {
     init {
@@ -50,122 +48,122 @@ class SkewedEllipseShape(
         val angleRad: Float,
     ) : ApproximatedShape
 
-    @Suppress("LongMethod")
+    private fun createTiltedEllipse(points: List<Offset>): RotatedEllipse {
+        var minX = points[0].x
+        var maxX = points[0].x
+        var minY = points[0].y
+        var maxY = points[0].y
+
+        for (i in 1 until points.size) {
+            minX = mathMin(minX, points[i].x)
+            maxX = mathMax(maxX, points[i].x)
+            minY = mathMin(minY, points[i].y)
+            maxY = mathMax(maxY, points[i].y)
+        }
+
+        val estimatedWidth = mathMax(2f, maxX - minX)
+        val estimatedHeight = mathMax(2f, maxY - minY)
+
+        val previewCenterX = minX + estimatedWidth / 2f
+        val previewCenterY = minY + estimatedHeight / 2f
+        val previewCenter = Offset(previewCenterX, previewCenterY)
+
+        val previewRadiusX = estimatedWidth / 2f
+        val previewRadiusY = estimatedHeight / 2f
+
+        return RotatedEllipse(
+            center = previewCenter,
+            radiusX = previewRadiusX,
+            radiusY = previewRadiusY,
+            angleRad = PI_SIXTH,
+        )
+    }
+
     private fun findSmallestEnclosingSkewedEllipse(points: List<Offset>): RotatedEllipse? {
+        val resultEllipse: RotatedEllipse?
+
         if (points.isEmpty()) {
             log(
                 tag = SkewedEllipseShape::class.java.simpleName,
-                messageBuilder = {
-                    "Point list is empty, cannot fit ellipse."
-                },
+                messageBuilder = { "Point list is empty, cannot fit ellipse." },
                 logType = LogType.WARN,
                 logRegardless = logRegardless,
             )
-            return null
+            resultEllipse = null
+        } else if (inPreviewMode) {
+            resultEllipse = createTiltedEllipse(points)
+        } else {
+            resultEllipse = fitEllipseWithJNI(points)
         }
 
-        var resultEllipse: RotatedEllipse? = null
+        return resultEllipse
+    }
+
+    @Suppress("LongMethod")
+    private fun fitEllipseWithJNI(points: List<Offset>): RotatedEllipse? {
         val pointsX = FloatArray(points.size) { points[it].x }
         val pointsY = FloatArray(points.size) { points[it].y }
+        var resultEllipse: RotatedEllipse? = null
 
-        if (inPreviewMode) {
-            var minX = points[0].x
-            var maxX = points[0].x
-            var minY = points[0].y
-            var maxY = points[0].y
+        try {
+            val ellipseParamsArray: FloatArray? =
+                EllipseFitterJNI.fitEllipseNative(
+                    pointsX,
+                    pointsY,
+                    BuildConfig.DEBUG || logRegardless,
+                )
 
-            for (i in 1 until points.size) {
-                minX = mathMin(minX, points[i].x)
-                maxX = mathMax(maxX, points[i].x)
-                minY = mathMin(minY, points[i].y)
-                maxY = mathMax(maxY, points[i].y)
-            }
+            if (ellipseParamsArray != null && ellipseParamsArray.size == MAX_ELLIPSE_PARAMS) {
+                val centerX = ellipseParamsArray[CENTER_X_IDX]
+                val centerY = ellipseParamsArray[CENTER_Y_IDX]
+                val radiusY = ellipseParamsArray[RAD_Y_IDX]
+                val radiusX = ellipseParamsArray[RAD_X_IDX]
+                val angleRad = ellipseParamsArray[ANGLE_RAD_IDX]
 
-            val estimatedWidth = mathMax(2f, maxX - minX)
-            val estimatedHeight = mathMax(2f, maxY - minY)
-
-            val previewCenterX = minX + estimatedWidth / 2f
-            val previewCenterY = minY + estimatedHeight / 2f
-            val previewCenter = Offset(previewCenterX, previewCenterY)
-
-            val previewRadiusX = estimatedWidth / 2f
-            val previewRadiusY = estimatedHeight / 2f
-            val previewAngleRad = (PI / 6).toFloat()
-
-            resultEllipse = RotatedEllipse(
-                center = previewCenter,
-                radiusX = previewRadiusX,
-                radiusY = previewRadiusY,
-                angleRad = previewAngleRad
-            )
-        } else {
-            try {
-                val ellipseParamsArray: FloatArray? =
-                    EllipseFitterJNI.fitEllipseNative(
-                        pointsX,
-                        pointsY,
-                        BuildConfig.DEBUG || logRegardless,
-                    )
-
-                if (ellipseParamsArray != null && ellipseParamsArray.size == MAX_ELLIPSE_PARAMS) {
-                    val centerX = ellipseParamsArray[CENTER_X_IDX]
-                    val centerY = ellipseParamsArray[CENTER_Y_IDX]
-                    val radiusY = ellipseParamsArray[RAD_Y_IDX]
-                    val radiusX = ellipseParamsArray[RAD_X_IDX]
-                    val angleRad = ellipseParamsArray[ANGLE_RAD_IDX]
-
-                    if (radiusX > 0f && radiusY > 0f) {
-                        resultEllipse =
-                            RotatedEllipse(
-                                center = Offset(centerX, centerY),
-                                radiusX = radiusX,
-                                radiusY = radiusY,
-                                angleRad = angleRad,
-                            )
-                    } else {
-                        log(
-                            tag = SkewedEllipseShape::class.java.simpleName,
-                            messageBuilder = {
-                                "Native method returned invalid ellipse radii: rX=$radiusX, rY=$radiusY"
-                            },
-                            logType = LogType.WARN,
-                            logRegardless = logRegardless,
+                if (radiusX > 0f && radiusY > 0f) {
+                    resultEllipse =
+                        RotatedEllipse(
+                            center = Offset(centerX, centerY),
+                            radiusX = radiusX,
+                            radiusY = radiusY,
+                            angleRad = angleRad,
                         )
-                    }
                 } else {
                     log(
                         tag = SkewedEllipseShape::class.java.simpleName,
-                        messageBuilder = {
-                            "Native method 'fitEllipseNative' returned null or an array of unexpected size: " +
-                                    "${ellipseParamsArray?.size ?: "null"}. Expected $MAX_ELLIPSE_PARAMS."
-                        },
+                        messageBuilder = { "Native method returned invalid ellipse radii: rX=$radiusX, rY=$radiusY" },
                         logType = LogType.WARN,
                         logRegardless = logRegardless,
                     )
                 }
-            } catch (e: UnsatisfiedLinkError) {
+            } else {
                 log(
                     tag = SkewedEllipseShape::class.java.simpleName,
                     messageBuilder = {
-                        "JNI UnsatisfiedLinkError in findEllipseUsingJNI: ${e.message}"
+                        "Native method 'fitEllipseNative' returned null or an array of unexpected size: " +
+                            "${ellipseParamsArray?.size ?: "null"}. Expected $MAX_ELLIPSE_PARAMS."
                     },
-                    logType = LogType.ERROR,
-                    logRegardless = logRegardless,
-                )
-            } catch (
-                @Suppress("TooGenericExceptionCaught") e: Exception,
-            ) {
-                log(
-                    tag = SkewedEllipseShape::class.java.simpleName,
-                    messageBuilder = {
-                        "Exception during JNI ellipse fitting: ${e.message}"
-                    },
-                    logType = LogType.ERROR,
+                    logType = LogType.WARN,
                     logRegardless = logRegardless,
                 )
             }
+        } catch (e: UnsatisfiedLinkError) {
+            log(
+                tag = SkewedEllipseShape::class.java.simpleName,
+                messageBuilder = { "JNI UnsatisfiedLinkError in findEllipseUsingJNI: ${e.message}" },
+                logType = LogType.ERROR,
+                logRegardless = logRegardless,
+            )
+        } catch (
+            @Suppress("TooGenericExceptionCaught") e: Exception,
+        ) {
+            log(
+                tag = SkewedEllipseShape::class.java.simpleName,
+                messageBuilder = { "Exception during JNI ellipse fitting: ${e.message}" },
+                logType = LogType.ERROR,
+                logRegardless = logRegardless,
+            )
         }
-
         return resultEllipse
     }
 
@@ -173,70 +171,25 @@ class SkewedEllipseShape(
         drawScope: DrawScope,
         points: List<Offset>,
     ) {
-        if (inPreviewMode) {
-            if (points.size >= 2) {
-                drawScope.apply {
-                    var minX = points[0].x
-                    var maxX = points[0].x
-                    var minY = points[0].y
-                    var maxY = points[0].y
-
-                    for (i in 1 until points.size) {
-                        minX = mathMin(minX, points[i].x)
-                        maxX = mathMax(maxX, points[i].x)
-                        minY = mathMin(minY, points[i].y)
-                        maxY = mathMax(maxY, points[i].y)
-                    }
-
-                    val estimatedWidth = mathMax(2f, maxX - minX)
-                    val estimatedHeight = mathMax(2f, maxY - minY)
-                    val previewCenterX = minX + estimatedWidth / 2f
-                    val previewCenterY = minY + estimatedHeight / 2f
-                    val previewCenter = Offset(previewCenterX, previewCenterY)
-
-                    val radiusX = estimatedWidth / 2f
-                    val radiusY = estimatedHeight / 2f
-
-                    rotate(
-                        degrees = 45f,
-                        pivot = previewCenter,
-                    ) {
-                        drawOval(
-                            color = color.copy(alpha = 0.5f),
-                            topLeft = Offset(
-                                previewCenterX - radiusX,
-                                previewCenterY - radiusY,
-                            ),
-                            size = Size(
-                                radiusX * 2,
-                                radiusY * 2,
-                            ),
-                            style = Stroke(width = strokeWidth),
-                        )
-                    }
-                }
-            }
-        } else {
-            findSmallestEnclosingSkewedEllipse(points)?.let { rotatedEllipse ->
-                drawScope.rotate(
-                    degrees = rotatedEllipse.angleRad * (180f / PI.toFloat()),
-                    pivot = rotatedEllipse.center,
-                ) {
-                    drawOval(
-                        color = color,
-                        topLeft =
-                            Offset(
-                                rotatedEllipse.center.x - rotatedEllipse.radiusX,
-                                rotatedEllipse.center.y - rotatedEllipse.radiusY,
-                            ),
-                        size =
-                            Size(
-                                rotatedEllipse.radiusX * 2,
-                                rotatedEllipse.radiusY * 2,
-                            ),
-                        style = Stroke(width = strokeWidth),
-                    )
-                }
+        findSmallestEnclosingSkewedEllipse(points)?.let { rotatedEllipse ->
+            drawScope.rotate(
+                degrees = rotatedEllipse.angleRad * (180f / PI.toFloat()),
+                pivot = rotatedEllipse.center,
+            ) {
+                drawOval(
+                    color = color,
+                    topLeft =
+                        Offset(
+                            rotatedEllipse.center.x - rotatedEllipse.radiusX,
+                            rotatedEllipse.center.y - rotatedEllipse.radiusY,
+                        ),
+                    size =
+                        Size(
+                            rotatedEllipse.radiusX * 2,
+                            rotatedEllipse.radiusY * 2,
+                        ),
+                    style = Stroke(width = strokeWidth),
+                )
             }
         }
     }
@@ -250,6 +203,7 @@ class SkewedEllipseShape(
         private const val RAD_Y_IDX = 2
         private const val ANGLE_RAD_IDX = 4
         private const val MAX_ELLIPSE_PARAMS = 5
+        private const val PI_SIXTH = (PI / 6).toFloat()
     }
 
     override fun equals(other: Any?): Boolean {

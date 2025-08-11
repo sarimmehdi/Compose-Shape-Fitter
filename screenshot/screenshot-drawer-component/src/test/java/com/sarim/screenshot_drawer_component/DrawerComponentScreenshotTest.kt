@@ -24,38 +24,40 @@ class CanvasComponentScreenshotTest(
     private val testData: TestDataDrawerComponentScreenshotTest,
 ) {
     @get:Rule
-    val paparazzi = Paparazzi(
-        deviceConfig = DeviceConfig.PIXEL_6_PRO,
-    )
+    val paparazzi =
+        Paparazzi(
+            deviceConfig = DeviceConfig.PIXEL_6_PRO,
+        )
 
     @Test
     fun test() {
         paparazzi.snapshot {
             DrawerComponent(
                 data = testData.data,
-                modifier = Modifier
-                    .background(Color.White)
-                    .fillMaxSize()
+                modifier =
+                    Modifier
+                        .background(Color.White)
+                        .fillMaxSize(),
             )
         }
     }
 
     companion object {
-
         @JvmStatic
         @Parameterized.Parameters(
             name = "{0}",
         )
         @Suppress("unused")
-        fun getParameters(): Collection<Array<Any>> {
-            return DrawerComponentDataParameterProvider().values.mapIndexed { index, data ->
-                arrayOf(
-                    index.toString(),
-                    TestDataDrawerComponentScreenshotTest(
-                        data = data
-                    ),
-                )
-            }.toList()
-        }
+        fun getParameters(): Collection<Array<Any>> =
+            DrawerComponentDataParameterProvider()
+                .values
+                .mapIndexed { index, data ->
+                    arrayOf(
+                        index.toString(),
+                        TestDataDrawerComponentScreenshotTest(
+                            data = data,
+                        ),
+                    )
+                }.toList()
     }
 }

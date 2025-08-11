@@ -12,27 +12,31 @@ import com.sarim.example_app_domain.model.Shape
 @Composable
 @Preview(
     apiLevel = 35,
-    device = PIXEL_6_PRO
+    device = PIXEL_6_PRO,
 )
 internal fun DrawingScreenPreviewType1(
-    @PreviewParameter(DrawingScreenDataProviderType1::class) data: DrawingScreenData
+    @PreviewParameter(DrawingScreenDataProviderType1::class) data: DrawingScreenData,
 ) {
     DrawingScreen(
-        data = data.copy(
-            state = data.state.copy(
-                inPreviewMode = true
-            )
-        )
+        data =
+            data.copy(
+                state =
+                    data.state.copy(
+                        inPreviewMode = true,
+                    ),
+            ),
     )
 }
 
 class DrawingScreenDataProviderType1 : PreviewParameterProvider<DrawingScreenData> {
-    override val values = Shape.entries.asSequence().map { selectedShape ->
-        DrawingScreenData(
-            state = DrawingScreenState(
-                selectedShape = selectedShape
-            ),
-            drawerState = DrawerState(DrawerValue.Open)
-        )
-    }
+    override val values =
+        Shape.entries.asSequence().map { selectedShape ->
+            DrawingScreenData(
+                state =
+                    DrawingScreenState(
+                        selectedShape = selectedShape,
+                    ),
+                drawerState = DrawerState(DrawerValue.Open),
+            )
+        }
 }
