@@ -1,10 +1,11 @@
 plugins {
     alias(libs.plugins.androidLibraryPlugin)
     alias(libs.plugins.kotlinAndroidPlugin)
+    alias(libs.plugins.kotlinComposePlugin)
 }
 
 android {
-    namespace = "com.sarim.arch_unit_test"
+    namespace = "com.sarim.nav"
     compileSdk = 36
 
     defaultConfig {
@@ -32,14 +33,19 @@ android {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
         }
     }
+    buildFeatures {
+        compose = true
+        buildConfig = true
+    }
 }
 
 dependencies {
-
-    implementation(project(":example-app:example-app-di"))
-    implementation(project(":example-app:example-app-data"))
-    implementation(project(":example-app:example-app-domain"))
+    implementation(libs.androidxCoreKtxLibrary)
+    implementation(libs.androidxLifecycleRuntimeKtxLibrary)
+    implementation(libs.androidxActivityComposeLibrary)
+    implementation(platform(libs.koinBomLibrary))
+    implementation(libs.bundles.koinBundle)
+    implementation(platform(libs.androidxComposeBomLibrary))
+    implementation(libs.bundles.composeImplementationBundle)
     implementation(project(":example-app:example-app-presentation"))
-
-    testImplementation(libs.bundles.testBundle)
 }

@@ -16,6 +16,7 @@ import com.sarim.example_app_domain.usecase.GetSettingsUseCase
 import com.sarim.example_app_domain.usecase.UpdateSelectedShapeUseCase
 import com.sarim.example_app_domain.usecase.UpdateSettingsUseCase
 import com.sarim.example_app_presentation.BuildConfig
+import com.sarim.example_app_presentation.DrawingFeature
 import com.sarim.example_app_presentation.DrawingScreenUseCases
 import com.sarim.example_app_presentation.DrawingScreenViewModel
 import com.sarim.utils.DefaultDispatchers
@@ -30,16 +31,16 @@ import org.koin.dsl.lazyModule
 const val SHAPE_DATASTORE = "shapeDataStore"
 const val SETTINGS_DATASTORE = "settingsDataStore"
 
-fun dataStoreModule(
+internal fun dataStoreModule(
     shapeDtoDataStoreName: String,
-    settingsDtoDataStoreName: String
+    settingsDtoDataStoreName: String,
 ) = lazyModule {
     log(
         tag = "DrawingScreenModule",
         messageBuilder = {
             "called dataStoreModule " +
-                    "with shapeDtoDataStoreName = $shapeDtoDataStoreName, " +
-                    "settingsDtoDataStoreName = $settingsDtoDataStoreName, "
+                "with shapeDtoDataStoreName = $shapeDtoDataStoreName, " +
+                "settingsDtoDataStoreName = $settingsDtoDataStoreName, "
         },
         logType = LogType.DEBUG,
         shouldLog = BuildConfig.DEBUG,
@@ -48,54 +49,77 @@ fun dataStoreModule(
     single<DataStore<ShapeDto>>(named(SHAPE_DATASTORE)) {
         DataStoreFactory.create(
             serializer = ShapeDtoSerializer,
-            produceFile = { androidContext().dataStoreFile(shapeDtoDataStoreName) }
+            produceFile = { androidContext().dataStoreFile(shapeDtoDataStoreName) },
         )
     }
 
     single<DataStore<SettingsDto>>(named(SETTINGS_DATASTORE)) {
         DataStoreFactory.create(
             serializer = SettingsDtoSerializer,
-            produceFile = { androidContext().dataStoreFile(settingsDtoDataStoreName) }
+            produceFile = { androidContext().dataStoreFile(settingsDtoDataStoreName) },
         )
     }
 }
 
-fun drawingScreenModule(
-    scope: StringQualifier,
-) = lazyModule {
-    log(
-        tag = "DrawingScreenModule",
-        messageBuilder = {
-            "called drawingScreenModule and scope = $scope"
-        },
-        logType = LogType.DEBUG,
-        shouldLog = BuildConfig.DEBUG,
-    )
-    scope(scope) {
-        scoped<ShapesRepository> {
-            ShapesRepositoryImpl(
-                dataStore = get(named(SHAPE_DATASTORE)),
-            )
-        }
+internal fun drawingScreenModule(scope: StringQualifier) =
+    lazyModule {
+        log(
+            tag = "DrawingScreenModule",
+            messageBuilder = {
+                "called drawingScreenModule and scope = $scope"
+            },
+            logType = LogType.DEBUG,
+            shouldLog = BuildConfig.DEBUG,
+        )
+        scope(scope) {
+            scoped<ShapesRepository> {
+                ShapesRepositoryImpl(
+                    dataStore = get(named(SHAPE_DATASTORE)),
+                )
+            }
 
-        scoped<SettingsRepository> {
-            SettingsRepositoryImpl(
-                dataStore = get(named(SETTINGS_DATASTORE)),
-            )
-        }
+            scoped<SettingsRepository> {
+                SettingsRepositoryImpl(
+                    dataStore = get(named(SETTINGS_DATASTORE)),
+                )
+            }
 
-        viewModel {
-            DrawingScreenViewModel(
-                dispatchers = DefaultDispatchers(),
-                savedStateHandle = get(),
-                drawingScreenUseCases =
-                    DrawingScreenUseCases(
-                        getSettingsUseCase = GetSettingsUseCase(get()),
-                        getSelectedShapeUseCase = GetSelectedShapeUseCase(get()),
-                        updateSelectedShapeUseCase = UpdateSelectedShapeUseCase(get()),
-                        updateSettingsUseCase = UpdateSettingsUseCase(get()),
-                    ),
-            )
+            viewModel {
+                DrawingScreenViewModel(
+                    dispatchers = DefaultDispatchers(),
+                    savedStateHandle = get(),
+                    drawingScreenUseCases =
+                        DrawingScreenUseCases(
+                            getSettingsUseCase = GetSettingsUseCase(get()),
+                            getSelectedShapeUseCase = GetSelectedShapeUseCase(get()),
+                            updateSelectedShapeUseCase = UpdateSelectedShapeUseCase(get()),
+                            updateSettingsUseCase = UpdateSettingsUseCase(get()),
+                        ),
+                )
+            }
         }
     }
+
+enum class ModuleType {
+    ACTUAL,
+    TEST,
 }
+
+fun drawingFeatureModules(moduleType: ModuleType) =
+    listOf(
+        dataStoreModule(
+            shapeDtoDataStoreName =
+                when (moduleType) {
+                    ModuleType.ACTUAL -> ShapeDtoSerializer.SHAPE_DTO_DATA_STORE_NAME
+                    ModuleType.TEST -> ShapeDtoSerializer.SHAPE_DTO_TEST_DATA_STORE_NAME
+                },
+            settingsDtoDataStoreName =
+                when (moduleType) {
+                    ModuleType.ACTUAL -> SettingsDtoSerializer.SETTINGS_DTO_DATA_STORE_NAME
+                    ModuleType.TEST -> SettingsDtoSerializer.SETTINGS_DTO_TEST_DATA_STORE_NAME
+                },
+        ),
+        drawingScreenModule(
+            scope = named(DrawingFeature::class.java.name),
+        ),
+    )

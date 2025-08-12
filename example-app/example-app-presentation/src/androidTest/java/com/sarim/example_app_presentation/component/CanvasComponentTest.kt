@@ -1,4 +1,4 @@
-package com.sarim.composeshapefittersampleapp.component
+package com.sarim.example_app_presentation.component
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -16,8 +16,6 @@ import com.sarim.compose_shape_fitter.shape.SkewedEllipseShape
 import com.sarim.compose_shape_fitter.shape.SquareShape
 import com.sarim.compose_shape_fitter.shape.TriangleShape
 import com.sarim.example_app_presentation.DrawingScreenToViewModelEvents
-import com.sarim.example_app_presentation.component.CanvasComponent
-import com.sarim.example_app_presentation.component.CanvasComponentData
 import com.sarim.utils.generateEllipsePoints
 import com.sarim.utils.generatePolygonPoints
 import io.mockk.mockk

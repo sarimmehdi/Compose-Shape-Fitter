@@ -19,7 +19,7 @@ jobs:
         uses: ./.github/actions/setup-environment
 
       - name: Run Android Lint (Debug)
-        run: ./gradlew :app:lintDebug
+        run: ./gradlew lintDebug
 
       - name: Upload Lint Report
         uses: actions/upload-artifact@v4.6.2
@@ -116,7 +116,7 @@ jobs:
 
       - name: Run unit tests
         run: |
-          ./gradlew :arch-unit-test \
+          ./gradlew :arch-unit-test:testDebugUnitTest \
                     :example-app:example-app-data:testDebugUnitTest \
                     :example-app:example-app-domain:testDebugUnitTest \
                     :example-app:example-app-presentation:testDebugUnitTest
@@ -148,7 +148,9 @@ jobs:
           target: google_apis
           arch: x86_64
           profile: Pixel 6 Pro
-          script: ./gradlew :example-app:example-app-di:connectedDebugAndroidTest
+          script: |
+            ./gradlew :example-app:example-app-presentation:connectedDebugAndroidTest \
+                      :test-app:connectedDebugAndroidTest
 
       - name: Upload Integration Test Results
         if: always()

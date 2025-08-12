@@ -1,4 +1,4 @@
-package com.sarim.composeshapefittersampleapp
+package com.sarim.test_app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,7 +16,7 @@ import com.sarim.utils.ObserveAsEvents
 import com.sarim.utils.SnackBarController
 import kotlinx.coroutines.launch
 
-class MainActivity : ComponentActivity() {
+class TestActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

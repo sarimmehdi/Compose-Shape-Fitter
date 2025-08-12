@@ -26,7 +26,7 @@ class TestApplication :
             lazyModules(
                 dataStoreModule(
                     shapeDtoDataStoreName = ShapeDtoSerializer.SHAPE_DTO_TEST_DATA_STORE_NAME,
-                    settingsDtoDataStoreName = SettingsDtoSerializer.SETTINGS_DTO_TEST_DATA_STORE_NAME
+                    settingsDtoDataStoreName = SettingsDtoSerializer.SETTINGS_DTO_TEST_DATA_STORE_NAME,
                 ),
                 drawingScreenModule(
                     scope = named(DrawingFeature::class.java.name),

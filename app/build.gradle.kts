@@ -2,23 +2,20 @@ plugins {
     alias(libs.plugins.androidApplicationPlugin)
     alias(libs.plugins.kotlinAndroidPlugin)
     alias(libs.plugins.kotlinComposePlugin)
-    alias(libs.plugins.kotlinSerializationPlugin)
 }
 
 android {
     namespace = "com.sarim.composeshapefittersampleapp"
-    //noinspection GradleDependency
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.sarim.composeshapefittersampleapp"
         minSdk = 26
-        //noinspection OldTargetApi
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "com.sarim.composeshapefittersampleapp.InstrumentationTestRunner"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -34,14 +31,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-    packaging {
-        resources {
-            pickFirsts.add("META-INF/AL2.0")
-            pickFirsts.add("META-INF/LGPL2.1")
-            pickFirsts.add("META-INF/LICENSE.md")
-            pickFirsts.add("META-INF/LICENSE-notice.md")
-        }
-    }
     kotlin {
         compilerOptions {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
@@ -50,11 +39,6 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
-    }
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
-        }
     }
 }
 
@@ -67,22 +51,7 @@ dependencies {
     implementation(libs.bundles.koinBundle)
     implementation(platform(libs.androidxComposeBomLibrary))
     implementation(libs.bundles.composeImplementationBundle)
-    implementation(libs.bundles.dataStorageBundle)
     implementation(project(":example-app:example-app-di"))
-    implementation(project(":example-app:example-app-data"))
-    implementation(project(":example-app:example-app-domain"))
-    implementation(project(":example-app:example-app-presentation"))
+    implementation(project(":nav"))
     implementation(project(":utils"))
-    implementation(kotlin("reflect"))
-
-    debugImplementation(libs.bundles.composeDebugImplementationBundle)
-
-    testImplementation(platform(libs.androidxComposeBomLibrary))
-    testImplementation(libs.composeJunit4Library)
-    testImplementation(libs.bundles.testBundle)
-
-    androidTestImplementation(platform(libs.androidxComposeBomLibrary))
-    androidTestImplementation(libs.composeJunit4Library)
-    androidTestImplementation(libs.bundles.androidTestBundle)
-    androidTestImplementation(project(":compose-shape-fitter"))
 }

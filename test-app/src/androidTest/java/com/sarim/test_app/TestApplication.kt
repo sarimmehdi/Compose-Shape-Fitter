@@ -1,4 +1,4 @@
-package com.sarim.composeshapefittersampleapp
+package com.sarim.test_app
 
 import android.app.Application
 import com.sarim.example_app_di.ModuleType
@@ -12,13 +12,13 @@ import org.koin.core.logger.Level
 import org.koin.dsl.koinConfiguration
 
 @OptIn(KoinExperimentalAPI::class)
-class MainApplication :
+class TestApplication :
     Application(),
     KoinStartup {
     override fun onKoinStartup() =
         koinConfiguration {
             androidLogger(Level.DEBUG)
-            androidContext(this@MainApplication)
-            lazyModules(drawingFeatureModules(ModuleType.ACTUAL))
+            androidContext(this@TestApplication)
+            lazyModules(drawingFeatureModules(ModuleType.TEST))
         }
 }

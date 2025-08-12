@@ -1,4 +1,4 @@
-package com.sarim.composeshapefittersampleapp.ui.theme
+package com.sarim.nav.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

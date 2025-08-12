@@ -1,21 +1,19 @@
 plugins {
-    alias(libs.plugins.androidLibraryPlugin)
+    alias(libs.plugins.androidApplicationPlugin)
     alias(libs.plugins.kotlinAndroidPlugin)
     alias(libs.plugins.kotlinComposePlugin)
-    alias(libs.plugins.kotlinSerializationPlugin)
-    alias(libs.plugins.conventionPluginJacocoId)
-    id("kotlin-parcelize")
 }
 
 android {
-    namespace = "com.sarim.example_app_presentation"
+    namespace = "com.sarim.test_app"
     compileSdk = 36
 
     defaultConfig {
+        applicationId = "com.sarim.test_app"
         minSdk = 26
+        targetSdk = 36
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
+        testInstrumentationRunner = "com.sarim.test_app.InstrumentationTestRunner"
     }
 
     buildTypes {
@@ -46,21 +44,6 @@ android {
     }
     buildFeatures {
         compose = true
-        buildConfig = true
-    }
-    testOptions {
-        unitTests {
-            isIncludeAndroidResources = true
-            isReturnDefaultValues = true
-            all { test ->
-                test.testLogging {
-                    showStandardStreams = true
-
-                    events("started", "passed", "skipped", "failed", "standard_out", "standard_error")
-                    exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
-                }
-            }
-        }
     }
 }
 
@@ -71,20 +54,16 @@ dependencies {
     implementation(libs.androidxActivityComposeLibrary)
     implementation(platform(libs.androidxComposeBomLibrary))
     implementation(libs.bundles.composeImplementationBundle)
-    implementation(libs.bundles.dataStorageBundle)
-    implementation(libs.kotestPropertyLibrary)
-    implementation(project(":example-app:example-app-domain"))
+    implementation(project(":nav"))
     implementation(project(":utils"))
-    implementation(project(":compose-shape-fitter"))
 
-    debugImplementation(libs.bundles.composeDebugImplementationBundle)
-
-    testImplementation(platform(libs.androidxComposeBomLibrary))
-    testImplementation(libs.composeJunit4Library)
-    testImplementation(libs.bundles.testBundle)
-    testImplementation(kotlin("reflect"))
-
+    androidTestImplementation(platform(libs.koinBomLibrary))
+    androidTestImplementation(libs.bundles.koinBundle)
     androidTestImplementation(platform(libs.androidxComposeBomLibrary))
     androidTestImplementation(libs.composeJunit4Library)
     androidTestImplementation(libs.bundles.androidTestBundle)
+    androidTestImplementation(project(":example-app:example-app-di"))
+    androidTestImplementation(project(":example-app:example-app-domain"))
+    androidTestImplementation(project(":example-app:example-app-presentation"))
+    androidTestImplementation(project(":compose-shape-fitter"))
 }

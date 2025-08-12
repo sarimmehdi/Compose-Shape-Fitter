@@ -1,4 +1,4 @@
-package com.sarim.composeshapefittersampleapp.ui.theme
+package com.sarim.nav.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
