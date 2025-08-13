@@ -31,7 +31,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
-class DrawingScreenViewModelInitTest {
+internal class DrawingScreenViewModelInitTest {
     lateinit var savedStateHandle: SavedStateHandle
     lateinit var viewModel: DrawingScreenViewModel
 

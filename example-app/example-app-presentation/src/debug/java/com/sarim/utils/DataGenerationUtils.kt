@@ -15,7 +15,7 @@ import com.sarim.compose_shape_fitter.shape.TriangleShape
 import com.sarim.example_app_domain.model.Shape
 import com.sarim.example_app_presentation.DEFAULT_STROKE_WIDTH
 
-fun getDrawableShapeFromShape(shape: Shape) =
+internal fun getDrawableShapeFromShape(shape: Shape) =
     when (shape) {
         Shape.Circle -> CircleShape(Color.Blue, DEFAULT_STROKE_WIDTH, inPreviewMode = true)
         Shape.Ellipse -> EllipseShape(Color.Blue, DEFAULT_STROKE_WIDTH, inPreviewMode = true)
@@ -41,7 +41,7 @@ fun getDrawableShapeFromShape(shape: Shape) =
         Shape.Triangle -> TriangleShape(Color.Blue, DEFAULT_STROKE_WIDTH, inPreviewMode = true)
     }
 
-fun generateDummyPoints(drawableShape: DrawableShape): List<Offset> {
+internal fun generateDummyPoints(drawableShape: DrawableShape): List<Offset> {
     val commonStartX = 400f
     val commonStartY = 1000f
     val defaultSize = 250f

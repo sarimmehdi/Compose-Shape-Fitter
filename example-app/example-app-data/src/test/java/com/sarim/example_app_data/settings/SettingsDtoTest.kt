@@ -12,7 +12,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 
-data class TestDataSettingsDtoTest(
+internal data class TestDataSettingsDtoTest(
     val input: SettingsDto,
     val expectedOutput: Settings,
 ) {
@@ -22,7 +22,7 @@ data class TestDataSettingsDtoTest(
 }
 
 @RunWith(Parameterized::class)
-class SettingsDtoTest(
+internal class SettingsDtoTest(
     @Suppress("UNUSED_PARAMETER") private val testDescription: String,
     private val testData: TestDataSettingsDtoTest,
 ) {

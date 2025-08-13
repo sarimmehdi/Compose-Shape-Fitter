@@ -15,7 +15,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 
-data class TestDataDrawingScreenTest(
+internal data class TestDataDrawingScreenTest(
     val testTagToClickOn: String,
     val affectedTestTagAfterClick: String,
     val enabledTestTags: List<String>,
@@ -29,7 +29,7 @@ data class TestDataDrawingScreenTest(
 }
 
 @RunWith(Parameterized::class)
-class DrawingScreenSettingsTest(
+internal class DrawingScreenSettingsTest(
     @Suppress("UNUSED_PARAMETER") private val testDescription: String,
     private val testData: TestDataDrawingScreenTest,
 ) {

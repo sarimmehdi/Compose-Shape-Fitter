@@ -26,7 +26,7 @@ import org.junit.runner.RunWith
         UpdateSelectedShapeUseCase::class, UpdateSettingsUseCase::class,
     ],
 )
-class DomainArchitectureTest {
+internal class DomainArchitectureTest {
     @ArchTest
     fun packageDependencyTest(importedClasses: JavaClasses) {
         noClasses()

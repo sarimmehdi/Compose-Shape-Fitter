@@ -6,7 +6,7 @@ import org.koin.androix.startup.KoinInitializer
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.core.component.KoinComponent
 
-class MainInitializer :
+internal class MainInitializer :
     Initializer<Unit>,
     KoinComponent {
     @Suppress("EmptyFunctionBlock")

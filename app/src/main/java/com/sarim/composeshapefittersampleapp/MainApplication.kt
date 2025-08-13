@@ -12,7 +12,7 @@ import org.koin.core.logger.Level
 import org.koin.dsl.koinConfiguration
 
 @OptIn(KoinExperimentalAPI::class)
-class MainApplication :
+internal class MainApplication :
     Application(),
     KoinStartup {
     override fun onKoinStartup() =

@@ -27,7 +27,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 
-data class TestDataDrawingScreenViewModelOnEventTest(
+internal data class TestDataDrawingScreenViewModelOnEventTest(
     val inputEvent: DrawingScreenToViewModelEvents,
     val inputState: DrawingScreenState,
     val outputState: DrawingScreenState,
@@ -44,7 +44,7 @@ data class TestDataDrawingScreenViewModelOnEventTest(
 }
 
 @RunWith(Parameterized::class)
-class DrawingScreenViewModelOnEventTest(
+internal class DrawingScreenViewModelOnEventTest(
     @Suppress("UNUSED_PARAMETER") private val testDescription: String,
     private val testData: TestDataDrawingScreenViewModelOnEventTest,
 ) {

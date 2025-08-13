@@ -18,13 +18,13 @@ import com.sarim.screenshot_drawing_screen_type4.databinding.ComposeViewBinding
 import io.kotest.property.Exhaustive
 import io.kotest.property.exhaustive.boolean
 
-data class TestDataDrawingScreenPreviewType4ScreenshotTest(
+internal data class TestDataDrawingScreenPreviewType4ScreenshotTest(
     val data: DrawingScreenData,
     val showSnackbar: Boolean,
 )
 
 @RunWith(Parameterized::class)
-class DrawingScreenPreviewType4ScreenshotTest(
+internal class DrawingScreenPreviewType4ScreenshotTest(
     @Suppress("UNUSED_PARAMETER") private val testDescription: String,
     private val testData: TestDataDrawingScreenPreviewType4ScreenshotTest,
 ) {

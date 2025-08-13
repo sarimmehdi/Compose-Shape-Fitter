@@ -21,7 +21,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
 
-data class TestDataDrawerComponentTestSelectShape(
+internal data class TestDataDrawerComponentTestSelectShape(
     val selectedShape: Shape,
     val shapeToClickOn: Shape,
 ) {
@@ -30,7 +30,7 @@ data class TestDataDrawerComponentTestSelectShape(
 }
 
 @RunWith(ParameterizedRobolectricTestRunner::class)
-class DrawerComponentTest(
+internal class DrawerComponentTest(
     @Suppress("UNUSED_PARAMETER") private val testDescription: String,
     private val testData: TestDataDrawerComponentTestSelectShape,
 ) {

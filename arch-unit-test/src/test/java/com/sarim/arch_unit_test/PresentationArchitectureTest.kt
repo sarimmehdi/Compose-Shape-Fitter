@@ -19,7 +19,7 @@ import org.junit.runner.RunWith
         DrawingScreenUseCases::class, DrawingScreenViewModel::class,
     ],
 )
-class PresentationArchitectureTest {
+internal class PresentationArchitectureTest {
     @ArchTest
     fun packageDependencyTest(importedClasses: JavaClasses) {
         noClasses()

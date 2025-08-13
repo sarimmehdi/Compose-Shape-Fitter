@@ -18,7 +18,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 
-data class TestDataDrawingScreenStateTest(
+internal data class TestDataDrawingScreenStateTest(
     val inputShape: Shape,
     val inputColor: Color,
     val inputStrokeWidth: Float,
@@ -32,7 +32,7 @@ data class TestDataDrawingScreenStateTest(
 }
 
 @RunWith(Parameterized::class)
-class DrawingScreenStateTest(
+internal class DrawingScreenStateTest(
     @Suppress("UNUSED_PARAMETER") private val testDescription: String,
     private val testData: TestDataDrawingScreenStateTest,
 ) {

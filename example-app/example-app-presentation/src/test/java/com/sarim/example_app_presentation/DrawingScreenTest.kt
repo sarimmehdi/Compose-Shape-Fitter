@@ -43,7 +43,7 @@ import org.robolectric.RobolectricTestRunner
 import kotlin.collections.zipWithNext
 
 @RunWith(RobolectricTestRunner::class)
-class DrawingScreenTest {
+internal class DrawingScreenTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 

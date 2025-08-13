@@ -7,7 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import com.sarim.nav.MainActivityScreen
 import com.sarim.nav.theme.ComposeShapeFitterSampleAppTheme
 
-class MainActivity : ComponentActivity() {
+internal class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

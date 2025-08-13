@@ -18,13 +18,13 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 
-data class TestDataDrawingScreenPreviewType3ScreenshotTest(
+internal data class TestDataDrawingScreenPreviewType3ScreenshotTest(
     val data: DrawingScreenData,
     val showSnackbar: Boolean,
 )
 
 @RunWith(Parameterized::class)
-class DrawingScreenPreviewType3ScreenshotTest(
+internal class DrawingScreenPreviewType3ScreenshotTest(
     @Suppress("UNUSED_PARAMETER") private val testDescription: String,
     private val testData: TestDataDrawingScreenPreviewType3ScreenshotTest,
 ) {

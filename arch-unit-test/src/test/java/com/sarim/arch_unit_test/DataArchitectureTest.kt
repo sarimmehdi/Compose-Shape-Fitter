@@ -25,7 +25,7 @@ import org.junit.runner.RunWith
         SettingsRepositoryImpl::class, ShapesRepositoryImpl::class,
     ],
 )
-class DataArchitectureTest {
+internal class DataArchitectureTest {
     @ArchTest
     fun packageDependencyTest(importedClasses: JavaClasses) {
         noClasses()

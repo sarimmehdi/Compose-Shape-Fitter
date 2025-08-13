@@ -14,12 +14,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 
-data class TestDataCanvasComponentScreenshotTest(
+internal data class TestDataCanvasComponentScreenshotTest(
     val data: CanvasComponentData,
 )
 
 @RunWith(Parameterized::class)
-class CanvasComponentScreenshotTest(
+internal class CanvasComponentScreenshotTest(
     @Suppress("UNUSED_PARAMETER") private val testDescription: String,
     private val testData: TestDataCanvasComponentScreenshotTest,
 ) {

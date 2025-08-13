@@ -16,7 +16,7 @@ import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
 import kotlin.collections.map
 
-data class TestDataTopBarComponentSettingsMenu(
+internal data class TestDataTopBarComponentSettingsMenu(
     val data: TopBarComponentData,
     val enabledTestTags: List<String>,
     val disabledTestTags: List<String>,
@@ -28,7 +28,7 @@ data class TestDataTopBarComponentSettingsMenu(
 }
 
 @RunWith(ParameterizedRobolectricTestRunner::class)
-class TopBarComponentTestSettingsMenuOpenClosed(
+internal class TopBarComponentTestSettingsMenuOpenClosed(
     @Suppress("UNUSED_PARAMETER") private val testDescription: String,
     private val testData: TestDataTopBarComponentSettingsMenu,
 ) {
