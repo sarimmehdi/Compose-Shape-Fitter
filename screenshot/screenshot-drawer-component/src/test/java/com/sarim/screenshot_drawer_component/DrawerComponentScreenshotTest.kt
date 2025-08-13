@@ -9,6 +9,7 @@ import app.cash.paparazzi.Paparazzi
 import com.sarim.example_app_presentation.component.DrawerComponent
 import com.sarim.example_app_presentation.component.DrawerComponentData
 import com.sarim.example_app_presentation.component.DrawerComponentDataParameterProvider
+import com.sarim.nav.theme.ComposeShapeFitterSampleAppTheme
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -32,13 +33,15 @@ class CanvasComponentScreenshotTest(
     @Test
     fun test() {
         paparazzi.snapshot {
-            DrawerComponent(
-                data = testData.data,
-                modifier =
-                    Modifier
-                        .background(Color.White)
-                        .fillMaxSize(),
-            )
+            ComposeShapeFitterSampleAppTheme {
+                DrawerComponent(
+                    data = testData.data,
+                    modifier =
+                        Modifier
+                            .background(Color.White)
+                            .fillMaxSize(),
+                )
+            }
         }
     }
 

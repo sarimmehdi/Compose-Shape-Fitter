@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.bundles.composeImplementationBundle)
     implementation(project(":example-app:example-app-presentation"))
 
+    testImplementation(project(":nav"))
     testImplementation(platform(libs.androidxComposeBomLibrary))
     testImplementation(libs.composeJunit4Library)
     testImplementation(libs.bundles.testBundle)

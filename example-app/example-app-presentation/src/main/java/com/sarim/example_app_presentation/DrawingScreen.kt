@@ -8,6 +8,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,57 +30,63 @@ fun DrawingScreen(
     data: DrawingScreenData = DrawingScreenData(),
     onEvent: (DrawingScreenToViewModelEvents) -> Unit = {},
 ) {
-    ModalNavigationDrawer(
-        drawerState = data.drawerState,
-        drawerContent = {
-            ModalDrawerSheet(modifier = modifier) {
-                DrawerComponent(
+    Scaffold(
+        snackbarHost = { SnackbarHost(data.snackbarHostState) },
+        modifier = modifier
+    ) { padding ->
+        ModalNavigationDrawer(
+            drawerState = data.drawerState,
+            drawerContent = {
+                ModalDrawerSheet {
+                    DrawerComponent(
+                        data =
+                            DrawerComponentData(
+                                allShapes = data.state.allShapes,
+                                selectedShape = data.state.selectedShape,
+                                currentDrawerState = data.drawerState,
+                            ),
+                        onEvent = onEvent,
+                    )
+                }
+            },
+            modifier = Modifier.padding(padding)
+        ) {
+            Scaffold(
+                topBar = {
+                    TopBarComponent(
+                        data =
+                            TopBarComponentData(
+                                showSettingsDropDown = data.state.showSettingsDropDown,
+                                showFingerTracedLines = data.state.showFingerTracedLines,
+                                showApproximatedShape = data.state.showApproximatedShape,
+                                currentDrawerState = data.drawerState,
+                            ),
+                        onEvent = onEvent,
+                    )
+                },
+                modifier = Modifier.fillMaxSize(),
+            ) { innerPadding ->
+                CanvasComponent(
                     data =
-                        DrawerComponentData(
-                            allShapes = data.state.allShapes,
-                            selectedShape = data.state.selectedShape,
-                            currentDrawerState = data.drawerState,
+                        CanvasComponentData(
+                            drawableShape =
+                                data.state.getDrawableShape(
+                                    Color.Blue,
+                                    DEFAULT_STROKE_WIDTH,
+                                ),
+                            isDragging = data.state.isDragging,
+                            points = data.state.points,
+                            lines = data.state.lines,
+                            showFingerTracedLines = data.state.showFingerTracedLines,
+                            showApproximatedShape = data.state.showApproximatedShape,
                         ),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
                     onEvent = onEvent,
                 )
             }
-        },
-    ) {
-        Scaffold(
-            topBar = {
-                TopBarComponent(
-                    data =
-                        TopBarComponentData(
-                            showSettingsDropDown = data.state.showSettingsDropDown,
-                            showFingerTracedLines = data.state.showFingerTracedLines,
-                            showApproximatedShape = data.state.showApproximatedShape,
-                            currentDrawerState = data.drawerState,
-                        ),
-                    onEvent = onEvent,
-                )
-            },
-            modifier = Modifier.fillMaxSize(),
-        ) { innerPadding ->
-            CanvasComponent(
-                data =
-                    CanvasComponentData(
-                        drawableShape =
-                            data.state.getDrawableShape(
-                                Color.Blue,
-                                DEFAULT_STROKE_WIDTH,
-                            ),
-                        isDragging = data.state.isDragging,
-                        points = data.state.points,
-                        lines = data.state.lines,
-                        showFingerTracedLines = data.state.showFingerTracedLines,
-                        showApproximatedShape = data.state.showApproximatedShape,
-                    ),
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                onEvent = onEvent,
-            )
         }
     }
 }
@@ -86,6 +94,7 @@ fun DrawingScreen(
 data class DrawingScreenData(
     val state: DrawingScreenState = DrawingScreenState(),
     val drawerState: DrawerState = DrawerState(DrawerValue.Closed),
+    val snackbarHostState: SnackbarHostState = SnackbarHostState(),
 )
 
 @Serializable

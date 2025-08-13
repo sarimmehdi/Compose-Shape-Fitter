@@ -1,13 +1,18 @@
 package com.sarim.screenshot_drawing_screen_type2
 
 import android.view.LayoutInflater
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
 import com.sarim.example_app_presentation.DrawingScreen
 import com.sarim.example_app_presentation.DrawingScreenData
 import com.sarim.example_app_presentation.DrawingScreenDataProviderType2
+import com.sarim.nav.theme.ComposeShapeFitterSampleAppTheme
 import com.sarim.screenshot_drawing_screen_type2.databinding.ComposeViewBinding
+import io.kotest.property.Exhaustive
+import io.kotest.property.exhaustive.boolean
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -15,6 +20,7 @@ import org.junit.runners.Parameterized
 
 data class TestDataDrawingScreenPreviewType2ScreenshotTest(
     val data: DrawingScreenData,
+    val showSnackbar: Boolean,
 )
 
 @RunWith(Parameterized::class)
@@ -38,15 +44,26 @@ class DrawingScreenPreviewType2ScreenshotTest(
             it.composeView.apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
-                    DrawingScreen(
-                        data =
-                            testData.data.copy(
-                                state =
-                                    testData.data.state.copy(
-                                        inPreviewMode = true,
-                                    ),
-                            ),
-                    )
+                    ComposeShapeFitterSampleAppTheme {
+                        DrawingScreen(
+                            data =
+                                testData.data.copy(
+                                    state =
+                                        testData.data.state.copy(
+                                            inPreviewMode = true,
+                                        ),
+                                ),
+                        )
+                        if (testData.showSnackbar) {
+                            LaunchedEffect(Unit) {
+                                testData.data.snackbarHostState.showSnackbar(
+                                    message = "Error",
+                                    actionLabel = "Dismiss",
+                                    duration = SnackbarDuration.Short
+                                )
+                            }
+                        }
+                    }
                 }
             }
 
@@ -60,16 +77,22 @@ class DrawingScreenPreviewType2ScreenshotTest(
             name = "{0}",
         )
         @Suppress("unused")
-        fun getParameters(): Collection<Array<Any>> =
-            DrawingScreenDataProviderType2()
+        fun getParameters(): Collection<Array<Any>> {
+            var overallIndex = 0
+            return DrawingScreenDataProviderType2()
                 .values
-                .mapIndexed { index, data ->
-                    arrayOf(
-                        index.toString(),
-                        TestDataDrawingScreenPreviewType2ScreenshotTest(
-                            data = data,
-                        ),
-                    )
+                .flatMap { drawingData ->
+                    Exhaustive.boolean().values.map { showSnackbarValue ->
+                        val currentTestIndex = overallIndex++
+                        arrayOf(
+                            currentTestIndex.toString(),
+                            TestDataDrawingScreenPreviewType2ScreenshotTest(
+                                data = drawingData,
+                                showSnackbar = showSnackbarValue,
+                            ),
+                        )
+                    }
                 }.toList()
+        }
     }
 }

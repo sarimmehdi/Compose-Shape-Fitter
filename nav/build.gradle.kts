@@ -47,5 +47,7 @@ dependencies {
     implementation(libs.bundles.koinBundle)
     implementation(platform(libs.androidxComposeBomLibrary))
     implementation(libs.bundles.composeImplementationBundle)
+    implementation(libs.kotestPropertyLibrary)
     implementation(project(":example-app:example-app-presentation"))
+    implementation(project(":utils"))
 }

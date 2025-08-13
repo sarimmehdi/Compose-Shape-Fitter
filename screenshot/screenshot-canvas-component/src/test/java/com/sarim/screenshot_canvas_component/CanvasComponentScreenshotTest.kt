@@ -8,6 +8,7 @@ import app.cash.paparazzi.Paparazzi
 import com.sarim.example_app_presentation.component.CanvasComponent
 import com.sarim.example_app_presentation.component.CanvasComponentData
 import com.sarim.example_app_presentation.component.CanvasComponentDataParameterProvider
+import com.sarim.nav.theme.ComposeShapeFitterSampleAppTheme
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -31,10 +32,12 @@ class CanvasComponentScreenshotTest(
     @Test
     fun test() {
         paparazzi.snapshot {
-            CanvasComponent(
-                data = testData.data,
-                modifier = Modifier.background(Color.White),
-            )
+            ComposeShapeFitterSampleAppTheme {
+                CanvasComponent(
+                    data = testData.data,
+                    modifier = Modifier.background(Color.White),
+                )
+            }
         }
     }
 

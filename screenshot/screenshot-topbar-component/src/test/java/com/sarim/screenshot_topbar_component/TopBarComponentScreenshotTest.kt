@@ -11,6 +11,7 @@ import app.cash.paparazzi.Paparazzi
 import com.sarim.example_app_presentation.component.TopBarComponent
 import com.sarim.example_app_presentation.component.TopBarComponentData
 import com.sarim.example_app_presentation.component.TopBarComponentDataProvider
+import com.sarim.nav.theme.ComposeShapeFitterSampleAppTheme
 import com.sarim.screenshot_topbar_component.databinding.ComposeViewBinding
 import org.junit.Rule
 import org.junit.Test
@@ -42,13 +43,15 @@ class CanvasComponentScreenshotTest(
             it.composeView.apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
-                    TopBarComponent(
-                        data = testData.data,
-                        modifier =
-                            Modifier
-                                .background(Color.White)
-                                .fillMaxSize(),
-                    )
+                    ComposeShapeFitterSampleAppTheme {
+                        TopBarComponent(
+                            data = testData.data,
+                            modifier =
+                                Modifier
+                                    .background(Color.White)
+                                    .fillMaxSize(),
+                        )
+                    }
                 }
             }
 

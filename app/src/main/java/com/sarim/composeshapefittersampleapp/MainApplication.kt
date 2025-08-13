@@ -17,7 +17,9 @@ class MainApplication :
     KoinStartup {
     override fun onKoinStartup() =
         koinConfiguration {
-            androidLogger(Level.DEBUG)
+            if (BuildConfig.DEBUG) {
+                androidLogger(Level.DEBUG)
+            }
             androidContext(this@MainApplication)
             lazyModules(drawingFeatureModules(ModuleType.ACTUAL))
         }
