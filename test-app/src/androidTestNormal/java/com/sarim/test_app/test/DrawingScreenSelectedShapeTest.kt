@@ -9,7 +9,7 @@ import com.sarim.example_app_domain.model.Shape
 import com.sarim.example_app_presentation.component.DrawerComponentTestTags.SELECTED_NAVIGATION_DRAWER_ITEM
 import com.sarim.example_app_presentation.component.DrawerComponentTestTags.UNSELECTED_NAVIGATION_DRAWER_ITEM
 import com.sarim.example_app_presentation.component.TopBarComponentTestTags.OPEN_DRAWER_ICON_BUTTON
-import com.sarim.test_app.startApp
+import com.sarim.utils.startApp
 import com.sarim.utils.shuffleListExceptOne
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -34,7 +34,7 @@ internal class DrawingScreenSelectedShapeTest(
     @Test
     fun test() {
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        device.startApp()
+        device.startApp(pkg = "com.sarim.test_app", activityPkg = "com.sarim.test_app.TestActivity")
 
         device.wait(Until.hasObject(By.res(OPEN_DRAWER_ICON_BUTTON)), MAX_TIMEOUT)
         device.findObject(By.res(OPEN_DRAWER_ICON_BUTTON)).click()

@@ -10,7 +10,7 @@ import com.sarim.example_app_presentation.component.TopBarComponentTestTags.APPR
 import com.sarim.example_app_presentation.component.TopBarComponentTestTags.FINGER_TRACED_LINES
 import com.sarim.example_app_presentation.component.TopBarComponentTestTags.FINGER_TRACED_LINES_TRAILING_ICON
 import com.sarim.example_app_presentation.component.TopBarComponentTestTags.SETTINGS_ICON_BUTTON
-import com.sarim.test_app.startApp
+import com.sarim.utils.startApp
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
@@ -36,7 +36,7 @@ internal class DrawingScreenSettingsTest(
     @Test
     fun test() {
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        device.startApp()
+        device.startApp(pkg = "com.sarim.test_app", activityPkg = "com.sarim.test_app.TestActivity")
 
         device.wait(Until.hasObject(By.res(SETTINGS_ICON_BUTTON)), MAX_TIMEOUT)
         device.findObject(By.res(SETTINGS_ICON_BUTTON)).click()

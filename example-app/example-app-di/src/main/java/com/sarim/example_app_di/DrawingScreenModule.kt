@@ -28,8 +28,8 @@ import org.koin.core.qualifier.StringQualifier
 import org.koin.core.qualifier.named
 import org.koin.dsl.lazyModule
 
-const val SHAPE_DATASTORE = "shapeDataStore"
-const val SETTINGS_DATASTORE = "settingsDataStore"
+private const val SHAPE_DATASTORE = "shapeDataStore"
+private const val SETTINGS_DATASTORE = "settingsDataStore"
 
 internal fun dataStoreModule(
     shapeDtoDataStoreName: String,
@@ -48,20 +48,24 @@ internal fun dataStoreModule(
 
     single<DataStore<ShapeDto>>(named(SHAPE_DATASTORE)) {
         DataStoreFactory.create(
-            serializer = ShapeDtoSerializer,
+            serializer = ShapeDtoSerializer.create(shapeDtoDataStoreName),
             produceFile = { androidContext().dataStoreFile(shapeDtoDataStoreName) },
         )
     }
 
     single<DataStore<SettingsDto>>(named(SETTINGS_DATASTORE)) {
         DataStoreFactory.create(
-            serializer = SettingsDtoSerializer,
+            serializer = SettingsDtoSerializer.create(settingsDtoDataStoreName),
             produceFile = { androidContext().dataStoreFile(settingsDtoDataStoreName) },
         )
     }
 }
 
-internal fun drawingScreenModule(scope: StringQualifier) =
+internal fun drawingScreenModule(
+    shapeDtoDataStoreName: String,
+    settingsDtoDataStoreName: String,
+    scope: StringQualifier
+) =
     lazyModule {
         log(
             tag = "DrawingScreenModule",
@@ -75,12 +79,14 @@ internal fun drawingScreenModule(scope: StringQualifier) =
             scoped<ShapesRepository> {
                 ShapesRepositoryImpl(
                     dataStore = get(named(SHAPE_DATASTORE)),
+                    dataStoreName = shapeDtoDataStoreName
                 )
             }
 
             scoped<SettingsRepository> {
                 SettingsRepositoryImpl(
                     dataStore = get(named(SETTINGS_DATASTORE)),
+                    dataStoreName = settingsDtoDataStoreName
                 )
             }
 
@@ -103,23 +109,30 @@ internal fun drawingScreenModule(scope: StringQualifier) =
 enum class ModuleType {
     ACTUAL,
     TEST,
+    TEST_ERROR;
+}
+
+internal fun ModuleType.getShapeDtoDataStoreName() = when (this) {
+    ModuleType.ACTUAL -> ShapeDtoSerializer.Companion.DataStoreType.ACTUAL.dataStoreName
+    ModuleType.TEST -> ShapeDtoSerializer.Companion.DataStoreType.TEST.dataStoreName
+    ModuleType.TEST_ERROR -> ShapeDtoSerializer.Companion.DataStoreType.TEST_ERROR.dataStoreName
+}
+
+internal fun ModuleType.getSettingsDtoDataStoreName() = when (this) {
+    ModuleType.ACTUAL -> SettingsDtoSerializer.Companion.DataStoreType.ACTUAL.dataStoreName
+    ModuleType.TEST -> SettingsDtoSerializer.Companion.DataStoreType.TEST.dataStoreName
+    ModuleType.TEST_ERROR -> SettingsDtoSerializer.Companion.DataStoreType.TEST_ERROR.dataStoreName
 }
 
 fun drawingFeatureModules(moduleType: ModuleType) =
     listOf(
         dataStoreModule(
-            shapeDtoDataStoreName =
-                when (moduleType) {
-                    ModuleType.ACTUAL -> ShapeDtoSerializer.SHAPE_DTO_DATA_STORE_NAME
-                    ModuleType.TEST -> ShapeDtoSerializer.SHAPE_DTO_TEST_DATA_STORE_NAME
-                },
-            settingsDtoDataStoreName =
-                when (moduleType) {
-                    ModuleType.ACTUAL -> SettingsDtoSerializer.SETTINGS_DTO_DATA_STORE_NAME
-                    ModuleType.TEST -> SettingsDtoSerializer.SETTINGS_DTO_TEST_DATA_STORE_NAME
-                },
+            shapeDtoDataStoreName = moduleType.getShapeDtoDataStoreName(),
+            settingsDtoDataStoreName = moduleType.getSettingsDtoDataStoreName(),
         ),
         drawingScreenModule(
+            shapeDtoDataStoreName = moduleType.getShapeDtoDataStoreName(),
+            settingsDtoDataStoreName = moduleType.getSettingsDtoDataStoreName(),
             scope = named(DrawingFeature::class.java.name),
         ),
     )

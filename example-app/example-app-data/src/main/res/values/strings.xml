@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="unknown_reason_exception">Unknown reason for exception %1$s</string>
+    <string name="unknown_reason_read_exception">Unknown reason for exception when trying to read from %1$s: %2$s</string>
+    <string name="unknown_reason_write_exception">Unknown reason for exception when trying to write to %1$s: %2$s</string>
 </resources>

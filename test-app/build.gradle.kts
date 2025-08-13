@@ -13,7 +13,19 @@ android {
         minSdk = 26
         targetSdk = 36
 
-        testInstrumentationRunner = "com.sarim.test_app.InstrumentationTestRunner"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    flavorDimensions += listOf("test")
+    productFlavors {
+        create("normal") {
+            dimension = "test"
+            testInstrumentationRunner = "com.sarim.test_app.InstrumentationTestRunner"
+        }
+        create("error") {
+            dimension = "test"
+            testInstrumentationRunner = "com.sarim.test_app.InstrumentationTestErrorRunner"
+        }
     }
 
     buildTypes {

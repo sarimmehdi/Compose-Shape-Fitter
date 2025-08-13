@@ -1,6 +1,7 @@
 package com.sarim.example_app_data.repository
 
 import androidx.datastore.core.DataStore
+import androidx.datastore.core.IOException
 import com.sarim.example_app_data.BuildConfig
 import com.sarim.example_app_data.R
 import com.sarim.example_app_data.dto.shape.ShapeDto
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.map
 
 class ShapesRepositoryImpl(
     private val dataStore: DataStore<ShapeDto>,
+    private val dataStoreName: String,
 ) : ShapesRepository {
     override val selectedShape: Flow<Resource<Shape>>
         get() =
@@ -31,15 +33,16 @@ class ShapesRepositoryImpl(
                     )
                     Resource.Success(it.selectedShapeType)
                 }
-            } catch (
-                @Suppress("TooGenericExceptionCaught") e: Exception,
-            ) {
+            } catch (e: IOException) {
                 flowOf(
                     Resource.Error(
                         message =
                             e.localizedMessage?.let {
                                 MessageType.StringMessage(it)
-                            } ?: MessageType.IntMessage(R.string.unknown_reason_exception, e),
+                            } ?: MessageType.IntMessage(
+                                R.string.unknown_reason_read_exception,
+                                dataStoreName, e
+                            ),
                     ),
                 )
             }
@@ -60,6 +63,16 @@ class ShapesRepositoryImpl(
                 )
             }
             Resource.Success(true)
+        } catch (e: IOException) {
+            Resource.Error(
+                message =
+                    e.localizedMessage?.let {
+                        MessageType.StringMessage(it)
+                    } ?: MessageType.IntMessage(
+                        R.string.unknown_reason_write_exception,
+                        dataStoreName, e
+                    ),
+            )
         } catch (
             @Suppress("TooGenericExceptionCaught") e: Exception,
         ) {

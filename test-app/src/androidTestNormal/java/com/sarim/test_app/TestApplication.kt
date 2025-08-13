@@ -3,8 +3,8 @@ package com.sarim.test_app
 import android.app.Application
 import com.sarim.example_app_di.ModuleType
 import com.sarim.example_app_di.drawingFeatureModules
+import com.sarim.utils.CustomKoinLogger
 import org.koin.android.ext.koin.androidContext
-import org.koin.android.ext.koin.androidLogger
 import org.koin.androix.startup.KoinStartup
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.core.lazyModules
@@ -17,7 +17,12 @@ internal class TestApplication :
     KoinStartup {
     override fun onKoinStartup() =
         koinConfiguration {
-            androidLogger(Level.DEBUG)
+            logger(
+                CustomKoinLogger(
+                    tag = TestApplication::class.java.simpleName,
+                    level = Level.DEBUG
+                )
+            )
             androidContext(this@TestApplication)
             lazyModules(drawingFeatureModules(ModuleType.TEST))
         }

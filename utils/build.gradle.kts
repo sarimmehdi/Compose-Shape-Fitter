@@ -46,4 +46,7 @@ dependencies {
     implementation(libs.androidxActivityComposeLibrary)
     implementation(platform(libs.androidxComposeBomLibrary))
     implementation(libs.bundles.composeImplementationBundle)
+    implementation(platform(libs.koinBomLibrary))
+    implementation(libs.bundles.koinBundle)
+    implementation(libs.bundles.androidTestBundle)
 }

@@ -1,6 +1,7 @@
 package com.sarim.example_app_data.repository
 
 import androidx.datastore.core.DataStore
+import androidx.datastore.core.IOException
 import com.sarim.example_app_data.BuildConfig
 import com.sarim.example_app_data.R
 import com.sarim.example_app_data.dto.settings.SettingsDto
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.map
 
 class SettingsRepositoryImpl(
     private val dataStore: DataStore<SettingsDto>,
+    private val dataStoreName: String,
 ) : SettingsRepository {
     override val settings: Flow<Resource<Settings>>
         get() =
@@ -32,15 +34,16 @@ class SettingsRepositoryImpl(
                     )
                     Resource.Success(it.toSettings())
                 }
-            } catch (
-                @Suppress("TooGenericExceptionCaught") e: Exception,
-            ) {
+            } catch (e: IOException) {
                 flowOf(
                     Resource.Error(
                         message =
                             e.localizedMessage?.let {
                                 MessageType.StringMessage(it)
-                            } ?: MessageType.IntMessage(R.string.unknown_reason_exception, e),
+                            } ?: MessageType.IntMessage(
+                                R.string.unknown_reason_read_exception,
+                                dataStoreName, e
+                            ),
                     ),
                 )
             }
@@ -62,6 +65,16 @@ class SettingsRepositoryImpl(
                 )
             }
             Resource.Success(true)
+        } catch (e: IOException) {
+            Resource.Error(
+                message =
+                    e.localizedMessage?.let {
+                        MessageType.StringMessage(it)
+                    } ?: MessageType.IntMessage(
+                        R.string.unknown_reason_write_exception,
+                        dataStoreName, e
+                    ),
+            )
         } catch (
             @Suppress("TooGenericExceptionCaught") e: Exception,
         ) {
