@@ -8,6 +8,6 @@
     <string name="finger_traced_lines">Show Finger-Traced Lines</string>
     <string name="approximated_shape">Show Approximated Shape</string>
     <string name="unable_to_get_settings">Unable to get settings because of %1$s</string>
-    <string name="error">Error</string>
+    <string name="dismiss">Dismiss</string>
     <string name="unable_to_get_selected_shape">Unable to get selected shape because of %1$s</string>
 </resources>

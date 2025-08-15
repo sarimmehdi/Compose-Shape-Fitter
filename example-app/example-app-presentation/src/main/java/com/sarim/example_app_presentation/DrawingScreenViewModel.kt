@@ -59,7 +59,7 @@ class DrawingScreenViewModel(
                                         },
                                     action =
                                         SnackbarAction(
-                                            name = UiText.StringResource(R.string.error),
+                                            name = UiText.StringResource(R.string.dismiss),
                                         ),
                                 ),
                         )
@@ -107,7 +107,7 @@ class DrawingScreenViewModel(
                                         },
                                     action =
                                         SnackbarAction(
-                                            name = UiText.StringResource(R.string.error),
+                                            name = UiText.StringResource(R.string.dismiss),
                                         ),
                                 ),
                         )

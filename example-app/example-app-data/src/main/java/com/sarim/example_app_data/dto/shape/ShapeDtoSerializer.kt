@@ -13,11 +13,6 @@ class ShapeDtoSerializer(val dataStoreName: String) : Serializer<ShapeDto> {
         get() = ShapeDto()
 
     override suspend fun readFrom(input: InputStream): ShapeDto {
-        if (dataStoreName == DataStoreType.TEST_ERROR.dataStoreName) {
-            throw CorruptionException(
-                "Unable to read ShapeDto from $dataStoreName"
-            )
-        }
         try {
             return Json.decodeFromString(
                 ShapeDto.serializer(),
@@ -35,11 +30,6 @@ class ShapeDtoSerializer(val dataStoreName: String) : Serializer<ShapeDto> {
         t: ShapeDto,
         output: OutputStream,
     ) {
-        if (dataStoreName == DataStoreType.TEST_ERROR.dataStoreName) {
-            throw CorruptionException(
-                "Unable to write ShapeDto to $dataStoreName"
-            )
-        }
         try {
             output.write(
                 Json

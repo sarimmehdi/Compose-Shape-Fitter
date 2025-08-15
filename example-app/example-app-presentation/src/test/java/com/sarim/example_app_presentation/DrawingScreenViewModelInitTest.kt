@@ -67,7 +67,7 @@ internal class DrawingScreenViewModelInitTest {
                                             INT_MESSAGE,
                                             INT_MESSAGE_ARGS,
                                         ),
-                                    action = SnackbarAction(name = UiText.StringResource(R.string.error)),
+                                    action = SnackbarAction(name = UiText.StringResource(R.string.dismiss)),
                                 ),
                             ),
                     )
@@ -85,7 +85,7 @@ internal class DrawingScreenViewModelInitTest {
                                             R.string.unable_to_get_settings,
                                             STRING_MESSAGE,
                                         ),
-                                    action = SnackbarAction(name = UiText.StringResource(R.string.error)),
+                                    action = SnackbarAction(name = UiText.StringResource(R.string.dismiss)),
                                 ),
                             ),
                     )
@@ -125,7 +125,7 @@ internal class DrawingScreenViewModelInitTest {
                                             INT_MESSAGE,
                                             INT_MESSAGE_ARGS,
                                         ),
-                                    action = SnackbarAction(name = UiText.StringResource(R.string.error)),
+                                    action = SnackbarAction(name = UiText.StringResource(R.string.dismiss)),
                                 ),
                             ),
                     )
@@ -143,7 +143,7 @@ internal class DrawingScreenViewModelInitTest {
                                             R.string.unable_to_get_selected_shape,
                                             STRING_MESSAGE,
                                         ),
-                                    action = SnackbarAction(name = UiText.StringResource(R.string.error)),
+                                    action = SnackbarAction(name = UiText.StringResource(R.string.dismiss)),
                                 ),
                             ),
                     )

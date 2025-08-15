@@ -1,10 +1,7 @@
 package com.sarim.nav
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.rememberDrawerState
@@ -53,7 +50,7 @@ fun MainActivityScreen(
                 snackbarHostState.showSnackbar(
                     message = event.message.asString(context),
                     actionLabel = event.action?.name?.asString(context),
-                    duration = SnackbarDuration.Long,
+                    duration = SnackbarDuration.Short,
                 )
 
             if (result == SnackbarResult.ActionPerformed) {

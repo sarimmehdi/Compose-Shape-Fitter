@@ -20,6 +20,7 @@ import com.sarim.example_app_presentation.DrawingFeature
 import com.sarim.example_app_presentation.DrawingScreenUseCases
 import com.sarim.example_app_presentation.DrawingScreenViewModel
 import com.sarim.utils.DefaultDispatchers
+import com.sarim.utils.ErrorDataStore
 import com.sarim.utils.LogType
 import com.sarim.utils.log
 import org.koin.android.ext.koin.androidContext
@@ -32,9 +33,10 @@ private const val SHAPE_DATASTORE = "shapeDataStore"
 private const val SETTINGS_DATASTORE = "settingsDataStore"
 
 internal fun dataStoreModule(
-    shapeDtoDataStoreName: String,
-    settingsDtoDataStoreName: String,
+    moduleType: ModuleType,
 ) = lazyModule {
+    val shapeDtoDataStoreName = moduleType.getShapeDtoDataStoreName()
+    val settingsDtoDataStoreName = moduleType.getSettingsDtoDataStoreName()
     log(
         tag = "DrawingScreenModule",
         messageBuilder = {
@@ -47,17 +49,25 @@ internal fun dataStoreModule(
     )
 
     single<DataStore<ShapeDto>>(named(SHAPE_DATASTORE)) {
-        DataStoreFactory.create(
-            serializer = ShapeDtoSerializer.create(shapeDtoDataStoreName),
-            produceFile = { androidContext().dataStoreFile(shapeDtoDataStoreName) },
-        )
+        if (moduleType == ModuleType.TEST_ERROR) {
+            ErrorDataStore(shapeDtoDataStoreName)
+        } else {
+            DataStoreFactory.create(
+                serializer = ShapeDtoSerializer.create(shapeDtoDataStoreName),
+                produceFile = { androidContext().dataStoreFile(shapeDtoDataStoreName) },
+            )
+        }
     }
 
     single<DataStore<SettingsDto>>(named(SETTINGS_DATASTORE)) {
-        DataStoreFactory.create(
-            serializer = SettingsDtoSerializer.create(settingsDtoDataStoreName),
-            produceFile = { androidContext().dataStoreFile(settingsDtoDataStoreName) },
-        )
+        if (moduleType == ModuleType.TEST_ERROR) {
+            ErrorDataStore(settingsDtoDataStoreName)
+        } else {
+            DataStoreFactory.create(
+                serializer = SettingsDtoSerializer.create(settingsDtoDataStoreName),
+                produceFile = { androidContext().dataStoreFile(settingsDtoDataStoreName) },
+            )
+        }
     }
 }
 
@@ -127,8 +137,7 @@ internal fun ModuleType.getSettingsDtoDataStoreName() = when (this) {
 fun drawingFeatureModules(moduleType: ModuleType) =
     listOf(
         dataStoreModule(
-            shapeDtoDataStoreName = moduleType.getShapeDtoDataStoreName(),
-            settingsDtoDataStoreName = moduleType.getSettingsDtoDataStoreName(),
+            moduleType = moduleType
         ),
         drawingScreenModule(
             shapeDtoDataStoreName = moduleType.getShapeDtoDataStoreName(),

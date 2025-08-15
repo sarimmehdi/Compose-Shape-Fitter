@@ -49,4 +49,5 @@ dependencies {
     implementation(platform(libs.koinBomLibrary))
     implementation(libs.bundles.koinBundle)
     implementation(libs.bundles.androidTestBundle)
+    implementation(libs.bundles.dataStorageBundle)
 }

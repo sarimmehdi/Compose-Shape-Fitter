@@ -13,6 +13,10 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
+import com.sarim.example_app_presentation.DrawerScreenTestTags.SNACKBAR
 import com.sarim.example_app_presentation.component.CanvasComponent
 import com.sarim.example_app_presentation.component.CanvasComponentData
 import com.sarim.example_app_presentation.component.DrawerComponent
@@ -31,7 +35,14 @@ fun DrawingScreen(
     onEvent: (DrawingScreenToViewModelEvents) -> Unit = {},
 ) {
     Scaffold(
-        snackbarHost = { SnackbarHost(data.snackbarHostState) },
+        snackbarHost = {
+            SnackbarHost(
+                hostState = data.snackbarHostState,
+                modifier = Modifier
+                    .semantics { testTagsAsResourceId = true }
+                    .testTag(SNACKBAR)
+            )
+        },
         modifier = modifier
     ) { padding ->
         ModalNavigationDrawer(
@@ -96,6 +107,10 @@ data class DrawingScreenData(
     val drawerState: DrawerState = DrawerState(DrawerValue.Closed),
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
 )
+
+object DrawerScreenTestTags {
+    const val SNACKBAR = "SNACKBAR"
+}
 
 @Serializable
 object DrawingScreenNavigationDestination

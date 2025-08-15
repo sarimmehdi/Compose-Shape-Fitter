@@ -12,7 +12,7 @@ import com.sarim.utils.MessageType
 import com.sarim.utils.Resource
 import com.sarim.utils.log
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
 class ShapesRepositoryImpl(
@@ -20,32 +20,29 @@ class ShapesRepositoryImpl(
     private val dataStoreName: String,
 ) : ShapesRepository {
     override val selectedShape: Flow<Resource<Shape>>
-        get() =
-            try {
-                dataStore.data.map {
-                    log(
-                        tag = ShapesRepositoryImpl::class.java.simpleName,
-                        messageBuilder = {
-                            "shapeDto = $it, selectedShapeType = ${it.selectedShapeType}"
-                        },
-                        logType = LogType.INFO,
-                        shouldLog = BuildConfig.DEBUG,
-                    )
-                    Resource.Success(it.selectedShapeType)
-                }
-            } catch (e: IOException) {
-                flowOf(
-                    Resource.Error(
-                        message =
-                            e.localizedMessage?.let {
-                                MessageType.StringMessage(it)
-                            } ?: MessageType.IntMessage(
-                                R.string.unknown_reason_read_exception,
-                                dataStoreName, e
-                            ),
-                    ),
+        get() = dataStore.data.map {
+            log(
+                tag = ShapesRepositoryImpl::class.java.simpleName,
+                messageBuilder = {
+                    "shapeDto = $it, selectedShapeType = ${it.selectedShapeType}"
+                },
+                logType = LogType.INFO,
+                shouldLog = BuildConfig.DEBUG,
+            )
+            Resource.Success(it.selectedShapeType) as Resource<Shape>
+        }.catch { e ->
+            emit(
+                Resource.Error(
+                    message =
+                        e.localizedMessage?.let {
+                            MessageType.StringMessage(it)
+                        } ?: MessageType.IntMessage(
+                            R.string.unknown_reason_read_exception,
+                            dataStoreName, e
+                        ),
                 )
-            }
+            )
+        }
 
     override suspend fun updateSelectedShape(selectedShape: Shape) =
         try {

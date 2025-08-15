@@ -13,11 +13,6 @@ class SettingsDtoSerializer(private val dataStoreName: String) : Serializer<Sett
         get() = SettingsDto()
 
     override suspend fun readFrom(input: InputStream): SettingsDto {
-        if (dataStoreName == DataStoreType.TEST_ERROR.dataStoreName) {
-            throw CorruptionException(
-                "Unable to read SettingsDto from $dataStoreName"
-            )
-        }
         try {
             return Json.decodeFromString(
                 SettingsDto.serializer(),
@@ -35,11 +30,6 @@ class SettingsDtoSerializer(private val dataStoreName: String) : Serializer<Sett
         t: SettingsDto,
         output: OutputStream,
     ) {
-        if (dataStoreName == DataStoreType.TEST_ERROR.dataStoreName) {
-            throw CorruptionException(
-                "Unable to write SettingsDto to $dataStoreName"
-            )
-        }
         try {
             output.write(
                 Json
