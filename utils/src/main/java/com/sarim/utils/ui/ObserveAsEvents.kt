@@ -1,4 +1,4 @@
-package com.sarim.utils
+package com.sarim.utils.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect

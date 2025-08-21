@@ -1,4 +1,4 @@
-package com.sarim.utils
+package com.sarim.utils.ui
 
 import android.content.Context
 import androidx.annotation.StringRes

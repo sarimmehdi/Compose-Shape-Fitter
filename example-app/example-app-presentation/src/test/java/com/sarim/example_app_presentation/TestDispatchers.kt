@@ -1,6 +1,6 @@
 package com.sarim.example_app_presentation
 
-import com.sarim.utils.DispatcherProvider
+import com.sarim.utils.test.DispatcherProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher

@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlinComposePlugin)
     alias(libs.plugins.kotlinSerializationPlugin)
     alias(libs.plugins.conventionPluginJacocoId)
+    alias(libs.plugins.conventionPluginGordonId)
     id("kotlin-parcelize")
 }
 
@@ -73,8 +74,12 @@ dependencies {
     implementation(libs.bundles.composeImplementationBundle)
     implementation(libs.bundles.dataStorageBundle)
     implementation(libs.kotestPropertyLibrary)
-    implementation(project(":example-app:example-app-domain"))
-    implementation(project(":utils"))
+    implementation(project(":example-app:example-app-domain")) {
+        exclude(group = libs.koinBomLibrary.get().group)
+    }
+    implementation(project(":utils")) {
+        exclude(group = libs.koinBomLibrary.get().group)
+    }
     implementation(project(":compose-shape-fitter"))
 
     debugImplementation(libs.bundles.composeDebugImplementationBundle)

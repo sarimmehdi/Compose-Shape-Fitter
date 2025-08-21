@@ -1,4 +1,4 @@
-package com.sarim.utils
+package com.sarim.utils.test
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

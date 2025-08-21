@@ -19,10 +19,10 @@ import com.sarim.example_app_presentation.BuildConfig
 import com.sarim.example_app_presentation.DrawingFeature
 import com.sarim.example_app_presentation.DrawingScreenUseCases
 import com.sarim.example_app_presentation.DrawingScreenViewModel
-import com.sarim.utils.DefaultDispatchers
-import com.sarim.utils.ErrorDataStore
-import com.sarim.utils.LogType
-import com.sarim.utils.log
+import com.sarim.utils.test.DefaultDispatchers
+import com.sarim.utils.test.ErrorDataStore
+import com.sarim.utils.log.LogType
+import com.sarim.utils.log.log
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.StringQualifier

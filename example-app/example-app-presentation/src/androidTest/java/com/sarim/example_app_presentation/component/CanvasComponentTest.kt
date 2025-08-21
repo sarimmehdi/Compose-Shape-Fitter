@@ -16,8 +16,10 @@ import com.sarim.compose_shape_fitter.shape.SkewedEllipseShape
 import com.sarim.compose_shape_fitter.shape.SquareShape
 import com.sarim.compose_shape_fitter.shape.TriangleShape
 import com.sarim.example_app_presentation.DrawingScreenToViewModelEvents
-import com.sarim.utils.generateEllipsePoints
-import com.sarim.utils.generatePolygonPoints
+import com.sarim.utils.log.LogType
+import com.sarim.utils.log.log
+import com.sarim.utils.test.generateEllipsePoints
+import com.sarim.utils.test.generatePolygonPoints
 import io.mockk.mockk
 import io.mockk.verifyOrder
 import junit.framework.TestCase.fail
@@ -52,6 +54,13 @@ class CanvasComponentTest(
 
     @Test
     fun test() {
+        log(
+            tag = CanvasComponentTest::class.java.simpleName,
+            messageBuilder = { testData.testDescription },
+            logType = LogType.INFO,
+            shouldLog = true
+        )
+
         composeTestRule.setContent {
             CanvasComponent(
                 data = testData.data,
@@ -291,9 +300,9 @@ class CanvasComponentTest(
                             ),
                         )
                     }.flatten()
-            return allTestData.map { data ->
+            return allTestData.mapIndexed { i, data ->
                 arrayOf(
-                    data.testDescription,
+                    i.toString(),
                     data,
                 )
             }

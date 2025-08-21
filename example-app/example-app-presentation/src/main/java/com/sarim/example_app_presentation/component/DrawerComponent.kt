@@ -38,8 +38,8 @@ import com.sarim.example_app_presentation.component.DrawerComponentTestTags.DRAW
 import com.sarim.example_app_presentation.component.DrawerComponentTestTags.LAZY_COLUMN
 import com.sarim.example_app_presentation.component.DrawerComponentTestTags.SELECTED_NAVIGATION_DRAWER_ITEM
 import com.sarim.example_app_presentation.component.DrawerComponentTestTags.UNSELECTED_NAVIGATION_DRAWER_ITEM
-import com.sarim.utils.LogType
-import com.sarim.utils.log
+import com.sarim.utils.log.LogType
+import com.sarim.utils.log.log
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch

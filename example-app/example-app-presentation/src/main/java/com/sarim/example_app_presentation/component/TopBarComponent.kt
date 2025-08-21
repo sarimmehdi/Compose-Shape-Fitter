@@ -32,8 +32,8 @@ import com.sarim.example_app_presentation.component.TopBarComponentTestTags.FING
 import com.sarim.example_app_presentation.component.TopBarComponentTestTags.OPEN_DRAWER_ICON_BUTTON
 import com.sarim.example_app_presentation.component.TopBarComponentTestTags.SETTINGS_DROP_DOWN_MENU
 import com.sarim.example_app_presentation.component.TopBarComponentTestTags.SETTINGS_ICON_BUTTON
-import com.sarim.utils.LogType
-import com.sarim.utils.log
+import com.sarim.utils.log.LogType
+import com.sarim.utils.log.log
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

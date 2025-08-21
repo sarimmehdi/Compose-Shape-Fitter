@@ -1,4 +1,4 @@
-package com.sarim.utils
+package com.sarim.utils.ui
 
 sealed interface Resource<T> {
     data class Success<T>(

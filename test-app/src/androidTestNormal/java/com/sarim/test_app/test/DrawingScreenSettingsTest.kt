@@ -1,16 +1,15 @@
 package com.sarim.test_app.test
 
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.Until
 import com.google.common.truth.Truth.assertThat
 import com.sarim.example_app_presentation.component.TopBarComponentTestTags.APPROXIMATED_SHAPE
 import com.sarim.example_app_presentation.component.TopBarComponentTestTags.APPROXIMATED_SHAPE_TRAILING_ICON
 import com.sarim.example_app_presentation.component.TopBarComponentTestTags.FINGER_TRACED_LINES
 import com.sarim.example_app_presentation.component.TopBarComponentTestTags.FINGER_TRACED_LINES_TRAILING_ICON
 import com.sarim.example_app_presentation.component.TopBarComponentTestTags.SETTINGS_ICON_BUTTON
-import com.sarim.utils.startApp
+import com.sarim.utils.log.LogType
+import com.sarim.utils.log.log
+import com.sarim.utils.uiautomator.BaseUiAutomatorTestClass
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
@@ -32,32 +31,32 @@ internal data class TestDataDrawingScreenTest(
 internal class DrawingScreenSettingsTest(
     @Suppress("UNUSED_PARAMETER") private val testDescription: String,
     private val testData: TestDataDrawingScreenTest,
-) {
+) : BaseUiAutomatorTestClass(DrawingScreenSettingsTest::class.java.simpleName) {
     @Test
     fun test() {
-        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        device.startApp(pkg = "com.sarim.test_app", activityPkg = "com.sarim.test_app.TestActivity")
+        log(
+            tag = DrawingScreenSettingsTest::class.java.simpleName,
+            messageBuilder = { testData.testDescription },
+            logType = LogType.INFO,
+            shouldLog = true
+        )
 
-        device.wait(Until.hasObject(By.res(SETTINGS_ICON_BUTTON)), MAX_TIMEOUT)
-        device.findObject(By.res(SETTINGS_ICON_BUTTON)).click()
+        startApp(pkg = "com.sarim.test_app", activityPkg = "com.sarim.test_app.TestActivity")
+
+        safeFindObject(By.res(SETTINGS_ICON_BUTTON)).click()
 
         testData.enabledTestTags.forEach {
-            assertThat(
-                device.wait(Until.hasObject(By.res(it)), MAX_TIMEOUT),
-            ).isTrue()
+            assertThat(safeWaitForObject(By.res(it))).isTrue()
         }
 
         testData.disabledTestTags.forEach {
-            assertThat(
-                device.wait(Until.hasObject(By.res(it)), MAX_TIMEOUT),
-            ).isFalse()
+            assertThat(safeWaitForObject(By.res(it))).isFalse()
         }
 
-        device.findObject(By.res(testData.testTagToClickOn)).click()
+        safeFindObject(By.res(testData.testTagToClickOn)).click()
     }
 
     companion object {
-        private const val MAX_TIMEOUT = 10_000L
 
         @JvmStatic
         @Parameterized.Parameters(
@@ -120,9 +119,9 @@ internal class DrawingScreenSettingsTest(
                         ),
                     disabledTestTags = emptyList(),
                 ),
-            ).map { data ->
+            ).mapIndexed { i, data ->
                 arrayOf(
-                    data.testDescription,
+                    i.toString(),
                     data,
                 )
             }

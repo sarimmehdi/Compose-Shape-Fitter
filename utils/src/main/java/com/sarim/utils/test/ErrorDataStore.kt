@@ -1,4 +1,4 @@
-package com.sarim.utils
+package com.sarim.utils.test
 
 import androidx.datastore.core.DataStore
 import kotlinx.coroutines.flow.Flow

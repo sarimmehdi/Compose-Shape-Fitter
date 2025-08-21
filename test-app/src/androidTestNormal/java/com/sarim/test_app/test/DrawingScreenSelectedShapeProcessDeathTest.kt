@@ -3,22 +3,23 @@ package com.sarim.test_app.test
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.Until
+import androidx.test.uiautomator.UiScrollable
+import androidx.test.uiautomator.UiSelector
 import com.google.common.truth.Truth.assertThat
 import com.sarim.example_app_domain.model.Shape
+import com.sarim.example_app_presentation.component.DrawerComponentTestTags.LAZY_COLUMN
 import com.sarim.example_app_presentation.component.DrawerComponentTestTags.SELECTED_NAVIGATION_DRAWER_ITEM
 import com.sarim.example_app_presentation.component.DrawerComponentTestTags.UNSELECTED_NAVIGATION_DRAWER_ITEM
 import com.sarim.example_app_presentation.component.TopBarComponentTestTags.OPEN_DRAWER_ICON_BUTTON
-import com.sarim.utils.forceStopApp
-import com.sarim.utils.shuffleListExceptOne
-import com.sarim.utils.startApp
+import com.sarim.utils.list.shuffleListExceptOne
+import com.sarim.utils.uiautomator.BaseUiAutomatorTestClass
 import org.junit.Test
 import org.junit.runner.RunWith
 import kotlin.collections.zipWithNext
 
 @RunWith(AndroidJUnit4::class)
-internal class DrawingScreenSelectedShapeProcessDeathTest {
+internal class DrawingScreenSelectedShapeProcessDeathTest :
+    BaseUiAutomatorTestClass(DrawingScreenSelectedShapeProcessDeathTest::class.java.simpleName) {
 
     private data class TestData(
         val disabledTestTagsBeforeClicking: List<String>,
@@ -31,11 +32,13 @@ internal class DrawingScreenSelectedShapeProcessDeathTest {
     @Test
     @Suppress("LongMethod")
     fun test() {
-        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        device.startApp(pkg = "com.sarim.test_app", activityPkg = "com.sarim.test_app.TestActivity")
+        startApp(pkg = "com.sarim.test_app", activityPkg = "com.sarim.test_app.TestActivity")
 
-        device.wait(Until.hasObject(By.res(OPEN_DRAWER_ICON_BUTTON)), MAX_TIMEOUT)
-        device.findObject(By.res(OPEN_DRAWER_ICON_BUTTON)).click()
+        safeFindObject(By.res(OPEN_DRAWER_ICON_BUTTON)).click()
+        assertThat(safeWaitForObject(By.res(LAZY_COLUMN))).isTrue()
+        val lazyColumn = UiScrollable(UiSelector().resourceId(LAZY_COLUMN)).apply {
+            setAsVerticalList()
+        }
 
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         shuffleListExceptOne(Shape.entries.toMutableList(), 0)
@@ -59,57 +62,45 @@ internal class DrawingScreenSelectedShapeProcessDeathTest {
                 )
             }.forEach {
                 it.disabledTestTagsBeforeClicking.forEach { disabledTestTagBeforeClicking ->
+                    lazyColumn.scrollIntoView(UiSelector().resourceId(disabledTestTagBeforeClicking))
                     assertThat(
-                        device.wait(
-                            Until.hasObject(By.res(disabledTestTagBeforeClicking)),
-                            MAX_TIMEOUT
-                        ),
+                        safeWaitForObject(By.res(disabledTestTagBeforeClicking))
                     ).isTrue()
                 }
                 it.enabledTestTagsBeforeClicking.forEach { enabledTestTagBeforeClicking ->
+                    lazyColumn.scrollIntoView(UiSelector().resourceId(enabledTestTagBeforeClicking))
                     assertThat(
-                        device.wait(
-                            Until.hasObject(By.res(enabledTestTagBeforeClicking)),
-                            MAX_TIMEOUT
-                        ),
+                        safeWaitForObject(By.res(enabledTestTagBeforeClicking))
                     ).isTrue()
                 }
 
-                device.findObject(By.res(it.testTagToClickOn)).click()
+                lazyColumn.scrollIntoView(UiSelector().resourceId(it.testTagToClickOn))
+                safeFindObject(By.res(it.testTagToClickOn)).click()
 
                 device.pressHome()
-                device.forceStopApp(
+                forceStopApp(
                     pkg = "com.sarim.test_app",
                     activityPkg = "com.sarim.test_app.TestActivity"
                 )
-                device.startApp(
+                startApp(
                     pkg = "com.sarim.test_app",
                     activityPkg = "com.sarim.test_app.TestActivity"
                 )
 
-                device.wait(Until.hasObject(By.res(OPEN_DRAWER_ICON_BUTTON)), MAX_TIMEOUT)
-                device.findObject(By.res(OPEN_DRAWER_ICON_BUTTON)).click()
+                safeFindObject(By.res(OPEN_DRAWER_ICON_BUTTON)).click()
 
                 it.disabledTestTagsAfterClicking.forEach { disabledTestTagAfterClicking ->
+                    lazyColumn.scrollIntoView(UiSelector().resourceId(disabledTestTagAfterClicking))
                     assertThat(
-                        device.wait(
-                            Until.hasObject(By.res(disabledTestTagAfterClicking)),
-                            MAX_TIMEOUT
-                        ),
+                        safeWaitForObject(By.res(disabledTestTagAfterClicking))
                     ).isTrue()
                 }
                 it.enabledTestTagsAfterClicking.forEach { enabledTestTagAfterClicking ->
+                    lazyColumn.scrollIntoView(UiSelector().resourceId(enabledTestTagAfterClicking))
                     assertThat(
-                        device.wait(
-                            Until.hasObject(By.res(enabledTestTagAfterClicking)),
-                            MAX_TIMEOUT
-                        ),
+                        safeWaitForObject(By.res(enabledTestTagAfterClicking))
                     ).isTrue()
                 }
             }
-    }
-
-    companion object {
-        private const val MAX_TIMEOUT = 5000L
     }
 }

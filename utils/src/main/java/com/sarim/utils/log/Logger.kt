@@ -1,4 +1,4 @@
-package com.sarim.utils
+package com.sarim.utils.log
 
 import android.util.Log
 

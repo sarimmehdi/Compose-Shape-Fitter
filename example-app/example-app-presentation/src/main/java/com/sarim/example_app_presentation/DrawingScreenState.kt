@@ -14,8 +14,8 @@ import com.sarim.compose_shape_fitter.shape.SkewedEllipseShape
 import com.sarim.compose_shape_fitter.shape.SquareShape
 import com.sarim.compose_shape_fitter.shape.TriangleShape
 import com.sarim.example_app_domain.model.Shape
-import com.sarim.utils.OffsetPairParceler
-import com.sarim.utils.OffsetParceler
+import com.sarim.utils.parceler.OffsetPairParceler
+import com.sarim.utils.parceler.OffsetParceler
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList

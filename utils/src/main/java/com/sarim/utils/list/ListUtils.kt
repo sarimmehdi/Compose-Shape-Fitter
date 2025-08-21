@@ -1,4 +1,4 @@
-package com.sarim.utils
+package com.sarim.utils.list
 
 fun <T> shuffleListExceptOne(
     list: MutableList<T>,

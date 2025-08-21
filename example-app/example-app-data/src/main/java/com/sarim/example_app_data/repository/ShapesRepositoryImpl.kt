@@ -7,10 +7,10 @@ import com.sarim.example_app_data.R
 import com.sarim.example_app_data.dto.shape.ShapeDto
 import com.sarim.example_app_domain.model.Shape
 import com.sarim.example_app_domain.repository.ShapesRepository
-import com.sarim.utils.LogType
-import com.sarim.utils.MessageType
-import com.sarim.utils.Resource
-import com.sarim.utils.log
+import com.sarim.utils.log.LogType
+import com.sarim.utils.ui.MessageType
+import com.sarim.utils.ui.Resource
+import com.sarim.utils.log.log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map

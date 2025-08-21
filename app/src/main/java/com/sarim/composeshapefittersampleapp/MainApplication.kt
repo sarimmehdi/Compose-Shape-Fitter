@@ -3,7 +3,7 @@ package com.sarim.composeshapefittersampleapp
 import android.app.Application
 import com.sarim.example_app_di.ModuleType
 import com.sarim.example_app_di.drawingFeatureModules
-import com.sarim.utils.CustomKoinLogger
+import com.sarim.utils.koin.CustomKoinLogger
 import org.koin.android.ext.koin.androidContext
 import org.koin.androix.startup.KoinStartup
 import org.koin.core.annotation.KoinExperimentalAPI

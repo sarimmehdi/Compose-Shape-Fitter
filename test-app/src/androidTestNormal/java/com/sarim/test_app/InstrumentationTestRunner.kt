@@ -5,7 +5,7 @@ import android.content.Context
 import androidx.test.runner.AndroidJUnitRunner
 
 @Suppress("UNUSED_PARAMETER")
-internal class InstrumentationTestRunner : AndroidJUnitRunner() {
+class InstrumentationTestRunner : AndroidJUnitRunner() {
     override fun newApplication(
         classLoader: ClassLoader?,
         className: String?,

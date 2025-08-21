@@ -1,4 +1,4 @@
-package com.sarim.utils
+package com.sarim.utils.ui
 
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow

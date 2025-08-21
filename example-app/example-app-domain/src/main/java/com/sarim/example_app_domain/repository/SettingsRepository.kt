@@ -1,7 +1,7 @@
 package com.sarim.example_app_domain.repository
 
 import com.sarim.example_app_domain.model.Settings
-import com.sarim.utils.Resource
+import com.sarim.utils.ui.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface SettingsRepository {

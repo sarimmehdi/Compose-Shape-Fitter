@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.androidApplicationPlugin)
     alias(libs.plugins.kotlinAndroidPlugin)
     alias(libs.plugins.kotlinComposePlugin)
+    alias(libs.plugins.conventionPluginGordonId)
 }
 
 android {
@@ -12,6 +13,8 @@ android {
         applicationId = "com.sarim.test_app"
         minSdk = 26
         targetSdk = 36
+        versionCode = 1
+        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

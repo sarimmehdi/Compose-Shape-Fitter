@@ -1,23 +1,20 @@
 package com.sarim.test_app.test
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.Until
 import com.google.common.truth.Truth.assertThat
 import com.sarim.example_app_presentation.component.TopBarComponentTestTags.APPROXIMATED_SHAPE
 import com.sarim.example_app_presentation.component.TopBarComponentTestTags.APPROXIMATED_SHAPE_TRAILING_ICON
 import com.sarim.example_app_presentation.component.TopBarComponentTestTags.FINGER_TRACED_LINES
 import com.sarim.example_app_presentation.component.TopBarComponentTestTags.FINGER_TRACED_LINES_TRAILING_ICON
 import com.sarim.example_app_presentation.component.TopBarComponentTestTags.SETTINGS_ICON_BUTTON
-import com.sarim.utils.forceStopApp
-import com.sarim.utils.startApp
+import com.sarim.utils.uiautomator.BaseUiAutomatorTestClass
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-internal class DrawingScreenSettingsProcessDeathTest {
+internal class DrawingScreenSettingsProcessDeathTest
+    : BaseUiAutomatorTestClass(DrawingScreenSettingsProcessDeathTest::class.java.simpleName) {
 
     private data class TestData(
         val testTagToVerifyBeforeClicking1: Pair<String, Boolean>,
@@ -30,11 +27,9 @@ internal class DrawingScreenSettingsProcessDeathTest {
     @Test
     @Suppress("LongMethod")
     fun test() {
-        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        device.startApp(pkg = "com.sarim.test_app", activityPkg = "com.sarim.test_app.TestActivity")
+        startApp(pkg = "com.sarim.test_app", activityPkg = "com.sarim.test_app.TestActivity")
 
-        device.wait(Until.hasObject(By.res(SETTINGS_ICON_BUTTON)), MAX_TIMEOUT)
-        device.findObject(By.res(SETTINGS_ICON_BUTTON)).click()
+        safeFindObject(By.res(SETTINGS_ICON_BUTTON)).click()
 
         listOf(
             TestData(
@@ -67,7 +62,7 @@ internal class DrawingScreenSettingsProcessDeathTest {
             )
         ).forEach {
             assertThat(
-                device.wait(Until.hasObject(By.res(it.testTagToVerifyBeforeClicking1.first)), MAX_TIMEOUT),
+                safeWaitForObject(By.res(it.testTagToVerifyBeforeClicking1.first)),
             ).apply {
                 if (it.testTagToVerifyBeforeClicking1.second) {
                     isTrue()
@@ -76,7 +71,7 @@ internal class DrawingScreenSettingsProcessDeathTest {
                 }
             }
             assertThat(
-                device.wait(Until.hasObject(By.res(it.testTagToVerifyBeforeClicking2.first)), MAX_TIMEOUT),
+                safeWaitForObject(By.res(it.testTagToVerifyBeforeClicking2.first)),
             ).apply {
                 if (it.testTagToVerifyBeforeClicking2.second) {
                     isTrue()
@@ -84,14 +79,14 @@ internal class DrawingScreenSettingsProcessDeathTest {
                     isFalse()
                 }
             }
-            device.findObject(By.res(it.testTagToClickOn)).click()
+            safeFindObject(By.res(it.testTagToClickOn)).click()
 
             device.pressHome()
-            device.forceStopApp(pkg = "com.sarim.test_app", activityPkg = "com.sarim.test_app.TestActivity")
-            device.startApp(pkg = "com.sarim.test_app", activityPkg = "com.sarim.test_app.TestActivity")
+            forceStopApp(pkg = "com.sarim.test_app", activityPkg = "com.sarim.test_app.TestActivity")
+            startApp(pkg = "com.sarim.test_app", activityPkg = "com.sarim.test_app.TestActivity")
 
             assertThat(
-                device.wait(Until.hasObject(By.res(it.testTagToVerifyAfterClicking1.first)), MAX_TIMEOUT),
+                safeWaitForObject(By.res(it.testTagToVerifyAfterClicking1.first)),
             ).apply {
                 if (it.testTagToVerifyAfterClicking1.second) {
                     isTrue()
@@ -100,7 +95,7 @@ internal class DrawingScreenSettingsProcessDeathTest {
                 }
             }
             assertThat(
-                device.wait(Until.hasObject(By.res(it.testTagToVerifyAfterClicking2.first)), MAX_TIMEOUT),
+                safeWaitForObject(By.res(it.testTagToVerifyAfterClicking2.first)),
             ).apply {
                 if (it.testTagToVerifyAfterClicking2.second) {
                     isTrue()
@@ -109,9 +104,5 @@ internal class DrawingScreenSettingsProcessDeathTest {
                 }
             }
         }
-    }
-
-    companion object {
-        private const val MAX_TIMEOUT = 5000L
     }
 }

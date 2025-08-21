@@ -13,7 +13,8 @@ class JacocoConventionPlugin : Plugin<Project> {
     private val jacocoEnabledModules = listOf(
         ":example-app:example-app-data",
         ":example-app:example-app-domain",
-        ":example-app:example-app-presentation"
+        ":example-app:example-app-presentation",
+        ":test-app"
     )
 
     private val fileFilter =
@@ -110,9 +111,12 @@ class JacocoConventionPlugin : Plugin<Project> {
                     ":example-app:example-app-data:testDebugUnitTest",
                     ":example-app:example-app-domain:testDebugUnitTest",
                     ":example-app:example-app-presentation:testDebugUnitTest",
+                    ":example-app:example-app-presentation:connectedDebugAndroidTest",
+                    ":test-app:connectedNormalDebugAndroidTest",
+                    ":test-app:connectedErrorDebugAndroidTest",
                     ":example-app:example-app-data:createDebugCoverageReport",
                     ":example-app:example-app-domain:createDebugCoverageReport",
-                    ":example-app:example-app-presentation:createDebugCoverageReport"
+                    ":example-app:example-app-presentation:createDebugCoverageReport",
                 )
 
                 reports {
@@ -136,12 +140,14 @@ class JacocoConventionPlugin : Plugin<Project> {
                     },
                 )
                 executionData.setFrom(
-                    fileTree(layout.buildDirectory.dir("outputs/unit_test_code_coverage/debugUnitTest")) {
-                        include("*.exec")
-                    },
-                    fileTree(layout.buildDirectory.dir("outputs/code_coverage/debugAndroidTest/connected/")) {
-                        include("**/*.ec")
-                    },
+                    jacocoEnabledModules
+                        .mapNotNull { project.findProject(it) }
+                        .flatMap { module ->
+                            listOf(
+                                module.layout.buildDirectory.file("outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec").get().asFile,
+                                module.layout.buildDirectory.dir("outputs/code_coverage/debugAndroidTest/connected").get().asFile
+                            )
+                        }
                 )
             } else {
                 enabled = false

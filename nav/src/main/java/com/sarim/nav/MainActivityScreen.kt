@@ -21,8 +21,8 @@ import com.sarim.example_app_presentation.DrawingScreen
 import com.sarim.example_app_presentation.DrawingScreenData
 import com.sarim.example_app_presentation.DrawingScreenNavigationDestination
 import com.sarim.example_app_presentation.DrawingScreenViewModel
-import com.sarim.utils.ObserveAsEvents
-import com.sarim.utils.SnackBarController
+import com.sarim.utils.ui.ObserveAsEvents
+import com.sarim.utils.ui.SnackBarController
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.getKoin

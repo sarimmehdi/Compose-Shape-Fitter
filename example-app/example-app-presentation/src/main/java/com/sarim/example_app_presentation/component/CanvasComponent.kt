@@ -17,8 +17,8 @@ import com.sarim.compose_shape_fitter.shape.CircleShape
 import com.sarim.compose_shape_fitter.shape.DrawableShape
 import com.sarim.example_app_presentation.DrawingScreenToViewModelEvents
 import com.sarim.example_app_presentation.component.CanvasComponentTestTags.CANVAS_COMPONENT
-import com.sarim.utils.LogType
-import com.sarim.utils.log
+import com.sarim.utils.log.LogType
+import com.sarim.utils.log.log
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 

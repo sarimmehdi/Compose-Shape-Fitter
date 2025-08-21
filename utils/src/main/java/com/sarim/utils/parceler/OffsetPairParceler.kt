@@ -1,4 +1,4 @@
-package com.sarim.utils
+package com.sarim.utils.parceler
 
 import android.os.Parcel
 import androidx.compose.ui.geometry.Offset

@@ -14,6 +14,8 @@ import com.sarim.compose_shape_fitter.shape.SquareShape
 import com.sarim.compose_shape_fitter.shape.TriangleShape
 import com.sarim.example_app_domain.model.Shape
 import com.sarim.example_app_presentation.DEFAULT_STROKE_WIDTH
+import com.sarim.utils.test.generateEllipsePoints
+import com.sarim.utils.test.generatePolygonPoints
 
 internal fun getDrawableShapeFromShape(shape: Shape) =
     when (shape) {
