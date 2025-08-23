@@ -12,11 +12,15 @@ import com.sarim.utils.uiautomator.BaseUiAutomatorTestClass
 
 @RunWith(AndroidJUnit4::class)
 internal class DrawingScreenSnackbarTest :
-    BaseUiAutomatorTestClass(DrawingScreenSnackbarTest::class.java.simpleName) {
+    BaseUiAutomatorTestClass(
+        pkg = "com.sarim.test_app",
+        activityPkg = "com.sarim.test_app.TestActivity",
+        logTag = DrawingScreenSnackbarTest::class.java.simpleName
+    ) {
     @Test
     fun testDismissSnackbar() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
-        startApp(pkg = "com.sarim.test_app", activityPkg = "com.sarim.test_app.TestActivity")
+        startApp()
 
         assertThat(
             safeWaitForObject(

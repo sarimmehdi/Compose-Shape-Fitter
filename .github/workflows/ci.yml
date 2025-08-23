@@ -149,7 +149,17 @@ jobs:
           arch: x86_64
           profile: Pixel 6 Pro
           script: |
-            ./gradlew gordon gordonError gordonNormal
+            echo "Starting Gordon All tests..."
+            ./gradlew gordon
+            echo "Gordon All tests finished."
+            
+            echo "Starting Gordon Error Flavor tests..."
+            ./gradlew gordonError
+            echo "Gordon Error Flavor tests finished."
+            
+            echo "Starting Gordon Normal Flavor tests..."
+            ./gradlew gordonNormal
+            echo "Gordon Normal Flavor tests finished."
 
       - name: Upload Gordon Test Results
         if: always()
@@ -280,7 +290,7 @@ jobs:
 
 
       - name: Generate Combined JaCoCo Report
-        run: ./gradlew jacocoAggregatedReport -PdisableTestReuse=true --info
+        run: ./gradlew jacocoAggregatedReport
 
       - name: Upload JaCoCo Report
         uses: actions/upload-artifact@v4.6.2

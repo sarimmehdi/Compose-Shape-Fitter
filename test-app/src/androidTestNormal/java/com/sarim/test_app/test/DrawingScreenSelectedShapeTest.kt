@@ -33,7 +33,11 @@ internal data class TestDataDrawingScreenSelectedShapeTest(
 internal class DrawingScreenSelectedShapeTest(
     @Suppress("UNUSED_PARAMETER") private val testDescription: String,
     private val testData: TestDataDrawingScreenSelectedShapeTest,
-) : BaseUiAutomatorTestClass(DrawingScreenSelectedShapeTest::class.java.simpleName) {
+) : BaseUiAutomatorTestClass(
+    pkg = "com.sarim.test_app",
+    activityPkg = "com.sarim.test_app.TestActivity",
+    logTag = DrawingScreenSelectedShapeTest::class.java.simpleName
+) {
     @Test
     fun test() {
         log(
@@ -43,7 +47,7 @@ internal class DrawingScreenSelectedShapeTest(
             shouldLog = true
         )
 
-        startApp(pkg = "com.sarim.test_app", activityPkg = "com.sarim.test_app.TestActivity")
+        startApp()
 
         safeFindObject(By.res(OPEN_DRAWER_ICON_BUTTON)).click()
         assertThat(safeWaitForObject(By.res(LAZY_COLUMN))).isTrue()

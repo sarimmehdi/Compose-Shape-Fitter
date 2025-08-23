@@ -23,11 +23,15 @@ android {
     productFlavors {
         create("normal") {
             dimension = "test"
-            testInstrumentationRunner = "com.sarim.test_app.InstrumentationTestRunner"
+            testInstrumentationRunner = "com.sarim.test_app.InstrumentationTestNormalRunner"
         }
         create("error") {
             dimension = "test"
             testInstrumentationRunner = "com.sarim.test_app.InstrumentationTestErrorRunner"
+        }
+        all {
+            testOptions.animationsDisabled = true
+            testOptions.execution = "ANDROIDX_TEST_ORCHESTRATOR"
         }
     }
 
@@ -77,8 +81,12 @@ dependencies {
     androidTestImplementation(platform(libs.androidxComposeBomLibrary))
     androidTestImplementation(libs.composeJunit4Library)
     androidTestImplementation(libs.bundles.androidTestBundle)
+    androidTestImplementation(libs.bundles.dataStorageBundle)
     androidTestImplementation(project(":example-app:example-app-di"))
+    androidTestImplementation(project(":example-app:example-app-data"))
     androidTestImplementation(project(":example-app:example-app-domain"))
     androidTestImplementation(project(":example-app:example-app-presentation"))
     androidTestImplementation(project(":compose-shape-fitter"))
+
+    androidTestUtil(libs.androidXTestOrchestratorLibrary)
 }

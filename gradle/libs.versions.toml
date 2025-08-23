@@ -22,6 +22,7 @@ kotestVersion = "6.0.0.M17"
 mockkVersion = "1.14.5"
 turbineVersion = "1.2.1"
 androidXTestRunnerVersion = "1.7.0"
+androidXTestOrchestratorVersion = "1.6.1"
 androidXTestJUnitVersion = "1.3.0"
 gordonVersion = "1.12.2"
 uiAutomatorVersion = "2.3.0"
@@ -56,6 +57,7 @@ mockkAndroidLibrary = { group = "io.mockk", name = "mockk-android", version.ref 
 mockkAgentLibrary = { group = "io.mockk", name = "mockk-agent", version.ref = "mockkVersion" }
 turbineLibrary = { group = "app.cash.turbine", name = "turbine", version.ref = "turbineVersion" }
 androidXTestRunnerLibrary = { group = "androidx.test", name = "runner", version.ref = "androidXTestRunnerVersion" }
+androidXTestOrchestratorLibrary = { group = "androidx.test", name = "orchestrator", version.ref = "androidXTestOrchestratorVersion" }
 androidXTestJUnitLibrary = { group = "androidx.test.ext", name = "junit", version.ref = "androidXTestJUnitVersion" }
 gordonPluginLibrary = { group = "com.banno.gordon", name = "gordon-plugin", version.ref = "gordonVersion" }
 uiAutomatorLibrary = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiAutomatorVersion" }

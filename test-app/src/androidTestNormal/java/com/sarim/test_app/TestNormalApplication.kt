@@ -12,18 +12,18 @@ import org.koin.core.logger.Level
 import org.koin.dsl.koinConfiguration
 
 @OptIn(KoinExperimentalAPI::class)
-class TestApplication :
+class TestNormalApplication :
     Application(),
     KoinStartup {
     override fun onKoinStartup() =
         koinConfiguration {
             logger(
                 CustomKoinLogger(
-                    tag = TestApplication::class.java.simpleName,
+                    tag = TestNormalApplication::class.java.simpleName,
                     level = Level.DEBUG
                 )
             )
-            androidContext(this@TestApplication)
+            androidContext(this@TestNormalApplication)
             lazyModules(drawingFeatureModules(ModuleType.TEST))
         }
 }

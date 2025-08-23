@@ -31,7 +31,11 @@ internal data class TestDataDrawingScreenTest(
 internal class DrawingScreenSettingsTest(
     @Suppress("UNUSED_PARAMETER") private val testDescription: String,
     private val testData: TestDataDrawingScreenTest,
-) : BaseUiAutomatorTestClass(DrawingScreenSettingsTest::class.java.simpleName) {
+) : BaseUiAutomatorTestClass(
+    pkg = "com.sarim.test_app",
+    activityPkg = "com.sarim.test_app.TestActivity",
+    logTag = DrawingScreenSettingsTest::class.java.simpleName
+) {
     @Test
     fun test() {
         log(
@@ -41,7 +45,7 @@ internal class DrawingScreenSettingsTest(
             shouldLog = true
         )
 
-        startApp(pkg = "com.sarim.test_app", activityPkg = "com.sarim.test_app.TestActivity")
+        startApp()
 
         safeFindObject(By.res(SETTINGS_ICON_BUTTON)).click()
 

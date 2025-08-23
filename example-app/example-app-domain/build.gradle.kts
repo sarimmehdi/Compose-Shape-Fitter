@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.androidLibraryPlugin)
     alias(libs.plugins.kotlinAndroidPlugin)
     alias(libs.plugins.conventionPluginJacocoId)
+    alias(libs.plugins.sonarPlugin)
 }
 
 android {

@@ -11,7 +11,11 @@ import com.sarim.utils.log.log
 import org.junit.After
 import org.junit.Before
 
-open class BaseUiAutomatorTestClass(private val logTag: String) {
+open class BaseUiAutomatorTestClass(
+    private val pkg: String,
+    private val activityPkg: String,
+    private val logTag: String,
+) {
 
     protected lateinit var device: UiDevice
 
@@ -31,15 +35,7 @@ open class BaseUiAutomatorTestClass(private val logTag: String) {
         device.executeShellCommand("settings put global animator_duration_scale 1")
     }
 
-    fun startApp(
-        pkg: String,
-        activityPkg: String
-    ) = device.executeShellCommand("am start -n $pkg/$activityPkg")
-
-    fun forceStopApp(
-        pkg: String,
-        activityPkg: String
-    ) = device.executeShellCommand("am force-stop $pkg/$activityPkg")
+    fun startApp() = device.executeShellCommand("am start -n $pkg/$activityPkg")
 
     fun safeFindObject(selector: BySelector): UiObject2 {
         val obj = device.wait(Until.findObject(selector), MAX_TIMEOUT)

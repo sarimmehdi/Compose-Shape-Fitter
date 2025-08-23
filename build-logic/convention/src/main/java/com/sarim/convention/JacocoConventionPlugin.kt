@@ -10,69 +10,28 @@ import org.gradle.testing.jacoco.plugins.JacocoPluginExtension
 import org.gradle.testing.jacoco.tasks.JacocoReport
 
 class JacocoConventionPlugin : Plugin<Project> {
-    private val jacocoEnabledModules = listOf(
-        ":example-app:example-app-data",
-        ":example-app:example-app-domain",
-        ":example-app:example-app-presentation",
-        ":test-app"
+    private val jacocoIncludePatterns = listOf(
+        "**/*Dto.class",
+        "**/*DtoSerializer.class",
+        "**/*RepositoryImpl.class",
+        "**/model/**/*.class",
+        "**/*Repository.class",
+        "**/*UseCase.class",
+        "**/*Screen.class",
+        "**/*ScreenState.class",
+        "**/*ScreenToViewModelEvents.class",
+        "**/*UseCases.class",
+        "**/*ViewModel.class",
+        "**/*Component.class"
     )
-
-    private val fileFilter =
-        listOf(
-            "**/R.class",
-            "**/R$*.class",
-            "**/Manifest*.*",
-            "**/BuildConfig.class",
-            "**/*Test.class",
-            "**/*Test$*.class",
-            "**/*Tests.class",
-            "**/*Tests$*.class",
-            "**/*UnitTest.class",
-            "**/*UnitTest$*.class",
-            "**/*InstrumentedTest.class",
-            "**/*InstrumentedTest$*.class",
-            "**/*Spec.class",
-            "**/*Spec$*.class",
-            "android/**/*.*",
-            "androidx/**/*.*",
-            "com/android/**/*.*",
-            "com/google/android/material/**/*.*",
-            "kotlinx/**/*.*",
-            "kotlin/coroutines/**/*.*",
-            "java/**/*.*",
-            "javax/**/*.*",
-            "org/intellij/lang/annotations/**/*.*",
-            "org/jetbrains/annotations/**/*.*",
-            "**/*ComposableSingletons*.*",
-            "**/*Kt$ années*.*",
-            "**/*Kt$*.class",
-            "**/databinding/*Binding.class",
-            "androidx/databinding/**/*.*",
-            "**/*\$ViewInjector*.*",
-            "**/*\$ViewBinder*.*",
-            "**/*Module.class",
-            "**/*Module$*.class",
-            "**/$*$.class",
-            "timber/**/*.*",
-            "com/jakewharton/timber/**/*.*",
-            "org/mockito/**/*.*",
-            "io/mockk/**/*.*",
-            "**/*\$MockitoMock*$.class",
-            "**/*\$MockK*.class",
-        )
 
     override fun apply(target: Project) {
         with(target) {
             val jacocoToolVersion = libs.versions.jacocoVersion.get()
             if (target == target.rootProject) {
                 configureAggregatedReport(jacocoToolVersion)
-            } else if (target.path in jacocoEnabledModules) {
-                configureJacocoForSubproject(jacocoToolVersion)
             } else {
-                target.logger.error(
-                    "JacocoConventionPlugin: Skipping JaCoCo configuration for ${target.path} " +
-                            "as it's not in the jacocoEnabledModules list: $jacocoEnabledModules"
-                )
+                configureJacocoForSubproject(jacocoToolVersion)
             }
         }
     }
@@ -103,51 +62,60 @@ class JacocoConventionPlugin : Plugin<Project> {
             group = "verification"
             description = "Generates JaCoCo code coverage reports for the debug build."
 
-            val projectsToInclude = jacocoEnabledModules
-                .mapNotNull { project.findProject(it) }
+            val projectsToInclude = subprojects.filter { subproject ->
+                subproject.plugins.hasPlugin("jacoco")
+            }
 
             if (projectsToInclude.isNotEmpty()) {
-                dependsOn(
-                    ":example-app:example-app-data:testDebugUnitTest",
-                    ":example-app:example-app-domain:testDebugUnitTest",
-                    ":example-app:example-app-presentation:testDebugUnitTest",
-                    ":example-app:example-app-presentation:connectedDebugAndroidTest",
-                    ":test-app:connectedNormalDebugAndroidTest",
-                    ":test-app:connectedErrorDebugAndroidTest",
-                    ":example-app:example-app-data:createDebugCoverageReport",
-                    ":example-app:example-app-domain:createDebugCoverageReport",
-                    ":example-app:example-app-presentation:createDebugCoverageReport",
-                )
-
+                logger.lifecycle("JacocoAggregatedReport: Will aggregate coverage for projects: " +
+                        "${projectsToInclude.map { it.path }}")
                 reports {
                     html.required.set(true)
                     xml.required.set(true)
                     csv.required.set(false)
                 }
 
-                val mainSrc = "${project.projectDir}/src/main/java"
-                val kotlinSrc = "${project.projectDir}/src/main/kotlin"
-                sourceDirectories.setFrom(
-                    rootProject.files(mainSrc, kotlinSrc).filter { it.exists() })
+                sourceDirectories.setFrom(files(projectsToInclude.map { module ->
+                    listOf(
+                        module.layout.projectDirectory.dir("src/main/java"),
+                        module.layout.projectDirectory.dir("src/main/kotlin")
+                    )
+                }))
 
-                val kotlinClassesDirProvider =
-                    rootProject.layout.buildDirectory.dir("tmp/kotlin-classes/debug")
-                classDirectories.from(
-                    kotlinClassesDirProvider.map { dir ->
-                        project.fileTree(dir) {
-                            exclude(fileFilter)
+                classDirectories.setFrom(
+                    projectsToInclude.map { module ->
+                        val kotlinClassesDir = module.layout.buildDirectory.dir("tmp/kotlin-classes/debug")
+                        module.fileTree(kotlinClassesDir) {
+                            include(jacocoIncludePatterns)
                         }
-                    },
+                    }
                 )
                 executionData.setFrom(
-                    jacocoEnabledModules
-                        .mapNotNull { project.findProject(it) }
-                        .flatMap { module ->
-                            listOf(
-                                module.layout.buildDirectory.file("outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec").get().asFile,
-                                module.layout.buildDirectory.dir("outputs/code_coverage/debugAndroidTest/connected").get().asFile
-                            )
+                    projectsToInclude.flatMap { module ->
+                        val unitTestExecFile = module.layout.buildDirectory.file(
+                            "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"
+                        ).orNull?.asFile
+                        val androidTestCoverageDir = module.layout.buildDirectory.dir(
+                            "outputs/code_coverage/debugAndroidTest/connected"
+                        ).orNull?.asFile
+
+                        val filesToInclude = mutableListOf<Any>()
+                        if (unitTestExecFile?.exists() == true) {
+                            filesToInclude.add(unitTestExecFile)
                         }
+                        if (androidTestCoverageDir?.exists() == true && androidTestCoverageDir.isDirectory) {
+                            filesToInclude.add(module.fileTree(androidTestCoverageDir) {
+                                include("**/*.ec")
+                            })
+                        }
+                        filesToInclude
+                    }.filter {
+                        when (it) {
+                            is java.io.File -> it.exists()
+                            is org.gradle.api.file.FileTree -> !it.isEmpty
+                            else -> false
+                        }
+                    }
                 )
             } else {
                 enabled = false
