@@ -12,8 +12,6 @@ import org.gradle.testing.jacoco.tasks.JacocoReport
 class JacocoConventionPlugin : Plugin<Project> {
     private val jacocoIncludePatterns = listOf(
         "**/*Dto.class",
-        "**/*DtoSerializer.class",
-        "**/*RepositoryImpl.class",
         "**/model/**/*.class",
         "**/*Repository.class",
         "**/*UseCase.class",

@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.kotlinSerializationPlugin)
     alias(libs.plugins.conventionPluginJacocoId)
     alias(libs.plugins.conventionPluginGordonId)
-    alias(libs.plugins.sonarPlugin)
     id("kotlin-parcelize")
 }
 

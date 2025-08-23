@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.kotlinAndroidPlugin)
     alias(libs.plugins.kotlinSerializationPlugin)
     alias(libs.plugins.conventionPluginJacocoId)
-    alias(libs.plugins.sonarPlugin)
 }
 
 android {

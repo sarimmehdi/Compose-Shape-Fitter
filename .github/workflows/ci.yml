@@ -299,6 +299,46 @@ jobs:
           path: build/reports/jacoco/jacocoAggregatedReport/html/
           if-no-files-found: error
           retention-days: 7
+  sonarcloud_analysis:
+    name: SonarCloud Analysis
+    runs-on: ubuntu-latest
+    needs: [ jacoco_report ]
+    steps:
+      - name: Setup Common Environment
+        uses: ./.github/actions/setup-environment
+
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      - name: Run SonarCloud Analysis
+        run: ./gradlew sonar \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
+          -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+          -Dsonar.pullrequest.key=${{ github.event.pull_request.number }} \
+          -Dsonar.pullrequest.branch=${{ github.event.pull_request.head.ref }} \
+          -Dsonar.pullrequest.base=${{ github.event.pull_request.base.ref }} \
+          -Dsonar.scm.revision=${{ github.sha }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   publish:
     name: Release build and publish
     runs-on: macOS-latest
