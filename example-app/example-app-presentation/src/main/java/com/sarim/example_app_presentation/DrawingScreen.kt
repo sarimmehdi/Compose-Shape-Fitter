@@ -38,12 +38,13 @@ fun DrawingScreen(
         snackbarHost = {
             SnackbarHost(
                 hostState = data.snackbarHostState,
-                modifier = Modifier
-                    .semantics { testTagsAsResourceId = true }
-                    .testTag(SNACKBAR)
+                modifier =
+                    Modifier
+                        .semantics { testTagsAsResourceId = true }
+                        .testTag(SNACKBAR),
             )
         },
-        modifier = modifier
+        modifier = modifier,
     ) { padding ->
         ModalNavigationDrawer(
             drawerState = data.drawerState,
@@ -60,7 +61,7 @@ fun DrawingScreen(
                     )
                 }
             },
-            modifier = Modifier.padding(padding)
+            modifier = Modifier.padding(padding),
         ) {
             Scaffold(
                 topBar = {

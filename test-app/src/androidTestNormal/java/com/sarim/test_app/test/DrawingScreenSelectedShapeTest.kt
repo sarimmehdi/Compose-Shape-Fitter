@@ -34,26 +34,27 @@ internal class DrawingScreenSelectedShapeTest(
     @Suppress("UNUSED_PARAMETER") private val testDescription: String,
     private val testData: TestDataDrawingScreenSelectedShapeTest,
 ) : BaseUiAutomatorTestClass(
-    pkg = "com.sarim.test_app",
-    activityPkg = "com.sarim.test_app.TestActivity",
-    logTag = DrawingScreenSelectedShapeTest::class.java.simpleName
-) {
+        pkg = "com.sarim.test_app",
+        activityPkg = "com.sarim.test_app.TestActivity",
+        logTag = DrawingScreenSelectedShapeTest::class.java.simpleName,
+    ) {
     @Test
     fun test() {
         log(
             tag = DrawingScreenSelectedShapeTest::class.java.simpleName,
             messageBuilder = { testData.testDescription },
             logType = LogType.INFO,
-            shouldLog = true
+            shouldLog = true,
         )
 
         startApp()
 
         safeFindObject(By.res(OPEN_DRAWER_ICON_BUTTON)).click()
         assertThat(safeWaitForObject(By.res(LAZY_COLUMN))).isTrue()
-        val lazyColumn = UiScrollable(UiSelector().resourceId(LAZY_COLUMN)).apply {
-            setAsVerticalList()
-        }
+        val lazyColumn =
+            UiScrollable(UiSelector().resourceId(LAZY_COLUMN)).apply {
+                setAsVerticalList()
+            }
 
         testData.enabledTestTags.forEach {
             lazyColumn.scrollIntoView(UiSelector().resourceId(it))
@@ -70,7 +71,6 @@ internal class DrawingScreenSelectedShapeTest(
     }
 
     companion object {
-
         @JvmStatic
         @Parameterized.Parameters(
             name = "{0}",

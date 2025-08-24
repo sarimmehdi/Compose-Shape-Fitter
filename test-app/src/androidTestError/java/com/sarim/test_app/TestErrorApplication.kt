@@ -20,8 +20,8 @@ class TestErrorApplication :
             logger(
                 CustomKoinLogger(
                     tag = TestErrorApplication::class.java.simpleName,
-                    level = Level.DEBUG
-                )
+                    level = Level.DEBUG,
+                ),
             )
             androidContext(this@TestErrorApplication)
             lazyModules(drawingFeatureModules(ModuleType.TEST_ERROR))

@@ -60,7 +60,7 @@ internal class DrawingScreenPreviewType1ScreenshotTest(
                             testData.data.snackbarHostState.showSnackbar(
                                 message = "Error",
                                 actionLabel = "Dismiss",
-                                duration = SnackbarDuration.Short
+                                duration = SnackbarDuration.Short,
                             )
                         }
                     }

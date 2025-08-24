@@ -32,17 +32,17 @@ internal class DrawingScreenSettingsTest(
     @Suppress("UNUSED_PARAMETER") private val testDescription: String,
     private val testData: TestDataDrawingScreenTest,
 ) : BaseUiAutomatorTestClass(
-    pkg = "com.sarim.test_app",
-    activityPkg = "com.sarim.test_app.TestActivity",
-    logTag = DrawingScreenSettingsTest::class.java.simpleName
-) {
+        pkg = "com.sarim.test_app",
+        activityPkg = "com.sarim.test_app.TestActivity",
+        logTag = DrawingScreenSettingsTest::class.java.simpleName,
+    ) {
     @Test
     fun test() {
         log(
             tag = DrawingScreenSettingsTest::class.java.simpleName,
             messageBuilder = { testData.testDescription },
             logType = LogType.INFO,
-            shouldLog = true
+            shouldLog = true,
         )
 
         startApp()
@@ -61,7 +61,6 @@ internal class DrawingScreenSettingsTest(
     }
 
     companion object {
-
         @JvmStatic
         @Parameterized.Parameters(
             name = "{0}",

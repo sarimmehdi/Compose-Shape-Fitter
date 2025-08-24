@@ -8,9 +8,9 @@ import com.sarim.example_app_data.dto.shape.ShapeDto
 import com.sarim.example_app_domain.model.Shape
 import com.sarim.example_app_domain.repository.ShapesRepository
 import com.sarim.utils.log.LogType
+import com.sarim.utils.log.log
 import com.sarim.utils.ui.MessageType
 import com.sarim.utils.ui.Resource
-import com.sarim.utils.log.log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -20,29 +20,32 @@ class ShapesRepositoryImpl(
     private val dataStoreName: String,
 ) : ShapesRepository {
     override val selectedShape: Flow<Resource<Shape>>
-        get() = dataStore.data.map {
-            log(
-                tag = ShapesRepositoryImpl::class.java.simpleName,
-                messageBuilder = {
-                    "shapeDto = $it, selectedShapeType = ${it.selectedShapeType}"
-                },
-                logType = LogType.INFO,
-                shouldLog = BuildConfig.DEBUG,
-            )
-            Resource.Success(it.selectedShapeType) as Resource<Shape>
-        }.catch { e ->
-            emit(
-                Resource.Error(
-                    message =
-                        e.localizedMessage?.let {
-                            MessageType.StringMessage(it)
-                        } ?: MessageType.IntMessage(
-                            R.string.unknown_reason_read_exception,
-                            dataStoreName, e
+        get() =
+            dataStore.data
+                .map {
+                    log(
+                        tag = ShapesRepositoryImpl::class.java.simpleName,
+                        messageBuilder = {
+                            "shapeDto = $it, selectedShapeType = ${it.selectedShapeType}"
+                        },
+                        logType = LogType.INFO,
+                        shouldLog = BuildConfig.DEBUG,
+                    )
+                    Resource.Success(it.selectedShapeType) as Resource<Shape>
+                }.catch { e ->
+                    emit(
+                        Resource.Error(
+                            message =
+                                e.localizedMessage?.let {
+                                    MessageType.StringMessage(it)
+                                } ?: MessageType.IntMessage(
+                                    R.string.unknown_reason_read_exception,
+                                    dataStoreName,
+                                    e,
+                                ),
                         ),
-                )
-            )
-        }
+                    )
+                }
 
     override suspend fun updateSelectedShape(selectedShape: Shape) =
         try {
@@ -67,7 +70,8 @@ class ShapesRepositoryImpl(
                         MessageType.StringMessage(it)
                     } ?: MessageType.IntMessage(
                         R.string.unknown_reason_write_exception,
-                        dataStoreName, e
+                        dataStoreName,
+                        e,
                     ),
             )
         } catch (

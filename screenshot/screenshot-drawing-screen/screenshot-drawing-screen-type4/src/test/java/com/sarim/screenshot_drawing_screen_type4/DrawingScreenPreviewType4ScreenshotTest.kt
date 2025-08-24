@@ -10,13 +10,13 @@ import com.sarim.example_app_presentation.DrawingScreen
 import com.sarim.example_app_presentation.DrawingScreenData
 import com.sarim.example_app_presentation.DrawingScreenDataProviderType4
 import com.sarim.nav.theme.ComposeShapeFitterSampleAppTheme
+import com.sarim.screenshot_drawing_screen_type4.databinding.ComposeViewBinding
+import io.kotest.property.Exhaustive
+import io.kotest.property.exhaustive.boolean
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
-import com.sarim.screenshot_drawing_screen_type4.databinding.ComposeViewBinding
-import io.kotest.property.Exhaustive
-import io.kotest.property.exhaustive.boolean
 
 internal data class TestDataDrawingScreenPreviewType4ScreenshotTest(
     val data: DrawingScreenData,
@@ -59,7 +59,7 @@ internal class DrawingScreenPreviewType4ScreenshotTest(
                                 testData.data.snackbarHostState.showSnackbar(
                                     message = "Error",
                                     actionLabel = "Dismiss",
-                                    duration = SnackbarDuration.Short
+                                    duration = SnackbarDuration.Short,
                                 )
                             }
                         }

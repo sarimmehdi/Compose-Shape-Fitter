@@ -19,10 +19,10 @@ import com.sarim.example_app_presentation.BuildConfig
 import com.sarim.example_app_presentation.DrawingFeature
 import com.sarim.example_app_presentation.DrawingScreenUseCases
 import com.sarim.example_app_presentation.DrawingScreenViewModel
-import com.sarim.utils.test.DefaultDispatchers
-import com.sarim.utils.test.ErrorDataStore
 import com.sarim.utils.log.LogType
 import com.sarim.utils.log.log
+import com.sarim.utils.test.DefaultDispatchers
+import com.sarim.utils.test.ErrorDataStore
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.StringQualifier
@@ -32,112 +32,112 @@ import org.koin.dsl.lazyModule
 private const val SHAPE_DATASTORE = "shapeDataStore"
 private const val SETTINGS_DATASTORE = "settingsDataStore"
 
-internal fun dataStoreModule(
-    moduleType: ModuleType,
-) = lazyModule {
-    val shapeDtoDataStoreName = moduleType.getShapeDtoDataStoreName()
-    val settingsDtoDataStoreName = moduleType.getSettingsDtoDataStoreName()
-    log(
-        tag = "DrawingScreenModule",
-        messageBuilder = {
-            "called dataStoreModule " +
-                "with shapeDtoDataStoreName = $shapeDtoDataStoreName, " +
-                "settingsDtoDataStoreName = $settingsDtoDataStoreName, "
-        },
-        logType = LogType.DEBUG,
-        shouldLog = BuildConfig.DEBUG,
-    )
-
-    single<DataStore<ShapeDto>>(named(SHAPE_DATASTORE)) {
-        if (moduleType == ModuleType.TEST_ERROR) {
-            ErrorDataStore(shapeDtoDataStoreName)
-        } else {
-            DataStoreFactory.create(
-                serializer = ShapeDtoSerializer.create(shapeDtoDataStoreName),
-                produceFile = { androidContext().dataStoreFile(shapeDtoDataStoreName) },
-            )
-        }
-    }
-
-    single<DataStore<SettingsDto>>(named(SETTINGS_DATASTORE)) {
-        if (moduleType == ModuleType.TEST_ERROR) {
-            ErrorDataStore(settingsDtoDataStoreName)
-        } else {
-            DataStoreFactory.create(
-                serializer = SettingsDtoSerializer.create(settingsDtoDataStoreName),
-                produceFile = { androidContext().dataStoreFile(settingsDtoDataStoreName) },
-            )
-        }
-    }
-}
-
-internal fun drawingScreenModule(
-    shapeDtoDataStoreName: String,
-    settingsDtoDataStoreName: String,
-    scope: StringQualifier
-) =
+internal fun dataStoreModule(moduleType: ModuleType) =
     lazyModule {
+        val shapeDtoDataStoreName = moduleType.getShapeDtoDataStoreName()
+        val settingsDtoDataStoreName = moduleType.getSettingsDtoDataStoreName()
         log(
             tag = "DrawingScreenModule",
             messageBuilder = {
-                "called drawingScreenModule and scope = $scope"
+                "called dataStoreModule " +
+                    "with shapeDtoDataStoreName = $shapeDtoDataStoreName, " +
+                    "settingsDtoDataStoreName = $settingsDtoDataStoreName, "
             },
             logType = LogType.DEBUG,
             shouldLog = BuildConfig.DEBUG,
         )
-        scope(scope) {
-            scoped<ShapesRepository> {
-                ShapesRepositoryImpl(
-                    dataStore = get(named(SHAPE_DATASTORE)),
-                    dataStoreName = shapeDtoDataStoreName
+
+        single<DataStore<ShapeDto>>(named(SHAPE_DATASTORE)) {
+            if (moduleType == ModuleType.TEST_ERROR) {
+                ErrorDataStore(shapeDtoDataStoreName)
+            } else {
+                DataStoreFactory.create(
+                    serializer = ShapeDtoSerializer.create(shapeDtoDataStoreName),
+                    produceFile = { androidContext().dataStoreFile(shapeDtoDataStoreName) },
                 )
             }
+        }
 
-            scoped<SettingsRepository> {
-                SettingsRepositoryImpl(
-                    dataStore = get(named(SETTINGS_DATASTORE)),
-                    dataStoreName = settingsDtoDataStoreName
-                )
-            }
-
-            viewModel {
-                DrawingScreenViewModel(
-                    dispatchers = DefaultDispatchers(),
-                    savedStateHandle = get(),
-                    drawingScreenUseCases =
-                        DrawingScreenUseCases(
-                            getSettingsUseCase = GetSettingsUseCase(get()),
-                            getSelectedShapeUseCase = GetSelectedShapeUseCase(get()),
-                            updateSelectedShapeUseCase = UpdateSelectedShapeUseCase(get()),
-                            updateSettingsUseCase = UpdateSettingsUseCase(get()),
-                        ),
+        single<DataStore<SettingsDto>>(named(SETTINGS_DATASTORE)) {
+            if (moduleType == ModuleType.TEST_ERROR) {
+                ErrorDataStore(settingsDtoDataStoreName)
+            } else {
+                DataStoreFactory.create(
+                    serializer = SettingsDtoSerializer.create(settingsDtoDataStoreName),
+                    produceFile = { androidContext().dataStoreFile(settingsDtoDataStoreName) },
                 )
             }
         }
     }
 
+internal fun drawingScreenModule(
+    shapeDtoDataStoreName: String,
+    settingsDtoDataStoreName: String,
+    scope: StringQualifier,
+) = lazyModule {
+    log(
+        tag = "DrawingScreenModule",
+        messageBuilder = {
+            "called drawingScreenModule and scope = $scope"
+        },
+        logType = LogType.DEBUG,
+        shouldLog = BuildConfig.DEBUG,
+    )
+    scope(scope) {
+        scoped<ShapesRepository> {
+            ShapesRepositoryImpl(
+                dataStore = get(named(SHAPE_DATASTORE)),
+                dataStoreName = shapeDtoDataStoreName,
+            )
+        }
+
+        scoped<SettingsRepository> {
+            SettingsRepositoryImpl(
+                dataStore = get(named(SETTINGS_DATASTORE)),
+                dataStoreName = settingsDtoDataStoreName,
+            )
+        }
+
+        viewModel {
+            DrawingScreenViewModel(
+                dispatchers = DefaultDispatchers(),
+                savedStateHandle = get(),
+                drawingScreenUseCases =
+                    DrawingScreenUseCases(
+                        getSettingsUseCase = GetSettingsUseCase(get()),
+                        getSelectedShapeUseCase = GetSelectedShapeUseCase(get()),
+                        updateSelectedShapeUseCase = UpdateSelectedShapeUseCase(get()),
+                        updateSettingsUseCase = UpdateSettingsUseCase(get()),
+                    ),
+            )
+        }
+    }
+}
+
 enum class ModuleType {
     ACTUAL,
     TEST,
-    TEST_ERROR;
+    TEST_ERROR,
 }
 
-internal fun ModuleType.getShapeDtoDataStoreName() = when (this) {
-    ModuleType.ACTUAL -> ShapeDtoSerializer.Companion.DataStoreType.ACTUAL.dataStoreName
-    ModuleType.TEST -> ShapeDtoSerializer.Companion.DataStoreType.TEST.dataStoreName
-    ModuleType.TEST_ERROR -> ShapeDtoSerializer.Companion.DataStoreType.TEST_ERROR.dataStoreName
-}
+internal fun ModuleType.getShapeDtoDataStoreName() =
+    when (this) {
+        ModuleType.ACTUAL -> ShapeDtoSerializer.Companion.DataStoreType.ACTUAL.dataStoreName
+        ModuleType.TEST -> ShapeDtoSerializer.Companion.DataStoreType.TEST.dataStoreName
+        ModuleType.TEST_ERROR -> ShapeDtoSerializer.Companion.DataStoreType.TEST_ERROR.dataStoreName
+    }
 
-internal fun ModuleType.getSettingsDtoDataStoreName() = when (this) {
-    ModuleType.ACTUAL -> SettingsDtoSerializer.Companion.DataStoreType.ACTUAL.dataStoreName
-    ModuleType.TEST -> SettingsDtoSerializer.Companion.DataStoreType.TEST.dataStoreName
-    ModuleType.TEST_ERROR -> SettingsDtoSerializer.Companion.DataStoreType.TEST_ERROR.dataStoreName
-}
+internal fun ModuleType.getSettingsDtoDataStoreName() =
+    when (this) {
+        ModuleType.ACTUAL -> SettingsDtoSerializer.Companion.DataStoreType.ACTUAL.dataStoreName
+        ModuleType.TEST -> SettingsDtoSerializer.Companion.DataStoreType.TEST.dataStoreName
+        ModuleType.TEST_ERROR -> SettingsDtoSerializer.Companion.DataStoreType.TEST_ERROR.dataStoreName
+    }
 
 fun drawingFeatureModules(moduleType: ModuleType) =
     listOf(
         dataStoreModule(
-            moduleType = moduleType
+            moduleType = moduleType,
         ),
         drawingScreenModule(
             shapeDtoDataStoreName = moduleType.getShapeDtoDataStoreName(),

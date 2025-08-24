@@ -8,7 +8,9 @@ import kotlinx.serialization.json.Json
 import java.io.InputStream
 import java.io.OutputStream
 
-class SettingsDtoSerializer(private val dataStoreName: String) : Serializer<SettingsDto> {
+class SettingsDtoSerializer(
+    private val dataStoreName: String,
+) : Serializer<SettingsDto> {
     override val defaultValue: SettingsDto
         get() = SettingsDto()
 
@@ -21,7 +23,7 @@ class SettingsDtoSerializer(private val dataStoreName: String) : Serializer<Sett
         } catch (serialization: SerializationException) {
             throw CorruptionException(
                 "Unable to read SettingsDto from $dataStoreName",
-                serialization
+                serialization,
             )
         }
     }
@@ -39,21 +41,20 @@ class SettingsDtoSerializer(private val dataStoreName: String) : Serializer<Sett
         } catch (e: IOException) {
             throw CorruptionException(
                 "Unable to write SettingsDto to $dataStoreName",
-                e
+                e,
             )
         }
     }
 
     companion object {
-
-        enum class DataStoreType(val dataStoreName: String) {
+        enum class DataStoreType(
+            val dataStoreName: String,
+        ) {
             ACTUAL("SettingsDto.json"),
             TEST("SettingsDtoTest.json"),
-            TEST_ERROR("SettingsDtoTestError.json")
+            TEST_ERROR("SettingsDtoTestError.json"),
         }
 
-        fun create(dataStoreName: String): SettingsDtoSerializer {
-            return SettingsDtoSerializer(dataStoreName)
-        }
+        fun create(dataStoreName: String): SettingsDtoSerializer = SettingsDtoSerializer(dataStoreName)
     }
 }

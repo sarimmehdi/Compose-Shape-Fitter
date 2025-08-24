@@ -22,7 +22,7 @@ internal fun DrawingScreenPreviewType5Snackbar(
         data.snackbarHostState.showSnackbar(
             message = "Error",
             actionLabel = "Dismiss",
-            duration = SnackbarDuration.Short
+            duration = SnackbarDuration.Short,
         )
     }
 }

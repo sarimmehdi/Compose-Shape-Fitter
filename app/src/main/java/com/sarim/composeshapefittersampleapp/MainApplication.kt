@@ -21,8 +21,8 @@ internal class MainApplication :
                 logger(
                     CustomKoinLogger(
                         tag = MainApplication::class.java.simpleName,
-                        level = Level.DEBUG
-                    )
+                        level = Level.DEBUG,
+                    ),
                 )
             }
             androidContext(this@MainApplication)

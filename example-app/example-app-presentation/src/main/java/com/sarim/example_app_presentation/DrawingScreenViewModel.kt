@@ -5,15 +5,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sarim.compose_shape_fitter.BuildConfig
 import com.sarim.example_app_domain.model.Settings
-import com.sarim.utils.test.DispatcherProvider
 import com.sarim.utils.log.LogType
+import com.sarim.utils.log.log
+import com.sarim.utils.test.DispatcherProvider
 import com.sarim.utils.ui.MessageType
 import com.sarim.utils.ui.Resource
 import com.sarim.utils.ui.SnackBarController
 import com.sarim.utils.ui.SnackbarAction
 import com.sarim.utils.ui.SnackbarEvent
 import com.sarim.utils.ui.UiText
-import com.sarim.utils.log.log
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

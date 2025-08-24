@@ -16,7 +16,6 @@ open class BaseUiAutomatorTestClass(
     private val activityPkg: String,
     private val logTag: String,
 ) {
-
     protected lateinit var device: UiDevice
 
     @Before
@@ -45,7 +44,7 @@ open class BaseUiAutomatorTestClass(
                 logTag,
                 { "Element with selector [$selector] not found within ${MAX_TIMEOUT}ms" },
                 LogType.ERROR,
-                shouldLog = true
+                shouldLog = true,
             )
             throw AssertionError("Element with selector [$selector] not found within ${MAX_TIMEOUT}ms")
         }
@@ -60,7 +59,7 @@ open class BaseUiAutomatorTestClass(
                 logTag,
                 { "Object with selector [$selector] not found within ${MAX_TIMEOUT}ms" },
                 LogType.ERROR,
-                shouldLog = true
+                shouldLog = true,
             )
         }
         return found
@@ -75,17 +74,20 @@ open class BaseUiAutomatorTestClass(
         log(logTag, { "===============================" }, LogType.ERROR, shouldLog = true)
     }
 
-    private fun dumpNode(node: UiObject2, indent: Int) {
+    private fun dumpNode(
+        node: UiObject2,
+        indent: Int,
+    ) {
         val indentStr = " ".repeat(indent * 2)
         log(
             logTag,
             {
                 "$indentStr id=${node.resourceName} " +
-                        "desc=${node.contentDescription} " +
-                        "text=${node.text}"
+                    "desc=${node.contentDescription} " +
+                    "text=${node.text}"
             },
             LogType.ERROR,
-            shouldLog = true
+            shouldLog = true,
         )
         for (child in node.children) {
             dumpNode(child, indent + 1)

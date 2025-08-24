@@ -58,7 +58,7 @@ class CanvasComponentTest(
             tag = CanvasComponentTest::class.java.simpleName,
             messageBuilder = { testData.testDescription },
             logType = LogType.INFO,
-            shouldLog = true
+            shouldLog = true,
         )
 
         composeTestRule.setContent {

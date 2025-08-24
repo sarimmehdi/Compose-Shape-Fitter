@@ -13,7 +13,10 @@ object OffsetPairParceler : Parceler<Pair<Offset, Offset>> {
         return Pair(first, second)
     }
 
-    override fun Pair<Offset, Offset>.write(parcel: Parcel, flags: Int) {
+    override fun Pair<Offset, Offset>.write(
+        parcel: Parcel,
+        flags: Int,
+    ) {
         offsetParceler.apply { first.write(parcel, flags) }
         offsetParceler.apply { second.write(parcel, flags) }
     }

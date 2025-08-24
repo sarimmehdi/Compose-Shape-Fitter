@@ -9,9 +9,9 @@ import com.sarim.example_app_data.dto.settings.toSettings
 import com.sarim.example_app_domain.model.Settings
 import com.sarim.example_app_domain.repository.SettingsRepository
 import com.sarim.utils.log.LogType
+import com.sarim.utils.log.log
 import com.sarim.utils.ui.MessageType
 import com.sarim.utils.ui.Resource
-import com.sarim.utils.log.log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -21,29 +21,32 @@ class SettingsRepositoryImpl(
     private val dataStoreName: String,
 ) : SettingsRepository {
     override val settings: Flow<Resource<Settings>>
-        get() = dataStore.data.map {
-            log(
-                tag = SettingsRepositoryImpl::class.java.simpleName,
-                messageBuilder = {
-                    "settingsDto = $it, settings = ${it.toSettings()}"
-                },
-                logType = LogType.INFO,
-                shouldLog = BuildConfig.DEBUG,
-            )
-            Resource.Success(it.toSettings()) as Resource<Settings>
-        }.catch { e ->
-            emit(
-                Resource.Error(
-                    message =
-                        e.localizedMessage?.let {
-                            MessageType.StringMessage(it)
-                        } ?: MessageType.IntMessage(
-                            R.string.unknown_reason_read_exception,
-                            dataStoreName, e
+        get() =
+            dataStore.data
+                .map {
+                    log(
+                        tag = SettingsRepositoryImpl::class.java.simpleName,
+                        messageBuilder = {
+                            "settingsDto = $it, settings = ${it.toSettings()}"
+                        },
+                        logType = LogType.INFO,
+                        shouldLog = BuildConfig.DEBUG,
+                    )
+                    Resource.Success(it.toSettings()) as Resource<Settings>
+                }.catch { e ->
+                    emit(
+                        Resource.Error(
+                            message =
+                                e.localizedMessage?.let {
+                                    MessageType.StringMessage(it)
+                                } ?: MessageType.IntMessage(
+                                    R.string.unknown_reason_read_exception,
+                                    dataStoreName,
+                                    e,
+                                ),
                         ),
-                )
-            )
-        }
+                    )
+                }
 
     override suspend fun updateSettings(settings: Settings) =
         try {
@@ -69,7 +72,8 @@ class SettingsRepositoryImpl(
                         MessageType.StringMessage(it)
                     } ?: MessageType.IntMessage(
                         R.string.unknown_reason_write_exception,
-                        dataStoreName, e
+                        dataStoreName,
+                        e,
                     ),
             )
         } catch (

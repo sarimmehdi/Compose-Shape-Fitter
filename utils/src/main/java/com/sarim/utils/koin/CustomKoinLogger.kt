@@ -7,36 +7,42 @@ import org.koin.core.logger.MESSAGE
 
 class CustomKoinLogger(
     private val tag: String,
-    level: Level = Level.INFO
+    level: Level = Level.INFO,
 ) : Logger(level) {
-
-    override fun display(level: Level, msg: MESSAGE) {
+    override fun display(
+        level: Level,
+        msg: MESSAGE,
+    ) {
         if (this.level <= level) {
             when (level) {
-                Level.DEBUG -> com.sarim.utils.log.log(
-                    tag = tag,
-                    messageBuilder = { msg },
-                    logType = LogType.DEBUG,
-                    shouldLog = true
-                )
-                Level.INFO -> com.sarim.utils.log.log(
-                    tag = tag,
-                    messageBuilder = { msg },
-                    logType = LogType.INFO,
-                    shouldLog = true
-                )
-                Level.WARNING -> com.sarim.utils.log.log(
-                    tag = tag,
-                    messageBuilder = { msg },
-                    logType = LogType.WARN,
-                    shouldLog = true
-                )
-                Level.ERROR -> com.sarim.utils.log.log(
-                    tag = tag,
-                    messageBuilder = { msg },
-                    logType = LogType.ERROR,
-                    shouldLog = true
-                )
+                Level.DEBUG ->
+                    com.sarim.utils.log.log(
+                        tag = tag,
+                        messageBuilder = { msg },
+                        logType = LogType.DEBUG,
+                        shouldLog = true,
+                    )
+                Level.INFO ->
+                    com.sarim.utils.log.log(
+                        tag = tag,
+                        messageBuilder = { msg },
+                        logType = LogType.INFO,
+                        shouldLog = true,
+                    )
+                Level.WARNING ->
+                    com.sarim.utils.log.log(
+                        tag = tag,
+                        messageBuilder = { msg },
+                        logType = LogType.WARN,
+                        shouldLog = true,
+                    )
+                Level.ERROR ->
+                    com.sarim.utils.log.log(
+                        tag = tag,
+                        messageBuilder = { msg },
+                        logType = LogType.ERROR,
+                        shouldLog = true,
+                    )
                 Level.NONE -> { }
             }
         }

@@ -30,9 +30,7 @@ import org.koin.core.qualifier.named
 import org.koin.core.scope.Scope
 
 @Composable
-fun MainActivityScreen(
-    modifier: Modifier = Modifier,
-) {
+fun MainActivityScreen(modifier: Modifier = Modifier) {
     val snackbarHostState =
         remember {
             SnackbarHostState()
@@ -83,7 +81,7 @@ fun MainActivityScreen(
                         DrawingScreenData(
                             state = drawingScreenState,
                             drawerState = drawerState,
-                            snackbarHostState = snackbarHostState
+                            snackbarHostState = snackbarHostState,
                         ),
                     onEvent = drawingScreenViewModel::onEvent,
                 )
