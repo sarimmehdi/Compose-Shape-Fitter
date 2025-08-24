@@ -15,6 +15,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.2.2
+
       - name: Setup Common Environment
         uses: ./.github/actions/setup-environment
 
@@ -32,6 +35,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.2.2
+
       - name: Setup Common Environment
         uses: ./.github/actions/setup-environment
 
@@ -50,6 +56,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.2.2
+
       - name: Setup Common Environment
         uses: ./.github/actions/setup-environment
 
@@ -76,6 +85,9 @@ jobs:
     needs: [ ktlint, detekt ]
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.2.2
+
       - name: Setup Common Environment
         uses: ./.github/actions/setup-environment
 
@@ -100,6 +112,9 @@ jobs:
     needs: [spotless]
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.2.2
+
       - name: Setup Common Environment
         uses: ./.github/actions/setup-environment
 
@@ -111,6 +126,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.2.2
+
       - name: Setup Common Environment
         uses: ./.github/actions/setup-environment
 
@@ -138,6 +156,9 @@ jobs:
     needs: test
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.2.2
+
       - name: Setup Common Environment
         uses: ./.github/actions/setup-environment
 
@@ -170,8 +191,12 @@ jobs:
   screenshot_test:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.2.2
+
       - name: Setup Common Environment
         uses: ./.github/actions/setup-environment
+
       - name: Verify Paparazzi Screenshots
         run: |
           echo "Attempting to verify Paparazzi screenshot tests..."
@@ -262,6 +287,9 @@ jobs:
     needs: [ test, integration_test ]
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.2.2
+
       - name: Setup Common Environment
         uses: ./.github/actions/setup-environment
 
@@ -304,6 +332,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ jacoco_report ]
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.2.2
+
       - name: Setup Common Environment
         uses: ./.github/actions/setup-environment
 
@@ -343,8 +374,12 @@ jobs:
     name: Release build and publish
     runs-on: macOS-latest
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.2.2
+
       - name: Setup Common Environment
         uses: ./.github/actions/setup-environment
+
       - name: Publish to MavenCentral
         # replace with publishAndReleaseToMavenCentral when everything works as expected
         run: ./gradlew publishToMavenCentral --no-configuration-cache

@@ -4,7 +4,7 @@ inputs:
   java-version:
     description: 'Java version to set up'
     required: false
-    default: '21' # Default Java version
+    default: '21'
   java-distribution:
     description: 'Java distribution to use'
     required: false
@@ -12,9 +12,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4.2.2
-
     - name: Set up JDK
       uses: actions/setup-java@v4.7.1
       with:
