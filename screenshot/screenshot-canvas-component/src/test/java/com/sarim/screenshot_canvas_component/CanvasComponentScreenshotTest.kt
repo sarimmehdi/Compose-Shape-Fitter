@@ -24,10 +24,7 @@ internal class CanvasComponentScreenshotTest(
     private val testData: TestDataCanvasComponentScreenshotTest,
 ) {
     @get:Rule
-    val paparazzi =
-        Paparazzi(
-            deviceConfig = DeviceConfig.PIXEL_6_PRO,
-        )
+    val paparazzi = Paparazzi()
 
     @Test
     fun test() {

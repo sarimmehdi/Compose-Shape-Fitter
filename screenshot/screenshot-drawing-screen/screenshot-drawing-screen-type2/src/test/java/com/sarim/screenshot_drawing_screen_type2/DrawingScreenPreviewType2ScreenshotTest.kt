@@ -29,10 +29,7 @@ internal class DrawingScreenPreviewType2ScreenshotTest(
     private val testData: TestDataDrawingScreenPreviewType2ScreenshotTest,
 ) {
     @get:Rule
-    val paparazzi =
-        Paparazzi(
-            deviceConfig = DeviceConfig.PIXEL_6_PRO,
-        )
+    val paparazzi = Paparazzi()
 
     private var binding: ComposeViewBinding? = null
 

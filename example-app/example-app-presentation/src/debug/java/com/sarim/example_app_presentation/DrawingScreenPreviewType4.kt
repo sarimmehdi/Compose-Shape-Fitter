@@ -1,7 +1,6 @@
 package com.sarim.example_app_presentation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Devices.PIXEL_6_PRO
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -13,7 +12,6 @@ import kotlinx.collections.immutable.toImmutableList
 @Composable
 @Preview(
     apiLevel = 35,
-    device = PIXEL_6_PRO,
 )
 internal fun DrawingScreenPreviewType4(
     @PreviewParameter(DrawingScreenDataProviderType4::class) data: DrawingScreenData,
