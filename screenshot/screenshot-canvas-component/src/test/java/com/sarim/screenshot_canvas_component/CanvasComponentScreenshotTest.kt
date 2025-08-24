@@ -3,7 +3,6 @@ package com.sarim.screenshot_canvas_component
 import androidx.compose.foundation.background
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
 import com.sarim.example_app_presentation.component.CanvasComponent
 import com.sarim.example_app_presentation.component.CanvasComponentData

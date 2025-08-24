@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
 import com.sarim.example_app_presentation.DrawingScreen
 import com.sarim.example_app_presentation.DrawingScreenData
