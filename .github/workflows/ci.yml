@@ -244,6 +244,70 @@ jobs:
           else
             echo "All Paparazzi screenshot verifications successful!"
           fi
+
+      - name: Upload Report for screenshot-canvas-component
+        if: always()
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: report-canvas-component
+          path: screenshot/screenshot-canvas-component/build/reports/tests/testDebugUnitTest/
+          if-no-files-found: warn
+
+      - name: Upload Report for screenshot-drawer-component
+        if: always()
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: report-drawer-component
+          path: screenshot/screenshot-drawer-component/build/reports/tests/testDebugUnitTest/
+          if-no-files-found: warn
+
+      - name: Upload Report for screenshot-drawing-screen-type1
+        if: always()
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: report-drawing-screen-type1
+          path: screenshot/screenshot-drawing-screen/screenshot-drawing-screen-type1/build/reports/tests/testDebugUnitTest/
+          if-no-files-found: warn
+
+      - name: Upload Report for screenshot-drawing-screen-type2
+        if: always()
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: report-drawing-screen-type2
+          path: screenshot/screenshot-drawing-screen/screenshot-drawing-screen-type2/build/reports/tests/testDebugUnitTest/
+          if-no-files-found: warn
+
+      - name: Upload Report for screenshot-drawing-screen-type3
+        if: always()
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: report-drawing-screen-type3
+          path: screenshot/screenshot-drawing-screen/screenshot-drawing-screen-type3/build/reports/tests/testDebugUnitTest/
+          if-no-files-found: warn
+
+      - name: Upload Report for screenshot-drawing-screen-type4
+        if: always()
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: report-drawing-screen-type4
+          path: screenshot/screenshot-drawing-screen/screenshot-drawing-screen-type4/build/reports/tests/testDebugUnitTest/
+          if-no-files-found: warn
+
+      - name: Upload Report for screenshot-drawing-screen-type5
+        if: always()
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: report-drawing-screen-type5
+          path: screenshot/screenshot-drawing-screen/screenshot-drawing-screen-type5/build/reports/tests/testDebugUnitTest/
+          if-no-files-found: warn
+
+      - name: Upload Report for screenshot-topbar-component
+        if: always()
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: report-topbar-component
+          path: screenshot/screenshot-topbar-component/build/reports/tests/testDebugUnitTest/
+          if-no-files-found: warn
   integration_test:
     name: Run Integration Tests
     runs-on: macos-latest
