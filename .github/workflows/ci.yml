@@ -150,45 +150,6 @@ jobs:
             example-app/example-app-data/build/reports/tests/testDebugUnitTest/
             example-app/example-app-domain/build/reports/tests/testDebugUnitTest/
             example-app/example-app-presentation/build/reports/tests/testDebugUnitTest/
-
-  integration_test:
-    name: Run Integration Tests
-    runs-on: macos-latest
-    needs: test
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4.2.2
-
-      - name: Setup Common Environment
-        uses: ./.github/actions/setup-environment
-
-      - name: Run Integration Tests with Gordon
-        uses: reactivecircus/android-emulator-runner@v2.34.0
-        with:
-          api-level: 35
-          target: google_apis
-          arch: x86_64
-          profile: Pixel 6 Pro
-          script: |
-            echo "Starting Gordon All tests..."
-            ./gradlew gordon
-            echo "Gordon All tests finished."
-            
-            echo "Starting Gordon Error Flavor tests..."
-            ./gradlew gordonError
-            echo "Gordon Error Flavor tests finished."
-            
-            echo "Starting Gordon Normal Flavor tests..."
-            ./gradlew gordonNormal
-            echo "Gordon Normal Flavor tests finished."
-
-      - name: Upload Gordon Test Results
-        if: always()
-        uses: actions/upload-artifact@v4.6.2
-        with:
-          name: gordon-test-results
-          path: example-app/example-app-presentation/build/reports/gordon/
   screenshot_test:
     runs-on: ubuntu-latest
     needs: [ build_app, test ]
@@ -203,63 +164,63 @@ jobs:
         run: |
           echo "Attempting to verify Paparazzi screenshot tests..."
           PAPARAZZI_VERIFY_FAILED=false
-          
+
           echo "Verifying :screenshot:screenshot-canvas-component..."
           ./gradlew :screenshot:screenshot-canvas-component:verifyPaparazziDebug
           if [ $? -ne 0 ]; then
             echo "Verification failed for :screenshot:screenshot-canvas-component"
             PAPARAZZI_VERIFY_FAILED=true
           fi
-          
+
           echo "Verifying :screenshot:screenshot-drawer-component..."
           ./gradlew :screenshot:screenshot-drawer-component:verifyPaparazziDebug
           if [ $? -ne 0 ]; then
             echo "Verification failed for :screenshot:screenshot-drawer-component"
             PAPARAZZI_VERIFY_FAILED=true
           fi
-          
+
           echo "Verifying :screenshot:screenshot-drawing-screen:screenshot-drawing-screen-type1..."
           ./gradlew :screenshot:screenshot-drawing-screen:screenshot-drawing-screen-type1:verifyPaparazziDebug
           if [ $? -ne 0 ]; then
             echo "Verification failed for :screenshot:screenshot-drawing-screen:screenshot-drawing-screen-type1"
             PAPARAZZI_VERIFY_FAILED=true
           fi
-          
+
           echo "Verifying :screenshot:screenshot-drawing-screen:screenshot-drawing-screen-type2..."
           ./gradlew :screenshot:screenshot-drawing-screen:screenshot-drawing-screen-type2:verifyPaparazziDebug
           if [ $? -ne 0 ]; then
             echo "Verification failed for :screenshot:screenshot-drawing-screen:screenshot-drawing-screen-type2"
             PAPARAZZI_VERIFY_FAILED=true
           fi
-          
+
           echo "Verifying :screenshot:screenshot-drawing-screen:screenshot-drawing-screen-type3..."
           ./gradlew :screenshot:screenshot-drawing-screen:screenshot-drawing-screen-type3:verifyPaparazziDebug
           if [ $? -ne 0 ]; then
             echo "Verification failed for :screenshot:screenshot-drawing-screen:screenshot-drawing-screen-type3"
             PAPARAZZI_VERIFY_FAILED=true
           fi
-          
+
           echo "Verifying :screenshot:screenshot-drawing-screen:screenshot-drawing-screen-type4..."
           ./gradlew :screenshot:screenshot-drawing-screen:screenshot-drawing-screen-type4:verifyPaparazziDebug
           if [ $? -ne 0 ]; then
             echo "Verification failed for :screenshot:screenshot-drawing-screen:screenshot-drawing-screen-type4"
             PAPARAZZI_VERIFY_FAILED=true
           fi
-          
+
           echo "Verifying :screenshot:screenshot-drawing-screen:screenshot-drawing-screen-type5..."
           ./gradlew :screenshot:screenshot-drawing-screen:screenshot-drawing-screen-type5:verifyPaparazziDebug
           if [ $? -ne 0 ]; then
             echo "Verification failed for :screenshot:screenshot-drawing-screen:screenshot-drawing-screen-type5"
             PAPARAZZI_VERIFY_FAILED=true
           fi
-          
+
           echo "Verifying :screenshot:screenshot-topbar-component..."
           ./gradlew :screenshot:screenshot-topbar-component:verifyPaparazziDebug
           if [ $? -ne 0 ]; then
             echo "Verification failed for :screenshot:screenshot-topbar-component"
             PAPARAZZI_VERIFY_FAILED=true
           fi
-          
+
           if [ "$PAPARAZZI_VERIFY_FAILED" = true ]; then
             echo "---------------------------------------------------------------------"
             echo "ERROR: Paparazzi screenshot verification failed!"
@@ -283,6 +244,48 @@ jobs:
           else
             echo "All Paparazzi screenshot verifications successful!"
           fi
+  integration_test:
+    name: Run Integration Tests
+    runs-on: macos-latest
+    needs: screenshot_test
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup Common Environment
+        uses: ./.github/actions/setup-environment
+
+      - name: List Available AVDs (Initial State)
+        run: |
+          echo "Listing AVDs before emulator creation (expected to be empty or default):"
+          $ANDROID_HOME/tools/bin/avdmanager list
+          echo "Listing available targets:"
+          $ANDROID_HOME/tools/bin/sdkmanager --list | grep system-images
+
+      - name: Run Integration Tests with Gordon
+        uses: reactivecircus/android-emulator-runner@v2.34.0
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: Nexus 6
+          script: |            
+            echo "Starting Gordon Error Flavor tests..."
+            ./gradlew gordonError
+            echo "Gordon Error Flavor tests finished."
+            
+            echo "Starting Gordon Normal Flavor tests..."
+            ./gradlew gordonNormal
+            echo "Gordon Normal Flavor tests finished."
+      - name: Upload Gordon Test Results
+        if: always()
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: gordon-test-results
+          path: |
+            test-app/build/reports/gordonError
+            test-app/build/reports/gordonNormal
   jacoco_report:
     name: Generate Combined JaCoCo Coverage Report
     runs-on: ubuntu-latest

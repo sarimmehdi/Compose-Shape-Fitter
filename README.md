@@ -4,6 +4,10 @@
 
 ---
 
+<div style="text-align: center;">
+  <img src="demo.gif?raw=true" alt="Compose Shape Fitter Demo" width="300"/>
+</div>
+
 ## ✨ Features
 
 - Approximate a best-fit shape from a list of `Offset` points
