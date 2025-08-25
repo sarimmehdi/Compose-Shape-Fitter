@@ -150,6 +150,10 @@ jobs:
             example-app/example-app-data/build/reports/tests/testDebugUnitTest/
             example-app/example-app-domain/build/reports/tests/testDebugUnitTest/
             example-app/example-app-presentation/build/reports/tests/testDebugUnitTest/
+            example-app/example-app-data/build/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec
+            example-app/example-app-domain/build/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec
+            example-app/example-app-presentation/build/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec
+            if-no-files-found: warn
   screenshot_test:
     runs-on: ubuntu-latest
     needs: [ build_app, test ]
@@ -358,7 +362,7 @@ jobs:
   jacoco_report:
     name: Generate Combined JaCoCo Coverage Report
     runs-on: ubuntu-latest
-    needs: [ test, integration_test ]
+    needs: [ test ]
 
     steps:
       - name: Checkout Repository
