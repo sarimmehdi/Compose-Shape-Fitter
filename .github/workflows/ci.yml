@@ -373,12 +373,6 @@ jobs:
           name: unit-test-results
           path: .
 
-      - name: Download Integration Test Results (for coverage)
-        uses: actions/download-artifact@v5
-        with:
-          name: integration-test-results
-          path: .
-
       - name: List files to verify download (optional debugging)
         run: |
           echo "Listing downloaded unit test coverage data structure:"

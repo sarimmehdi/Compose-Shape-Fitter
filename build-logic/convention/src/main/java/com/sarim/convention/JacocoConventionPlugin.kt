@@ -43,7 +43,6 @@ class JacocoConventionPlugin : Plugin<Project> {
             buildTypes {
                 debug {
                     enableUnitTestCoverage = true
-                    enableAndroidTestCoverage = true
                 }
             }
         }
@@ -93,18 +92,10 @@ class JacocoConventionPlugin : Plugin<Project> {
                         val unitTestExecFile = module.layout.buildDirectory.file(
                             "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"
                         ).orNull?.asFile
-                        val androidTestCoverageDir = module.layout.buildDirectory.dir(
-                            "outputs/code_coverage/debugAndroidTest/connected"
-                        ).orNull?.asFile
 
                         val filesToInclude = mutableListOf<Any>()
                         if (unitTestExecFile?.exists() == true) {
                             filesToInclude.add(unitTestExecFile)
-                        }
-                        if (androidTestCoverageDir?.exists() == true && androidTestCoverageDir.isDirectory) {
-                            filesToInclude.add(module.fileTree(androidTestCoverageDir) {
-                                include("**/*.ec")
-                            })
                         }
                         filesToInclude
                     }.filter {
