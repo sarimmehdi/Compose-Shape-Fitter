@@ -340,10 +340,6 @@ jobs:
             adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
             echo "Emulator is ready."
             
-            echo "Starting Integration Tests..."
-            ./gradlew :example-app:example-app-presentation:connectedDebugAndroidTest
-            echo "Integration Tests finished."
-            
             echo "Starting Gordon Error Flavor tests..."
             ./gradlew gordonError
             echo "Gordon Error Flavor tests finished."

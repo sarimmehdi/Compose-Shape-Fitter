@@ -27,7 +27,7 @@ import kotlinx.collections.immutable.persistentListOf
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.Parameterized
+import org.robolectric.ParameterizedRobolectricTestRunner
 
 data class TestDataDrawingScreenTest(
     val dragStart: Offset,
@@ -37,12 +37,12 @@ data class TestDataDrawingScreenTest(
 ) {
     val testDescription =
         "when you start dragging from $dragStart, \n" +
-            "and go through points: $dragPositions \n" +
-            "with data $data \n" +
-            "the expected sequence of events should be $expectedEvents"
+                "and go through points: $dragPositions \n" +
+                "with data $data \n" +
+                "the expected sequence of events should be $expectedEvents"
 }
 
-@RunWith(Parameterized::class)
+@RunWith(ParameterizedRobolectricTestRunner::class)
 class CanvasComponentTest(
     @Suppress("UNUSED_PARAMETER") private val testDescription: String,
     private val testData: TestDataDrawingScreenTest,
@@ -103,7 +103,7 @@ class CanvasComponentTest(
 
     companion object {
         @JvmStatic
-        @Parameterized.Parameters(
+        @ParameterizedRobolectricTestRunner.Parameters(
             name = "{0}",
         )
         @Suppress("unused")
@@ -138,22 +138,39 @@ class CanvasComponentTest(
             val allDragPositionsAndResultingDrawableShape =
                 listOf(
                     DragPositionsAndResultingDrawableShape(
-                        drawableShape = CircleShape(Color.Blue, 5f),
+                        drawableShape = CircleShape(
+                            color = Color.Black,
+                            strokeWidth = 5f,
+                            inPreviewMode = true
+                        ),
                         dragStart = circlePath.first(),
                         dragPositions = circlePath.drop(2),
                     ),
                     DragPositionsAndResultingDrawableShape(
-                        drawableShape = EllipseShape(Color.Black, 5f),
+                        drawableShape = EllipseShape(
+                            color = Color.Black,
+                            strokeWidth = 5f,
+                            inPreviewMode = true
+                        ),
                         dragStart = ellipsePath.first(),
                         dragPositions = ellipsePath.drop(2),
                     ),
                     DragPositionsAndResultingDrawableShape(
-                        drawableShape = HexagonShape(Color.Black, 5f),
+                        drawableShape = HexagonShape(
+                            color = Color.Black,
+                            strokeWidth = 5f,
+                            inPreviewMode = true
+                        ),
                         dragStart = hexagonPath.first(),
                         dragPositions = hexagonPath.drop(1),
                     ),
                     DragPositionsAndResultingDrawableShape(
-                        drawableShape = ObbShape(Color.Green, 5f, true),
+                        drawableShape = ObbShape(
+                            color = Color.Black,
+                            strokeWidth = 5f,
+                            inPreviewMode = true,
+                            allSidesEqual = true
+                        ),
                         dragStart = Offset(commonStartX, commonStartY),
                         dragPositions =
                             listOf(
@@ -164,7 +181,12 @@ class CanvasComponentTest(
                             ),
                     ),
                     DragPositionsAndResultingDrawableShape(
-                        drawableShape = ObbShape(Color.Cyan, 5f, false),
+                        drawableShape = ObbShape(
+                            color = Color.Black,
+                            strokeWidth = 5f,
+                            inPreviewMode = true,
+                            allSidesEqual = false
+                        ),
                         dragStart = Offset(commonStartX, commonStartY),
                         dragPositions =
                             listOf(
@@ -175,12 +197,20 @@ class CanvasComponentTest(
                             ),
                     ),
                     DragPositionsAndResultingDrawableShape(
-                        drawableShape = PentagonShape(Color.Magenta, 5f),
+                        drawableShape = PentagonShape(
+                            color = Color.Black,
+                            strokeWidth = 5f,
+                            inPreviewMode = true
+                        ),
                         dragStart = pentagonPath.first(),
                         dragPositions = pentagonPath.drop(1),
                     ),
                     DragPositionsAndResultingDrawableShape(
-                        drawableShape = RectangleShape(Color.Yellow, 5f),
+                        drawableShape = RectangleShape(
+                            color = Color.Black,
+                            strokeWidth = 5f,
+                            inPreviewMode = true
+                        ),
                         dragStart = Offset(commonStartX, commonStartY),
                         dragPositions =
                             listOf(
@@ -191,7 +221,11 @@ class CanvasComponentTest(
                             ),
                     ),
                     DragPositionsAndResultingDrawableShape(
-                        drawableShape = SkewedEllipseShape(Color.DarkGray, 5f),
+                        drawableShape = SkewedEllipseShape(
+                            color = Color.Black,
+                            strokeWidth = 5f,
+                            inPreviewMode = true
+                        ),
                         dragStart = Offset(commonStartX + 20f, commonStartY - 10f),
                         dragPositions =
                             generateEllipsePoints(
@@ -204,7 +238,11 @@ class CanvasComponentTest(
                                 .drop(1),
                     ),
                     DragPositionsAndResultingDrawableShape(
-                        drawableShape = SquareShape(Color.LightGray, 5f),
+                        drawableShape = SquareShape(
+                            color = Color.Black,
+                            strokeWidth = 5f,
+                            inPreviewMode = true
+                        ),
                         dragStart = Offset(commonStartX, commonStartY),
                         dragPositions =
                             listOf(
@@ -215,7 +253,11 @@ class CanvasComponentTest(
                             ),
                     ),
                     DragPositionsAndResultingDrawableShape(
-                        drawableShape = TriangleShape(Color.Red, 5f),
+                        drawableShape = TriangleShape(
+                            color = Color.Black,
+                            strokeWidth = 5f,
+                            inPreviewMode = true
+                        ),
                         dragStart = Offset(commonStartX, commonStartY + defaultSize),
                         dragPositions =
                             listOf(
@@ -247,15 +289,15 @@ class CanvasComponentTest(
                                         DrawingScreenToViewModelEvents.SetLines(persistentListOf()),
                                         mockk<DrawingScreenToViewModelEvents.SetPoints>(),
                                     ) +
-                                        it.dragPositions.drop(1).flatMapIndexed { index, currentDragPosition ->
+                                            it.dragPositions.drop(1).flatMapIndexed { index, currentDragPosition ->
+                                                listOf(
+                                                    mockk<DrawingScreenToViewModelEvents.UpdateLines>(),
+                                                    mockk<DrawingScreenToViewModelEvents.UpdatePoints>(),
+                                                )
+                                            } +
                                             listOf(
-                                                mockk<DrawingScreenToViewModelEvents.UpdateLines>(),
-                                                mockk<DrawingScreenToViewModelEvents.UpdatePoints>(),
-                                            )
-                                        } +
-                                        listOf(
-                                            DrawingScreenToViewModelEvents.SetDragging(false),
-                                        ),
+                                                DrawingScreenToViewModelEvents.SetDragging(false),
+                                            ),
                             ),
                             TestDataDrawingScreenTest(
                                 dragStart = it.dragStart,
@@ -275,28 +317,28 @@ class CanvasComponentTest(
                                         DrawingScreenToViewModelEvents.SetLines(persistentListOf()),
                                         mockk<DrawingScreenToViewModelEvents.SetPoints>(),
                                     ) +
-                                        it.dragPositions.drop(1).flatMapIndexed { index, currentDragPosition ->
+                                            it.dragPositions.drop(1).flatMapIndexed { index, currentDragPosition ->
+                                                listOf(
+                                                    mockk<DrawingScreenToViewModelEvents.UpdateLines>(),
+                                                    mockk<DrawingScreenToViewModelEvents.UpdatePoints>(),
+                                                )
+                                            } +
                                             listOf(
-                                                mockk<DrawingScreenToViewModelEvents.UpdateLines>(),
-                                                mockk<DrawingScreenToViewModelEvents.UpdatePoints>(),
-                                            )
-                                        } +
-                                        listOf(
-                                            DrawingScreenToViewModelEvents.SetDragging(false),
-                                            DrawingScreenToViewModelEvents.SetApproximateShape(
-                                                when (it.drawableShape) {
-                                                    is CircleShape -> mockk<CircleShape.Circle>(relaxed = true)
-                                                    is EllipseShape -> mockk<EllipseShape.Ellipse>(relaxed = true)
-                                                    is HexagonShape -> mockk<HexagonShape.Hexagon>(relaxed = true)
-                                                    is ObbShape -> mockk<ObbShape.OrientedBoundingBox>(relaxed = true)
-                                                    is PentagonShape -> mockk<PentagonShape.Pentagon>(relaxed = true)
-                                                    is RectangleShape -> mockk<RectangleShape.Rectangle>(relaxed = true)
-                                                    is SkewedEllipseShape -> mockk<SkewedEllipseShape.RotatedEllipse>(relaxed = true)
-                                                    is SquareShape -> mockk<RectangleShape.Rectangle>(relaxed = true)
-                                                    is TriangleShape -> mockk<TriangleShape.Triangle>(relaxed = true)
-                                                },
+                                                DrawingScreenToViewModelEvents.SetDragging(false),
+                                                DrawingScreenToViewModelEvents.SetApproximateShape(
+                                                    when (it.drawableShape) {
+                                                        is CircleShape -> mockk<CircleShape.Circle>(relaxed = true)
+                                                        is EllipseShape -> mockk<EllipseShape.Ellipse>(relaxed = true)
+                                                        is HexagonShape -> mockk<HexagonShape.Hexagon>(relaxed = true)
+                                                        is ObbShape -> mockk<ObbShape.OrientedBoundingBox>(relaxed = true)
+                                                        is PentagonShape -> mockk<PentagonShape.Pentagon>(relaxed = true)
+                                                        is RectangleShape -> mockk<RectangleShape.Rectangle>(relaxed = true)
+                                                        is SkewedEllipseShape -> mockk<SkewedEllipseShape.RotatedEllipse>(relaxed = true)
+                                                        is SquareShape -> mockk<RectangleShape.Rectangle>(relaxed = true)
+                                                        is TriangleShape -> mockk<TriangleShape.Triangle>(relaxed = true)
+                                                    },
+                                                ),
                                             ),
-                                        ),
                             ),
                         )
                     }.flatten()
