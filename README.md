@@ -26,10 +26,32 @@
 
 ---
 
-## 📦 Installation
+## Installation
 
-```kotlin
-implementation("io.github.sarimmehdi-compose-shape-fitter-1.0.0")
+Compose Shape Fitter is available on Maven Central.
+
+**Using Version Catalogs:**
+
+`libs.versions.toml`:
+```toml
+[versions]
+composeShapeFitterVersion = "1.0.0"
+
+[libraries]
+composeShapeFitterLibrary = { group = "io.github.sarimmehdi", name = "compose-shape-fitter", version.ref = "composeShapeFitterVersion" }
+```
+`build.gradle.kts` (module-level):
+```kts
+implementation(libs.composeShapeFitterLibrary)
+```
+
+**Gradle (Kotlin DSL - `build.gradle.kts`):**:
+```kts
+implementation("io.github.sarimmehdi:compose-shape-fitter:1.0.0")
+```
+**`build.gradle` (Groovy)**:
+```groovy
+implementation 'io.github.sarimmehdi:compose-shape-fitter:1.0.0'
 ```
 
 ---
